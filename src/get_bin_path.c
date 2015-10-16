@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   sh.h                                               :+:      :+:    :+:   */
+/*   get_bin_path.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,34 +10,35 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_SH_H
-# define FT_SH_H
+#include "sh.h"
+#include <sys/mount.h>
 
-#include <signal.h>
+void	set_bin_path(t_env *e)
+{
+	char	*path;
 
-# include "libft.h"
-# include "sh_data.h"
+	path = get_env_val(e, "PATH");
+	e->path = ft_strsplit(path, ':');
+	free(path);
+}
 
-/*
-**   INI_ENV
-*/
-t_env		*init_env(void);
+char	*get_cmd_path(t_env *e, char *cmd)
+{
+	int		i;
+	char	cmd_path[MAXPATHLEN + 1];
 
-/*
-**   GET_ENV
-*/
-char		*get_env_val(t_env *e, char *name);
-int			get_env_id(t_env *e, char *name);
-
-/*
-**   GET_BIN_PATH
-*/
-void		set_bin_path(t_env *e);
-char		*get_cmd_path(t_env *e, char *cmd);
-
-/*
-**   PROMPT
-*/
-void		print_prompt(void);
-
-#endif
+	i = 0;
+	while (e->path[i])
+	{
+		ft_bzero(cmd_path, MAXPATHLEN + 1);
+		ft_strcpy(cmd_path, e->path[i]);
+		ft_strcat(cmd_path, "/");
+		ft_strcat(cmd_path, cmd);
+		if (ft_get_file_type(cmd_path) == '-')
+			return (ft_strdup(cmd_path));
+		i++;
+	}
+	if (ft_get_file_type(cmd) == '-')
+		return (ft_strdup(cmd));
+	return (NULL);
+}

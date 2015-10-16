@@ -1,22 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   sh_data.h                                          :+:      :+:    :+:   */
+/*   ft_putchartab.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2015/10/09 21:27:14 by pbourrie         ###   ########.fr       */
+/*   Created: 2015/10/09 12:18:49 by pbourrie          #+#    #+#             */
+/*   Updated: 2015/10/09 21:08:54 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_SH_DATA_H
-# define FT_SH_DATA_H
+#include "libft.h"
 
-typedef struct	s_env
+void	ft_putchartab(char **tab)
 {
-	char	**val;
-	char	**path;
-}				t_env;
+	int	i;
 
-#endif
+	if (tab == NULL)
+		return ;
+	i = 0;
+	while (tab[i] != NULL)
+	{
+		ft_putendl(tab[i]);
+		i++;
+	}
+}

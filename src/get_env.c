@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   sh_data.h                                          :+:      :+:    :+:   */
+/*   get_env.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,13 +10,36 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_SH_DATA_H
-# define FT_SH_DATA_H
+#include "sh.h"
 
-typedef struct	s_env
+char	*get_env_val(t_env *e, char *name)
 {
-	char	**val;
-	char	**path;
-}				t_env;
+	int	i;
+	int	len;
 
-#endif
+	i = 0;
+	len = ft_strlen(name);
+	while (e->val[i] != NULL)
+	{
+		if (ft_strnequ(name, e->val[i], len) && e->val[i][len] == '=')
+			return (ft_strsub(e->val[i], len + 1, ft_strlen(e->val[i]) - len));
+		i++;
+	}
+	return (NULL);
+}
+
+int		get_env_id(t_env *e, char *name)
+{
+	int	i;
+	int	len;
+
+	i = 0;
+	len = ft_strlen(name);
+	while (e->val[i] != NULL)
+	{
+		if (ft_strnequ(name, e->val[i], len) && e->val[i][len] == '=')
+			return (i);
+		i++;
+	}
+	return (-1);
+}

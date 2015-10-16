@@ -11,27 +11,91 @@
 /* ************************************************************************** */
 
 #include "sh.h"
+#include <errno.h>
 
-int		main(int ac, char **av)
+void sighandler(int);
+
+int		main(void)
 {
-	pid_t	father;
-	int		ret;
+	char *cmd;
+	char **cmd_tab;
+	int	father;
+	int	ret;
+	int i;
+	t_env	*e;
 
-	father = fork();
-	if (father > 0)
+	char	*cmd_path;
+	cmd_path = NULL;
+
+	signal(SIGINT, sighandler);
+
+	e = init_env();
+
+	while (1)
 	{
-		ft_printf("PERE =%ld\n", father);
-		wait(&ret);
-		ft_printf("PERE fin ret=%ld\n", ret);
-	}
-	else if (father == 0)
-	{
-		ft_printf("FILS\n");
-		execve("a.out", av, NULL);
-		ft_printf("FILS fin\n");
+		print_prompt();
+		ret = get_next_line(0, &cmd);
+		if (ret == 0)
+		{
+			ft_printf("exit\n");
+			exit(0);
+		}
+
+		if (cmd == NULL)
+		{
+
+		}
+		else if (ft_strequ(cmd, "exit"))
+			exit(0);
+		else if (ft_strequ(cmd, "env"))
+			ft_putchartab(e->val);
+		else
+		{
+
+			cmd_tab = ft_strsplit(cmd, ' ');
+			if (cmd_tab[0] != NULL)
+			{
+				cmd_path = get_cmd_path(e, cmd_tab[0]);
+				if (cmd_path != NULL)
+				{
+					father = fork();
+					if (father > 0)
+						wait(&ret);
+					else if (father == 0)
+					{
+						if (execve(cmd_path, cmd_tab, e->val) == -1)
+						{
+							perror("!!!!");
+							exit(0);
+						}
+					}
+					free(cmd_path);
+				}
+				else
+					ft_printf("command not found: %s\n", cmd_tab[0]);
+			}
+			i = 0;
+			while (cmd_tab[i] != NULL)
+			{
+				free(cmd_tab[i]);
+				i++;
+			}
+			if (cmd_tab != NULL)
+				free(cmd_tab);
+		}
+		if (cmd)
+			free(cmd);
+		cmd = NULL;
 	}
 
-	if (ac > 55)
-		return (-1);
 	return (0);
+}
+
+
+void sighandler(int signum)
+{
+//	ft_printf("Caught signal %d, coming out...\n", signum);
+	if (signum != 239)
+	ft_printf("\n                                      \r{bold}$> {rt}");
+//	exit(1);
 }

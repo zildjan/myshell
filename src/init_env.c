@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   sh_data.h                                          :+:      :+:    :+:   */
+/*   init_env.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,13 +10,27 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_SH_DATA_H
-# define FT_SH_DATA_H
+#include "sh.h"
 
-typedef struct	s_env
+extern char **environ;
+
+t_env	*init_env(void)
 {
-	char	**val;
-	char	**path;
-}				t_env;
+	t_env	*e;
 
-#endif
+	e = (t_env*)ft_memalloc(sizeof(t_env));
+	e->val = (char**)ft_memalloc(sizeof(char*) * 1000);
+
+	int i;
+
+	i = 0;
+	while (environ[i] != NULL)
+	{
+		e->val[i] = ft_strdup(environ[i]);
+		i++;
+	}
+
+	set_bin_path(e);
+
+	return (e);
+}

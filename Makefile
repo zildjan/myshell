@@ -27,7 +27,11 @@ B  =		\033[1m
 UL =		\033[4m
 RT =		\033[0m
 
-SRCS =		main.c 
+SRCS =		main.c \
+			init_env.c \
+			get_env.c \
+			get_bin_path.c \
+			prompt.c
 SRC = $(sort $(SRCS))
 SRC_PATH = src/
 OBJ_PATH = obj/

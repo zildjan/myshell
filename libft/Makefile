@@ -71,6 +71,7 @@ SRCS =		ft_bzero.c \
 			ft_strtrim.c \
 			ft_strsplit.c \
 			ft_count_word.c \
+			ft_putchartab.c \
 			ft_isalpha.c \
 			ft_isdigit.c \
 			ft_isalnum.c \

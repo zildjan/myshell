@@ -1,22 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   sh_data.h                                          :+:      :+:    :+:   */
+/*   prompt.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2015/10/09 21:27:14 by pbourrie         ###   ########.fr       */
+/*   Created: 2015/10/09 12:18:49 by pbourrie          #+#    #+#             */
+/*   Updated: 2015/10/09 21:08:54 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_SH_DATA_H
-# define FT_SH_DATA_H
+#include "sh.h"
 
-typedef struct	s_env
+void	print_prompt(void)
 {
-	char	**val;
-	char	**path;
-}				t_env;
-
-#endif
+	ft_printf("                                      \r{bold}$> {rt}");
+}
