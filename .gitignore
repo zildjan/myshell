@@ -3,3 +3,4 @@ minishell
 libft/libft.a
 libft/obj
 obj/
+*.old

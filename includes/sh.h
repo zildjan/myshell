@@ -36,6 +36,27 @@ void		set_bin_path(t_env *e);
 char		*get_cmd_path(t_env *e, char *cmd);
 
 /*
+**   GET_CMD
+*/
+void		get_cmd(t_env *e);
+void		get_cmd_seq(t_env *e);
+void		get_cmd_opts(t_env *e, char **cmd_seq);
+
+/*
+**   PARSE_CMD
+*/
+void		parse_cmd_seq(t_env *e);
+void		parse_cmd(t_env *e);
+
+int			process_builtin(t_env *e);
+void		process_cmd(t_env *e);
+
+/*
+**   FREE_CMD
+*/
+void		free_cmd(t_env *e);
+
+/*
 **   PROMPT
 */
 void		print_prompt(void);

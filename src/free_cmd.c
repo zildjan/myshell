@@ -1,28 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memalloc.c                                      :+:      :+:    :+:   */
+/*   free_cmd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2014/11/06 16:29:38 by pbourrie          #+#    #+#             */
-/*   Updated: 2014/11/15 16:01:11 by pbourrie         ###   ########.fr       */
+/*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
+/*   Updated: 2015/10/09 21:27:14 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "sh.h"
 
-void	*ft_memalloc(size_t size)
+void	free_cmd(t_env *e)
 {
-	void	*ptr;
+	int	i;
+	int	j;
 
-	ptr = malloc(size);
-	if (!ptr)
+	i = 0;
+	while (e->cmd_seq[i])
 	{
-		ft_putstr("FATAL ERROR: memory allocation failed, ");
-		ft_putendl("exit to prevent indeterminate behavior...");
-		exit(1);
+		j = 0;
+		while (e->cmd_seq[i][j])
+		{
+			free(e->cmd_seq[i][j]);
+			e->cmd_seq[i][j] = NULL;
+			j++;
+		}
+		free(e->cmd_seq[i]);
+		e->cmd_seq[i] = NULL;
+		i++;
 	}
-	ft_memset(ptr, 0, size);
-	return (ptr);
+	free(e->cmd_seq);
+	e->cmd_seq = NULL;
+	e->cmd = NULL;
+	free(e->usr_cmd);
+	e->usr_cmd = NULL;
 }

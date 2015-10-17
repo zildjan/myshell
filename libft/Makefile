@@ -35,6 +35,7 @@ SRCS =		ft_bzero.c \
 			ft_memchr.c \
 			ft_memcmp.c \
 			ft_memalloc.c \
+			ft_memsalloc.c \
 			ft_memrealloc.c \
 			ft_memdel.c \
 			ft_strlen.c \

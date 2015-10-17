@@ -15,6 +15,9 @@
 
 typedef struct	s_env
 {
+	char	*usr_cmd;
+	char	**cmd;
+	char	***cmd_seq;
 	char	**val;
 	char	**path;
 }				t_env;
