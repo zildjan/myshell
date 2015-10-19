@@ -13,12 +13,17 @@
 #ifndef FT_SH_DATA_H
 # define FT_SH_DATA_H
 
+# define ERRACCES 1
+# define ERRNOENT 2
+# define ERRNOTDIR 3
+# define ERRNOCMD 4
+# define ERREXEFORM 5
+
 typedef struct	s_env
 {
 	char	*usr_cmd;
 	char	**cmd;
-	char	***cmd_seq;
-	char	**val;
+	char	**var;
 	char	**path;
 }				t_env;
 

@@ -1,26 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   prompt.c                                           :+:      :+:    :+:   */
+/*   ft_strcheck.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/10/09 12:18:49 by pbourrie          #+#    #+#             */
-/*   Updated: 2015/10/09 21:08:54 by pbourrie         ###   ########.fr       */
+/*   Created: 2014/11/11 16:03:45 by pbourrie          #+#    #+#             */
+/*   Updated: 2014/11/14 19:08:35 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "sh.h"
+#include "libft.h"
 
-void	print_prompt(void)
+int		ft_strcheck(char const *s, int (*f)(int))
 {
-	char *pwd;
-	char *spwd;
+	unsigned int	i;
 
-	pwd = getcwd(NULL, 0);
-	spwd = ft_get_basename(pwd);
-//	ft_printf("                                      \r{bold}/%s > {rt}", spwd);
-	ft_printf("{bold}/%s > {rt}", spwd);
-	free(pwd);
-	free(spwd);
+	if (s && f)
+	{
+		i = 0;
+		while (s[i])
+		{
+			if (!f(s[i]))
+				return (0);
+			i++;
+		}
+		return (1);
+	}
+	return (0);
 }

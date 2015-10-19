@@ -19,14 +19,14 @@ t_env	*init_env(void)
 	t_env	*e;
 
 	e = (t_env*)ft_memalloc(sizeof(t_env));
-	e->val = (char**)ft_memalloc(sizeof(char*) * 1000);
+	e->var = (char**)ft_memalloc(sizeof(char*) * 10000);
 
 	int i;
 
 	i = 0;
 	while (environ[i] != NULL)
 	{
-		e->val[i] = ft_strdup(environ[i]);
+		e->var[i] = ft_strdup(environ[i]);
 		i++;
 	}
 

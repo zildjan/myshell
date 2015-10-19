@@ -30,11 +30,15 @@ RT =		\033[0m
 SRCS =		main.c \
 			init_env.c \
 			get_env.c \
+			set_env.c \
+			builtin_cd.c \
+			builtin_setenv.c \
 			get_bin_path.c \
 			get_cmd.c \
 			parse_cmd.c \
 			free_cmd.c \
-			prompt.c
+			prompt.c \
+			error.c
 SRC = $(sort $(SRCS))
 SRC_PATH = src/
 OBJ_PATH = obj/

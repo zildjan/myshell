@@ -12,23 +12,10 @@
 
 #include "sh.h"
 
-void	parse_cmd_seq(t_env *e)
-{
-	int		i;
-
-	i = 0;
-	while (e->cmd_seq[i] != NULL)
-	{
-		e->cmd = e->cmd_seq[i];
-		parse_cmd(e);
-		i++;
-	}
-	free_cmd(e);
-}
-
 void	parse_cmd(t_env *e)
 {
-//	process_builtin(e);
+	if (e->cmd[0] == NULL)
+		return ;
 	if (!process_builtin(e))
 		process_cmd(e);
 }
@@ -36,10 +23,16 @@ void	parse_cmd(t_env *e)
 int		process_builtin(t_env *e)
 {
 //	ft_printf("%s\n", e->cmd[0]);
-	if (ft_strequ(e->cmd[0], "exit"))
+	if (ft_strequ(e->cmd[0], "cd"))
+		builtin_cd(e);
+	else if (ft_strequ(e->cmd[0], "exit"))
 		exit(0);
+	else if (ft_strequ(e->cmd[0], "setenv"))
+		builtin_setenv(e);
+	else if (ft_strequ(e->cmd[0], "unsetenv"))
+		builtin_unsetenv(e);
 	else if (ft_strequ(e->cmd[0], "env"))
-		ft_putchartab(e->val);
+		ft_putchartab(e->var);
 	else
 		return (0);
 	return (1);
@@ -48,25 +41,41 @@ int		process_builtin(t_env *e)
 void	process_cmd(t_env *e)
 {
 	char	*cmd_path;
-	int		father;
-	int		ret;
 
 	cmd_path = get_cmd_path(e, e->cmd[0]);
+	if (ft_strchr(e->cmd[0], '/') && ft_get_file_type(e->cmd[0]) == '-')
+		cmd_path = ft_strdup(e->cmd[0]);
 	if (cmd_path != NULL)
 	{
-		father = fork();
-		if (father > 0)
-			wait(&ret);
-		else if (father == 0)
-		{
-			if (execve(cmd_path, e->cmd, e->val) == -1)
-			{
-				perror("!!!!");
-				exit(0);
-			}
-		}
+		process_fork(e, cmd_path);
 		free(cmd_path);
 	}
 	else
-		ft_printf("command not found: %s\n", e->cmd[0]);
+	{
+		if (ft_strchr(e->cmd[0], '/'))
+			put_error(ERRNOENT, e->cmd[0]);
+		else
+			put_error(ERRNOCMD, e->cmd[0]);
+	}
+}
+
+void	process_fork(t_env *e, char *cmd_path)
+{
+	int		father;
+	int		ret;
+
+	father = fork();
+	if (father > 0)
+		wait(&ret);
+	else if (father == 0)
+	{
+		if (execve(cmd_path, e->cmd, e->var) == -1)
+		{
+			if (ft_get_file_mode(cmd_path) % 2 == 0)
+				put_error(ERRACCES, e->cmd[0]);
+			else
+				put_error(ERREXEFORM, e->cmd[0]);
+				exit(0);
+		}
+	}
 }

@@ -15,25 +15,14 @@
 void	free_cmd(t_env *e)
 {
 	int	i;
-	int	j;
 
 	i = 0;
-	while (e->cmd_seq[i])
+	while (e->cmd[i])
 	{
-		j = 0;
-		while (e->cmd_seq[i][j])
-		{
-			free(e->cmd_seq[i][j]);
-			e->cmd_seq[i][j] = NULL;
-			j++;
-		}
-		free(e->cmd_seq[i]);
-		e->cmd_seq[i] = NULL;
+		free(e->cmd[i]);
+		e->cmd[i] = NULL;
 		i++;
 	}
-	free(e->cmd_seq);
-	e->cmd_seq = NULL;
+	free(e->cmd);
 	e->cmd = NULL;
-	free(e->usr_cmd);
-	e->usr_cmd = NULL;
 }

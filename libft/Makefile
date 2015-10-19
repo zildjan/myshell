@@ -54,6 +54,7 @@ SRCS =		ft_bzero.c \
 			ft_strnstr.c \
 			ft_strcmp.c \
 			ft_strncmp.c \
+			ft_strcheck.c \
 			ft_atoi.c \
 			ft_btoi.c \
 			ft_pow.c \
@@ -136,6 +137,7 @@ SRCS =		ft_bzero.c \
 			ft_printf/color_tag.c \
 			get_next_line.c \
 			ft_get_file_size.c \
+			ft_get_file_mode.c \
 			ft_get_file_size_str.c \
 			ft_get_file_type.c \
 			ft_get_basename.c \

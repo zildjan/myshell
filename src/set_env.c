@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_cmd.c                                          :+:      :+:    :+:   */
+/*   set_env.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,48 +12,51 @@
 
 #include "sh.h"
 
-void	get_cmd(t_env *e)
+void	set_new_env_var(t_env *e, char *name, char *val)
 {
-	int		ret;
+	int		i;
+	char	*temp;
 
-	ret = get_next_line(0, &e->usr_cmd);
-	if (ret == 0)
-	{
-		ft_printf("exit\n");
-		exit(0);
-	}
-	if (e->usr_cmd == NULL)
-		return ;
-	parse_cmd_seq(e);
-	free(e->usr_cmd);
-	e->usr_cmd = NULL;
+	i = 0;
+	while (e->var[i] != NULL)
+		i++;
+	temp = ft_strjoin(name, "=");
+	e->var[i] = ft_strjoin(temp, val);
+	e->var[i + 1] = NULL;
+	free(temp);
 }
 
-void	parse_cmd_seq(t_env *e)
+void	set_env_var(t_env *e, char *name, char *val)
 {
-	char	**cmd_seq;
+	int		i;
+	char	*temp;
+
+	i = get_env_id(e, name);
+	if (i == -1)
+		set_new_env_var(e, name, val);
+	else
+	{
+		free(e->var[i]);
+		temp = ft_strjoin(name, "=");
+		e->var[i] = ft_strjoin(temp, val);
+		free(temp);
+	}
+}
+
+int		unset_env_var(t_env *e, char *name)
+{
 	int		i;
 
-	cmd_seq = ft_strsplit(e->usr_cmd, ';');
-	if (cmd_seq == NULL)
-		return ;
-	i = 0;
-	while (cmd_seq[i] != NULL)
+	i = get_env_id(e, name);
+	if (i == -1)
+		return (0);
+	free(e->var[i]);
+	i++;
+	while (e->var[i] != NULL)
 	{
-//		ft_printf("part%ld: '%s'\n", i, cmd_seq[i]);
-		parse_cmd_opts(e, cmd_seq[i]);
-		free(cmd_seq[i]);
+		e->var[i - 1] = e->var[i];
 		i++;
 	}
-	free(cmd_seq);
-}
-
-void	parse_cmd_opts(t_env *e, char *cmd)
-{
-	e->cmd = ft_strsplit(cmd, ' ');
-//	ft_printf("cmd: '%s'\n", e->cmd[0]);
-	if (e->cmd == NULL)
-		return ;
-	parse_cmd(e);
-	free_cmd(e);
+	e->var[i - 1] = NULL;
+	return (1);
 }

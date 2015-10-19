@@ -88,6 +88,7 @@ char			*ft_strtrim(char const *s);
 char			**ft_strsplit(char const *s, char c);
 unsigned int	ft_count_word(char const *s, char c);
 void			ft_putchartab(char **tab);
+int				ft_strcheck(char const *s, int (*f)(int));
 
 /*
 **    CAHARACTER
@@ -121,6 +122,7 @@ char			*ft_get_file_size_str(char *path);
 char			*ft_get_basename(char *path);
 int				ft_is_hidden_file(char *str);
 char			ft_get_file_type(char *path);
+int				ft_get_file_mode(char *path);
 char			**ft_list_dir_content(char *path, char all, char type);
 
 /*

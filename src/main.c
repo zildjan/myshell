@@ -37,6 +37,6 @@ void sighandler(int signum)
 {
 //	ft_printf("Caught signal %d, coming out...\n", signum);
 	if (signum != 239)
-	ft_printf("\n                                      \r{bold}$> {rt}");
+		print_prompt();
 //	exit(1);
 }

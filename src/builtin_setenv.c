@@ -1,42 +1,44 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_bin_path.c                                     :+:      :+:    :+:   */
+/*   builtin_setenv.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2015/10/09 21:25:29 by pbourrie         ###   ########.fr       */
+/*   Updated: 2015/10/09 21:27:14 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "sh.h"
-#include <sys/mount.h>
 
-void	set_bin_path(t_env *e)
+void	builtin_setenv(t_env *e)
 {
-	char	*path;
-
-	path = get_env_val(e, "PATH");
-	e->path = ft_strsplit(path, ':');
-	free(path);
+	if (!e->cmd[1])
+		ft_putchartab(e->var);
+	else if (e->cmd[2] && e->cmd[3])
+		ft_putendl_fd("setenv: Too many arguments.", 2);
+	else if (!ft_strcheck(e->cmd[1], ft_isascii))
+		ft_putendl_fd("setenv: Non ascii character.", 2);
+	else if (e->cmd[2] && !ft_strcheck(e->cmd[2], ft_isascii))
+		ft_putendl_fd("setenv: Non ascii character.", 2);
+	else
+		set_env_var(e, e->cmd[1], e->cmd[2]);
 }
 
-char	*get_cmd_path(t_env *e, char *cmd)
+void	builtin_unsetenv(t_env *e)
 {
 	int		i;
-	char	cmd_path[MAXPATHLEN + 1];
 
-	i = 0;
-	while (e->path[i])
+	if (!e->cmd[1])
+		ft_putendl_fd("setenv: Too few arguments.", 2);
+	else
 	{
-		ft_bzero(cmd_path, MAXPATHLEN + 1);
-		ft_strcpy(cmd_path, e->path[i]);
-		ft_strcat(cmd_path, "/");
-		ft_strcat(cmd_path, cmd);
-		if (ft_get_file_type(cmd_path) == '-')
-			return (ft_strdup(cmd_path));
-		i++;
+		i = 0;
+		while (e->cmd[i])
+		{
+			unset_env_var(e, e->cmd[i]);
+			i++;
+		}
 	}
-	return (NULL);
 }
