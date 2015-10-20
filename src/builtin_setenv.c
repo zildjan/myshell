@@ -31,7 +31,7 @@ void	builtin_unsetenv(t_env *e)
 	int		i;
 
 	if (!e->cmd[1])
-		ft_putendl_fd("setenv: Too few arguments.", 2);
+		ft_putendl_fd("unsetenv: Too few arguments.", 2);
 	else
 	{
 		i = 0;

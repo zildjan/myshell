@@ -16,10 +16,25 @@
 void	set_bin_path(t_env *e)
 {
 	char	*path;
+	int		i;
 
+	if (e->path)
+	{
+		i = -1;
+		while (e->path[++i])
+			free(e->path[i]);
+		free(e->path);
+	}
 	path = get_env_val(e, "PATH");
-	e->path = ft_strsplit(path, ':');
-	free(path);
+	if (path)
+	{
+		e->path = ft_strsplit(path, ':');
+		free(path);
+	}
+	else
+	{
+		e->path = NULL;
+	}
 }
 
 char	*get_cmd_path(t_env *e, char *cmd)
@@ -27,6 +42,8 @@ char	*get_cmd_path(t_env *e, char *cmd)
 	int		i;
 	char	cmd_path[MAXPATHLEN + 1];
 
+	if (!e->path)
+		return (NULL);
 	i = 0;
 	while (e->path[i])
 	{

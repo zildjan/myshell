@@ -30,6 +30,7 @@ t_env	*init_env(void)
 		i++;
 	}
 
+	e->path = NULL;
 	set_bin_path(e);
 
 	return (e);

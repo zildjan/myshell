@@ -41,6 +41,7 @@ void	set_env_var(t_env *e, char *name, char *val)
 		e->var[i] = ft_strjoin(temp, val);
 		free(temp);
 	}
+	refresh_sh_var(e, name);
 }
 
 int		unset_env_var(t_env *e, char *name)
@@ -58,5 +59,12 @@ int		unset_env_var(t_env *e, char *name)
 		i++;
 	}
 	e->var[i - 1] = NULL;
+	refresh_sh_var(e, name);
 	return (1);
+}
+
+void	refresh_sh_var(t_env *e, char *name)
+{
+	if (ft_strequ(name, "PATH"))
+		set_bin_path(e);
 }

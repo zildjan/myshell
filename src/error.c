@@ -29,3 +29,16 @@ void	put_error(int err, char *path)
 		ft_putstr_fd("error: ", 2);
 	ft_putendl_fd(path, 2);
 }
+
+void	put_sig_error(int pid, int ret, char *path)
+{
+	ft_putstr_fd("[*]   ", 2);
+	ft_putnbr_fd(pid, 2);
+	if (ret == SIGSEGV)
+		ft_putstr_fd(" segmentation fault ", 2);
+	else if (ret == SIGBUS)
+		ft_putstr_fd(" bus error ", 2);
+	else
+		ft_putstr_fd("error: ", 2);
+	ft_putendl_fd(path, 2);
+}

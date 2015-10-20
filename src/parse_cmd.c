@@ -61,13 +61,14 @@ void	process_cmd(t_env *e)
 
 void	process_fork(t_env *e, char *cmd_path)
 {
-	int		father;
+	int		child;
 	int		ret;
 
-	father = fork();
-	if (father > 0)
+	ret = 0;
+	child = fork();
+	if (child > 0)
 		wait(&ret);
-	else if (father == 0)
+	else if (child == 0)
 	{
 		if (execve(cmd_path, e->cmd, e->var) == -1)
 		{
@@ -78,4 +79,6 @@ void	process_fork(t_env *e, char *cmd_path)
 				exit(0);
 		}
 	}
+	if (ret)
+		put_sig_error(child, ret, e->cmd[0]);
 }

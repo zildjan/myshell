@@ -28,6 +28,7 @@ t_env		*init_env(void);
 */
 char		*get_env_val(t_env *e, char *name);
 int			get_env_id(t_env *e, char *name);
+void		refresh_sh_var(t_env *e, char *name);
 
 /*
 **   SET_ENV
@@ -84,5 +85,6 @@ void		print_prompt(void);
 **   ERROR
 */
 void		put_error(int err, char *path);
+void		put_sig_error(int pid, int ret, char *path);
 
 #endif
