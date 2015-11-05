@@ -61,7 +61,7 @@ int		main(void)
 
 	while (1)
 	{
-		print_prompt();
+		print_prompt(e);
 		get_cmd(e);
 	}
 
@@ -77,6 +77,7 @@ void sighandler(int signum)
 	else if (signum == SIGBUS)
 		ft_printf("Bus error ;)\n");
 		ft_printf("\n");
-		print_prompt();
-	exit(0);
+		sleep(2);
+//		print_prompt(e);
+//	exit(0);
 }

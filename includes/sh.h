@@ -14,6 +14,7 @@
 # define FT_SH_H
 
 #include <signal.h>
+#include <sys/mount.h>
 
 # include "libft.h"
 # include "sh_data.h"
@@ -22,6 +23,7 @@
 **   INI_ENV
 */
 t_env		*init_env(void);
+void		init_shlvl(t_env *e);
 
 /*
 **   GET_ENV
@@ -29,6 +31,7 @@ t_env		*init_env(void);
 char		*get_env_val(t_env *e, char *name);
 int			get_env_id(t_env *e, char *name);
 void		refresh_sh_var(t_env *e, char *name);
+char		*get_env_name(t_env *e, int id);
 
 /*
 **   SET_ENV
@@ -49,10 +52,21 @@ void		builtin_setenv(t_env *e);
 void		builtin_unsetenv(t_env *e);
 
 /*
+**   BUILTIN_EXIT
+*/
+void		builtin_exit(t_env *e);
+
+/*
 **   GET_BIN_PATH
 */
 void		set_bin_path(t_env *e);
 char		*get_cmd_path(t_env *e, char *cmd);
+
+/*
+**   HOME
+*/
+void		set_home_path(t_env *e);
+char		*parse_home_tilde(t_env *e, char *path);
 
 /*
 **   GET_CMD
@@ -60,7 +74,7 @@ char		*get_cmd_path(t_env *e, char *cmd);
 void		get_cmd(t_env *e);
 
 void		parse_cmd_seq(t_env *e);
-void		parse_cmd_opts(t_env *e, char *cmd_seq);
+void		split_cmd_args(t_env *e, char *cmd_seq);
 
 /*
 **   PARSE_CMD
@@ -72,6 +86,12 @@ void		process_cmd(t_env *e);
 void		process_fork(t_env *e, char *cmd_path);
 
 /*
+**   PARSE_CMD_VAR
+*/
+void		parse_env_var(t_env *e, char *cmd);
+void		parse_var_replace(t_env *e, char *cmd, char *new, int *c1, int *c2);
+
+/*
 **   FREE_CMD
 */
 void		free_cmd(t_env *e);
@@ -79,7 +99,7 @@ void		free_cmd(t_env *e);
 /*
 **   PROMPT
 */
-void		print_prompt(void);
+void		print_prompt(t_env *e);
 
 /*
 **   ERROR

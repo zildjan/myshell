@@ -33,9 +33,12 @@ SRCS =		main.c \
 			set_env.c \
 			builtin_cd.c \
 			builtin_setenv.c \
+			builtin_exit.c \
 			get_bin_path.c \
+			home.c \
 			get_cmd.c \
 			parse_cmd.c \
+			parse_cmd_var.c \
 			free_cmd.c \
 			prompt.c \
 			error.c

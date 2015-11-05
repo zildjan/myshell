@@ -69,6 +69,7 @@ SRCS =		ft_bzero.c \
 			ft_strequ.c \
 			ft_strnequ.c \
 			ft_strsub.c \
+			ft_strautosub.c \
 			ft_strjoin.c \
 			ft_strtrim.c \
 			ft_strsplit.c \

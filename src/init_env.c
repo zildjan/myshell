@@ -32,6 +32,27 @@ t_env	*init_env(void)
 
 	e->path = NULL;
 	set_bin_path(e);
+	e->home = NULL;
+	set_home_path(e);
+	e->pwd = getcwd(NULL, 0);
+	e->last_exit = 0;
+
+	init_shlvl(e);
 
 	return (e);
+}
+
+void	init_shlvl(t_env *e)
+{
+	char	*shlvl;
+	char	*new_shlvl;
+
+	shlvl = get_env_val(e, "SHLVL");
+	if (shlvl && ft_strcheck(shlvl, ft_isdigit))
+		new_shlvl = ft_itoa(ft_atoi(shlvl) + 1);
+	else
+		new_shlvl = ft_itoa(1);
+	set_env_var(e, "SHLVL", new_shlvl);
+	free(shlvl);
+	free(new_shlvl);
 }

@@ -39,6 +39,6 @@ void	put_sig_error(int pid, int ret, char *path)
 	else if (ret == SIGBUS)
 		ft_putstr_fd(" bus error ", 2);
 	else
-		ft_putstr_fd("error: ", 2);
+		ft_putstr_fd(" error: ", 2);
 	ft_putendl_fd(path, 2);
 }

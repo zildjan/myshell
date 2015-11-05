@@ -43,3 +43,17 @@ int		get_env_id(t_env *e, char *name)
 	}
 	return (-1);
 }
+
+char	*get_env_name(t_env *e, int id)
+{
+	int	i;
+
+	if (!e->var[id])
+		return (NULL);
+	i = 0;
+	while (e->var[id][i] != '=' && e->var[id][i])
+		i++;
+	if (!e->var[id][i])
+		return (NULL);
+	return (ft_strsub(e->var[id], 0, i));
+}

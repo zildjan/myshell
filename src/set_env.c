@@ -67,4 +67,6 @@ void	refresh_sh_var(t_env *e, char *name)
 {
 	if (ft_strequ(name, "PATH"))
 		set_bin_path(e);
+	else if (ft_strequ(name, "HOME"))
+		set_home_path(e);
 }

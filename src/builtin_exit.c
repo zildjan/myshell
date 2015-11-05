@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin_cd.c                                         :+:      :+:    :+:   */
+/*   builtin_exit.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,32 +12,22 @@
 
 #include "sh.h"
 
-void	builtin_cd(t_env *e)
+void	builtin_exit(t_env *e)
 {
-	char	*new_pwd;
-
-	if (!e->cmd[1])
-		new_pwd = ft_strdup(e->home);
-	else if (ft_strequ(e->cmd[1], "-"))
-		new_pwd = get_env_val(e, "OLDPWD");
-	else
+	if (e->cmd)
 	{
-		if (e->cmd[1][0] == '~')
-			new_pwd = parse_home_tilde(e, e->cmd[1]);
+		if (e->cmd[1] && e->cmd[2])
+			ft_putendl_fd("exit: too many arguments", 2);
+		else if (e->cmd[1])
+		{
+			if (ft_strcheck(e->cmd[1], ft_isdigit))
+				exit(ft_atoi(e->cmd[1]));
+			else
+				ft_putendl_fd("exit: syntax error", 2);
+		}
 		else
-			new_pwd = ft_strdup(e->cmd[1]);
-	}
-	if (chdir(new_pwd) == -1)
-	{
-		perror("!!! > ");
-		put_error(0, new_pwd);
+			exit(e->last_exit);
 	}
 	else
-	{
-		set_env_var(e, "OLDPWD", e->pwd);
-		free(e->pwd);
-		e->pwd = getcwd(NULL, 0);
-		set_env_var(e, "PWD", e->pwd);
-	}
-	free(new_pwd);
+		exit(e->last_exit);
 }

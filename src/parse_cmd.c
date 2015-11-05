@@ -26,7 +26,7 @@ int		process_builtin(t_env *e)
 	if (ft_strequ(e->cmd[0], "cd"))
 		builtin_cd(e);
 	else if (ft_strequ(e->cmd[0], "exit"))
-		exit(0);
+		builtin_exit(e);
 	else if (ft_strequ(e->cmd[0], "setenv"))
 		builtin_setenv(e);
 	else if (ft_strequ(e->cmd[0], "unsetenv"))
@@ -79,6 +79,15 @@ void	process_fork(t_env *e, char *cmd_path)
 				exit(0);
 		}
 	}
-	if (ret)
+	if (!WIFEXITED (ret))
+	{
 		put_sig_error(child, ret, e->cmd[0]);
+		if (WIFSIGNALED (ret))
+			ft_printf("SIGNAL RECU %ld = %ld - %ld\n", ret, WTERMSIG (ret), WIFSIGNALED (ret));
+		else
+			ft_printf("SIGNAL RECU %ld = %ld\n", ret, WEXITSTATUS (ret));
+		e->last_exit = WTERMSIG (ret);
+	}
+	else
+		e->last_exit = WEXITSTATUS (ret);
 }

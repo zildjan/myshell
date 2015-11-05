@@ -25,6 +25,9 @@ typedef struct	s_env
 	char	**cmd;
 	char	**var;
 	char	**path;
+	char	*home;
+	char	*pwd;
+	int		last_exit;
 }				t_env;
 
 #endif
