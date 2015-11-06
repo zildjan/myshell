@@ -6,7 +6,7 @@
 #    By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/01/04 17:14:24 by pbourrie          #+#    #+#              #
-#    Updated: 2015/04/29 20:38:22 by pbourrie         ###   ########.fr        #
+#    Updated: 2015/11/06 20:47:03 by pbourrie         ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -142,6 +142,7 @@ SRCS =		ft_bzero.c \
 			ft_get_file_size_str.c \
 			ft_get_file_type.c \
 			ft_get_basename.c \
+			ft_get_dirup.c \
 			ft_is_hidden_file.c \
 			ft_list_dir_content.c \
 			ft_rgbtohex.c 

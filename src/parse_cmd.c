@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2015/10/09 21:27:14 by pbourrie         ###   ########.fr       */
+/*   Updated: 2015/11/06 19:53:13 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,21 @@ void	parse_cmd(t_env *e)
 {
 	if (e->cmd[0] == NULL)
 		return ;
+	parse_cmd_args(e);
 	if (!process_builtin(e))
 		process_cmd(e);
+}
+
+void	parse_cmd_args(t_env *e)
+{
+	int	i;
+
+	i = 0;
+	while (e->cmd[i])
+	{
+		parse_home_tilde(e, i);
+		i++;
+	}
 }
 
 int		process_builtin(t_env *e)

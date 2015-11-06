@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2015/10/09 21:27:14 by pbourrie         ###   ########.fr       */
+/*   Updated: 2015/11/06 20:51:03 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,19 @@ void	set_home_path(t_env *e)
 	if (path)
 		e->home = path;
 	else
-		e->home = NULL;
+		e->home = ft_strdup("");
+	e->home_dir = ft_get_dirup(e->home);
+	ft_printf("-> '%s'\n", e->home_dir);
 }
 
-char	*parse_home_tilde(t_env *e, char *path)
+void	parse_home_tilde(t_env *e, int i)
 {
 	char	new[MAXPATHLEN + 1];
+	char	*path;
 
+	path = e->cmd[i];
+	if (path[0] != '~')
+		return ;
 	ft_bzero(new, MAXPATHLEN + 1);
 	if (path[1] == '/')
 	{
@@ -36,13 +42,14 @@ char	*parse_home_tilde(t_env *e, char *path)
 		path++;
 		ft_strcat(new, path);
 	}
-	else if (!path[2])
+	else if (!path[1])
 		ft_strcpy(new, e->home);
 	else
 	{
 		path++;
-		ft_strcpy(new, "/Users/");
+		ft_strcpy(new, e->home_dir);
 		ft_strcat(new, path);
 	}
-	return (ft_strdup(new));
+	free(e->cmd[i]);
+	e->cmd[i] = ft_strdup(new);
 }

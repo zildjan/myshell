@@ -1,34 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   sh_data.h                                          :+:      :+:    :+:   */
+/*   ft_get_dirup.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2015/11/06 20:41:02 by pbourrie         ###   ########.fr       */
+/*   Created: 2015/11/06 20:43:53 by pbourrie          #+#    #+#             */
+/*   Updated: 2015/11/06 20:45:32 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_SH_DATA_H
-# define FT_SH_DATA_H
+#include "libft.h"
 
-# define ERRACCES 1
-# define ERRNOENT 2
-# define ERRNOTDIR 3
-# define ERRNOCMD 4
-# define ERREXEFORM 5
-
-typedef struct	s_env
+char	*ft_get_dirup(char *path)
 {
-	char	*usr_cmd;
-	char	**cmd;
-	char	**var;
-	char	**path;
-	char	*home;
-	char	*home_dir;
-	char	*pwd;
-	int		last_exit;
-}				t_env;
+	int	i;
+	int	len;
 
-#endif
+	len = 0;
+	i = ft_strlen(path);
+	while (i >= 0)
+	{
+		if (path[i] == '/')
+			break ;
+		len++;
+		i--;
+	}
+	return (ft_strsub(path, 0, i + 1));
+}

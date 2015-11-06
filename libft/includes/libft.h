@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/04 19:12:34 by pbourrie          #+#    #+#             */
-/*   Updated: 2015/04/20 22:21:50 by pbourrie         ###   ########.fr       */
+/*   Updated: 2015/11/06 20:46:28 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,6 +125,7 @@ int				ft_is_hidden_file(char *str);
 char			ft_get_file_type(char *path);
 int				ft_get_file_mode(char *path);
 char			**ft_list_dir_content(char *path, char all, char type);
+char			*ft_get_dirup(char *path);
 
 /*
 **    INFOGRAPHIE

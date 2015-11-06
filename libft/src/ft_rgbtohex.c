@@ -6,13 +6,13 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/03/25 19:40:48 by pbourrie          #+#    #+#             */
-/*   Updated: 2015/03/30 21:43:43 by pbourrie         ###   ########.fr       */
+/*   Updated: 2015/11/06 19:22:13 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-unsigned long ft_rgbtohex(int r, int g, int b)
+unsigned long	ft_rgbtohex(int r, int g, int b)
 {
 	return ((r & 0xff) << 16) + ((g & 0xff) << 8) + (b & 0xff);
 }

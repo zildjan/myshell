@@ -6,11 +6,11 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/13 18:53:03 by pbourrie          #+#    #+#             */
-/*   Updated: 2014/11/13 19:02:06 by pbourrie         ###   ########.fr       */
+/*   Updated: 2015/11/06 19:21:40 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-unsigned int ft_count_word(char const *s, char c)
+unsigned int	ft_count_word(char const *s, char c)
 {
 	unsigned int	nb_part;
 	int				in_substr;

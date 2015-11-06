@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2015/10/09 21:25:29 by pbourrie         ###   ########.fr       */
+/*   Updated: 2015/11/06 19:53:28 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ char		*get_cmd_path(t_env *e, char *cmd);
 **   HOME
 */
 void		set_home_path(t_env *e);
-char		*parse_home_tilde(t_env *e, char *path);
+void		parse_home_tilde(t_env *e, int i);
 
 /*
 **   GET_CMD
@@ -80,6 +80,7 @@ void		split_cmd_args(t_env *e, char *cmd_seq);
 **   PARSE_CMD
 */
 void		parse_cmd(t_env *e);
+void		parse_cmd_args(t_env *e);
 
 int			process_builtin(t_env *e);
 void		process_cmd(t_env *e);
