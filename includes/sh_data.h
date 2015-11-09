@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2015/11/06 20:41:02 by pbourrie         ###   ########.fr       */
+/*   Updated: 2015/11/09 20:53:15 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ typedef struct	s_env
 	char	*home;
 	char	*home_dir;
 	char	*pwd;
-	int		last_exit;
+	int		status;
 }				t_env;
 
 #endif

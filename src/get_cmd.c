@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2015/10/09 21:27:14 by pbourrie         ###   ########.fr       */
+/*   Updated: 2015/11/09 21:05:38 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	parse_cmd_seq(t_env *e)
 	while (cmd_seq[i] != NULL)
 	{
 //		ft_printf("part%ld: '%s'\n", i, cmd_seq[i]);
-		parse_env_var(e, cmd_seq[i]);
+		split_cmd_args(e, cmd_seq[i]);
 		free(cmd_seq[i]);
 		i++;
 	}

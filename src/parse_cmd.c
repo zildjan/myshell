@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2015/11/06 19:53:13 by pbourrie         ###   ########.fr       */
+/*   Updated: 2015/11/09 21:18:36 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ void	parse_cmd_args(t_env *e)
 	i = 0;
 	while (e->cmd[i])
 	{
+		parse_env_var(e, i);
 		parse_home_tilde(e, i);
 		i++;
 	}
@@ -99,8 +100,8 @@ void	process_fork(t_env *e, char *cmd_path)
 			ft_printf("SIGNAL RECU %ld = %ld - %ld\n", ret, WTERMSIG (ret), WIFSIGNALED (ret));
 		else
 			ft_printf("SIGNAL RECU %ld = %ld\n", ret, WEXITSTATUS (ret));
-		e->last_exit = WTERMSIG (ret);
+		e->status = WTERMSIG (ret);
 	}
 	else
-		e->last_exit = WEXITSTATUS (ret);
+		e->status = WEXITSTATUS (ret);
 }

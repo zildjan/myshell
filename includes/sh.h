@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2015/11/06 19:53:28 by pbourrie         ###   ########.fr       */
+/*   Updated: 2015/11/09 21:17:31 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,8 +89,8 @@ void		process_fork(t_env *e, char *cmd_path);
 /*
 **   PARSE_CMD_VAR
 */
-void		parse_env_var(t_env *e, char *cmd);
-void		parse_var_replace(t_env *e, char *cmd, char *new, int *c1, int *c2);
+void		parse_env_var(t_env *e, int i);
+void		parse_env_var_replace(t_env *e, char *arg, char **cmd);
 
 /*
 **   FREE_CMD
