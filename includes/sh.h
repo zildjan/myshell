@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2015/11/09 21:17:31 by pbourrie         ###   ########.fr       */
+/*   Updated: 2015/11/10 20:16:36 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ int			unset_env_var(t_env *e, char *name);
 **   BUILTIN_CD
 */
 void		builtin_cd(t_env *e);
+void		builtin_cd_error(char *path);
 
 /*
 **   BUILTIN_SETENV
@@ -105,7 +106,7 @@ void		print_prompt(t_env *e);
 /*
 **   ERROR
 */
-void		put_error(int err, char *path);
+void		put_error(int err, char *cmd, char *path);
 void		put_sig_error(int pid, int ret, char *path);
 
 #endif

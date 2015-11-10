@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2015/10/09 21:27:14 by pbourrie         ###   ########.fr       */
+/*   Updated: 2015/11/10 19:00:13 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@ void	builtin_exit(t_env *e)
 				ft_putendl_fd("exit: syntax error", 2);
 		}
 		else
-			exit(e->last_exit);
+			exit(e->status);
 	}
 	else
-		exit(e->last_exit);
+		exit(e->status);
 }

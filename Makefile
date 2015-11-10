@@ -6,7 +6,7 @@
 #    By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/01/04 17:14:24 by pbourrie          #+#    #+#              #
-#    Updated: 2015/05/11 22:32:25 by pbourrie         ###   ########.fr        #
+#    Updated: 2015/11/10 18:59:42 by pbourrie         ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -39,6 +39,7 @@ SRCS =		main.c \
 			get_cmd.c \
 			parse_cmd.c \
 			parse_cmd_var.c \
+			execute.c \
 			free_cmd.c \
 			prompt.c \
 			error.c

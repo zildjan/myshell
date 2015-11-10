@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 12:18:49 by pbourrie          #+#    #+#             */
-/*   Updated: 2015/10/09 21:08:54 by pbourrie         ###   ########.fr       */
+/*   Updated: 2015/11/10 21:03:02 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,5 +79,5 @@ void sighandler(int signum)
 		ft_printf("\n");
 		sleep(2);
 //		print_prompt(e);
-//	exit(0);
+	exit(0);
 }

@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2015/11/06 20:51:03 by pbourrie         ###   ########.fr       */
+/*   Updated: 2015/11/10 18:50:36 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ void	set_home_path(t_env *e)
 	else
 		e->home = ft_strdup("");
 	e->home_dir = ft_get_dirup(e->home);
-	ft_printf("-> '%s'\n", e->home_dir);
 }
 
 void	parse_home_tilde(t_env *e, int i)
