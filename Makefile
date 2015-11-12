@@ -6,7 +6,7 @@
 #    By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/01/04 17:14:24 by pbourrie          #+#    #+#              #
-#    Updated: 2015/11/10 18:59:42 by pbourrie         ###   ########.fr        #
+#    Updated: 2015/11/12 19:42:57 by pbourrie         ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -32,6 +32,7 @@ SRCS =		main.c \
 			get_env.c \
 			set_env.c \
 			builtin_cd.c \
+			builtin_env.c \
 			builtin_setenv.c \
 			builtin_exit.c \
 			get_bin_path.c \

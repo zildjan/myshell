@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:26:19 by pbourrie          #+#    #+#             */
-/*   Updated: 2015/11/10 20:17:25 by pbourrie         ###   ########.fr       */
+/*   Updated: 2015/11/12 18:56:54 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,13 @@ void	builtin_cd(t_env *e)
 
 	if (!e->cmd[1])
 		new_pwd = ft_strdup(e->home);
-	else if (ft_strequ(e->cmd[1], "-"))
-		new_pwd = get_env_val(e, "OLDPWD");
+	else if (e->cmd[1] && e->cmd[2])
+	{
+		ft_putendl_fd("cd: too many arguments", 2);
+		return ;
+	}
+	else if (e->cmd[1][0] == '-')
+		new_pwd = builtin_cd_oldpwd(e);
 	else
 		new_pwd = ft_strdup(e->cmd[1]);
 	if (chdir(new_pwd) == -1)
@@ -32,6 +37,20 @@ void	builtin_cd(t_env *e)
 		set_env_var(e, "PWD", e->pwd);
 	}
 	free(new_pwd);
+}
+
+char	*builtin_cd_oldpwd(t_env *e)
+{
+	char	*old_pwd;
+	char	*pwd;
+	char	*new;
+
+	pwd = e->cmd[1];
+	pwd++;
+	old_pwd = get_env_val(e, "OLDPWD");
+	new = ft_strjoin(old_pwd, pwd);
+	free(old_pwd);
+	return (new); 
 }
 
 void	builtin_cd_error(char *path)

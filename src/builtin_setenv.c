@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2015/10/09 21:27:14 by pbourrie         ###   ########.fr       */
+/*   Updated: 2015/11/12 19:36:00 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,10 @@ void	builtin_setenv(t_env *e)
 		ft_putendl_fd("setenv: Non ascii character.", 2);
 	else if (e->cmd[2] && !ft_strcheck(e->cmd[2], ft_isascii))
 		ft_putendl_fd("setenv: Non ascii character.", 2);
+	else if (e->cmd[1] && ft_strchr(e->cmd[1], '='))
+		ft_putendl_fd("setenv: Syntax error : '='.", 2);
+	else if (e->cmd[2] && ft_strchr(e->cmd[2], '='))
+		ft_putendl_fd("setenv: Syntax error : '='.", 2);
 	else
 		set_env_var(e, e->cmd[1], e->cmd[2]);
 }

@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2015/11/09 20:53:24 by pbourrie         ###   ########.fr       */
+/*   Updated: 2015/11/12 21:18:29 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,14 @@ extern char **environ;
 t_env	*init_env(void)
 {
 	t_env	*e;
+	int		i;
 
 	e = (t_env*)ft_memalloc(sizeof(t_env));
-	e->var = (char**)ft_memalloc(sizeof(char*) * 10000);
-
-	int i;
-
+	i = 0;
+	while (environ[i] != NULL)
+		i++;
+	e->tab_size = i + 10;
+	e->var = (char**)ft_memalloc(sizeof(char*) * e->tab_size);
 	i = 0;
 	while (environ[i] != NULL)
 	{

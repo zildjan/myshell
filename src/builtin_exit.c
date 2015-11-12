@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2015/11/10 19:00:13 by pbourrie         ###   ########.fr       */
+/*   Updated: 2015/11/12 18:58:52 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	builtin_exit(t_env *e)
 			if (ft_strcheck(e->cmd[1], ft_isdigit))
 				exit(ft_atoi(e->cmd[1]));
 			else
-				ft_putendl_fd("exit: syntax error", 2);
+				exit(0);
 		}
 		else
 			exit(e->status);

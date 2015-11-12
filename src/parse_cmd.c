@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2015/11/10 18:59:26 by pbourrie         ###   ########.fr       */
+/*   Updated: 2015/11/12 21:46:48 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	parse_cmd(t_env *e)
 		return ;
 	parse_cmd_args(e);
 	if (!process_builtin(e))
-		process_cmd(e);
+		process_cmd(e, e->var);
 }
 
 void	parse_cmd_args(t_env *e)
@@ -33,4 +33,3 @@ void	parse_cmd_args(t_env *e)
 		i++;
 	}
 }
-

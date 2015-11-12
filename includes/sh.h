@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2015/11/10 20:16:36 by pbourrie         ###   ########.fr       */
+/*   Updated: 2015/11/12 22:12:12 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ void		init_shlvl(t_env *e);
 */
 char		*get_env_val(t_env *e, char *name);
 int			get_env_id(t_env *e, char *name);
-void		refresh_sh_var(t_env *e, char *name);
 char		*get_env_name(t_env *e, int id);
 
 /*
@@ -39,12 +38,24 @@ char		*get_env_name(t_env *e, int id);
 void		set_new_env_var(t_env *e, char *name, char *val);
 void		set_env_var(t_env *e, char *name, char *val);
 int			unset_env_var(t_env *e, char *name);
+void		resize_env_tab(t_env *e, int new);
+void		refresh_sh_var(t_env *e, char *name);
 
 /*
 **   BUILTIN_CD
 */
 void		builtin_cd(t_env *e);
 void		builtin_cd_error(char *path);
+char		*builtin_cd_oldpwd(t_env *e);
+
+/*
+**   BUILTIN_ENV
+*/
+void		builtin_env(t_env *e);
+void		builtin_env_setenvtab(t_env *e, int opt_i);
+char		**builtin_env_malloctab(t_env *e, int opt_i);
+int			builtin_env_filltab(t_env *e, char **env, int opt_i);
+void		builtin_env_exec(t_env *e, char **env, int i);
 
 /*
 **   BUILTIN_SETENV
@@ -83,9 +94,13 @@ void		split_cmd_args(t_env *e, char *cmd_seq);
 void		parse_cmd(t_env *e);
 void		parse_cmd_args(t_env *e);
 
+
+/*
+**   EXECUTE
+*/
 int			process_builtin(t_env *e);
-void		process_cmd(t_env *e);
-void		process_fork(t_env *e, char *cmd_path);
+void		process_cmd(t_env *e, char **env);
+void		process_fork(t_env *e, char *cmd_path, char **env);
 
 /*
 **   PARSE_CMD_VAR
@@ -107,6 +122,6 @@ void		print_prompt(t_env *e);
 **   ERROR
 */
 void		put_error(int err, char *cmd, char *path);
-void		put_sig_error(int pid, int ret, char *path);
+void		put_sig_error(int ret, char *path);
 
 #endif

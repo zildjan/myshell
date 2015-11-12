@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2015/11/09 21:47:06 by pbourrie         ###   ########.fr       */
+/*   Updated: 2015/11/12 18:23:20 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	parse_env_var_replace(t_env *e, char *arg, char **cmd)
 
 	new = NULL;
 	if (ft_strequ("?", arg))
-		new = ft_itoa(e->status);	
+		new = ft_itoa(e->status);
 	i = 0;
 	while (e->var[i])
 	{
@@ -52,4 +52,3 @@ void	parse_env_var_replace(t_env *e, char *arg, char **cmd)
 		*cmd = new;
 	}
 }
-
