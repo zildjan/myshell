@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2015/11/12 22:12:12 by pbourrie         ###   ########.fr       */
+/*   Updated: 2015/11/13 21:51:04 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,9 @@ char		*builtin_cd_oldpwd(t_env *e);
 **   BUILTIN_ENV
 */
 void		builtin_env(t_env *e);
+int			builtin_env_getopt(t_env *e, int *i, int *opt_i);
 void		builtin_env_setenvtab(t_env *e, int opt_i, int i);
+void		builtin_env_insertnewent(t_env *e, char **env, int *id, int i);
 char		**builtin_env_malloctab(t_env *e, int opt_i);
 int			builtin_env_filltab(t_env *e, char **env, int opt_i);
 void		builtin_env_exec(t_env *e, char **env, int i);
@@ -101,6 +103,7 @@ void		parse_cmd_args(t_env *e);
 int			process_builtin(t_env *e);
 void		process_cmd(t_env *e, char **env);
 void		process_fork(t_env *e, char *cmd_path, char **env);
+void		process_wait(t_env *e, int pid);
 
 /*
 **   PARSE_CMD_VAR
@@ -123,5 +126,12 @@ void		print_prompt(t_env *e);
 */
 void		put_error(int err, char *cmd, char *path);
 void		put_sig_error(int ret, char *path);
+
+/*
+**   SIGNAL
+*/
+void		catch_signal(void);
+void		sig_handler(t_env *e, int signum);
+void		sig_mediator(int signum);
 
 #endif

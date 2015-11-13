@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/12 19:40:34 by pbourrie          #+#    #+#             */
-/*   Updated: 2015/11/12 22:46:35 by pbourrie         ###   ########.fr       */
+/*   Updated: 2015/11/13 19:04:36 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ void	builtin_env(t_env *e)
 {
 	int		opt_i;
 	int		i;
-	int		i2;
 
 	opt_i = 0;
 	if (!e->cmd[1])
@@ -25,30 +24,36 @@ void	builtin_env(t_env *e)
 		return ;
 	}
 	i = 0;
+	if (!builtin_env_getopt(e, &i, &opt_i))
+		return ;
+	builtin_env_setenvtab(e, opt_i, i);
+}
+
+int		builtin_env_getopt(t_env *e, int *i, int *opt_i)
+{
+	int	i2;
+
 	i2 = 0;
-	while (e->cmd[++i] && e->cmd[i][0] == '-' && i2 >= 0)
+	while (e->cmd[++*i] && e->cmd[*i][0] == '-' && i2 >= 0)
 	{
 		i2 = 0;
-		while (e->cmd[i][++i2])
+		while (e->cmd[*i][++i2])
 		{
-			if (e->cmd[i][i2] == 'i')
-				opt_i = 1;
-			else if (e->cmd[i][i2] == '-')
-			{
-				i2 = -1;
-				break ;
-			}
-			else if (e->cmd[i][i2] && e->cmd[i][i2] != 'i')
+			if (e->cmd[*i][i2] == 'i')
+				*opt_i = 1;
+			else if (e->cmd[*i][i2] == '-')
+				return (++*i);
+			else if (e->cmd[*i][i2] && e->cmd[*i][i2] != 'i')
 			{
 				ft_putstr_fd("env: illegal option -- ", 2);
-				ft_putchar_fd(e->cmd[i][i2], 2);
+				ft_putchar_fd(e->cmd[*i][i2], 2);
 				ft_putstr_fd("\nusage: env [-i] [name=value ...] ", 2);
 				ft_putendl_fd("[utility [argument ...]]", 2);
-				return ;
+				return (0);
 			}
 		}
 	}
-	builtin_env_setenvtab(e, opt_i, i);
+	return (1);
 }
 
 void	builtin_env_setenvtab(t_env *e, int opt_i, int i)
@@ -65,15 +70,37 @@ void	builtin_env_setenvtab(t_env *e, int opt_i, int i)
 			ft_putendl_fd("env: Non ascii character.", 2);
 			return ;
 		}
-		env[id++] = ft_strdup(e->cmd[i++]);
+		builtin_env_insertnewent(e, env, &id, i++);
 	}
-	env[id] = NULL;
-//	ft_putchartab(env);
 	builtin_env_exec(e, env, i);
 	i = 0;
 	while (env[i])
 		free(env[i++]);
 	free(env);
+}
+
+void	builtin_env_insertnewent(t_env *e, char **env, int *id, int i)
+{
+	int		len;
+	int		i2;
+
+	len = 0;
+	while (e->cmd[i][len] != '=' && e->cmd[i][len])
+		len++;
+	i2 = -1;
+	while (env[++i2])
+		if (ft_strnequ(e->cmd[i], env[i2], len) && e->cmd[i][len] == '=')
+			break ;
+	if (i2 >= 0)
+	{
+		free(env[i2]);
+		env[i2] = ft_strdup(e->cmd[i]);
+	}
+	else
+	{
+		env[*id++] = ft_strdup(e->cmd[i]);
+		env[*id] = NULL;
+	}
 }
 
 void	builtin_env_exec(t_env *e, char **env, int i)
@@ -102,34 +129,4 @@ void	builtin_env_exec(t_env *e, char **env, int i)
 		e->cmd = cmd;
 		process_cmd(e, env);
 	}
-}
-
-char	**builtin_env_malloctab(t_env *e, int opt_i)
-{
-	int		size;
-	int		i;
-	char	**tab;
-
-	size = 0;
-	while (!opt_i && e->var[size])
-		size++;
-	i = 1;
-	while (e->cmd[i])
-		i++;
-	size += i;
-	tab = (char**)ft_memalloc(sizeof(char*) * size);
-	return (tab);
-}
-
-int		builtin_env_filltab(t_env *e, char **env, int opt_i)
-{
-	int		i;
-
-	i = 0;
-	while (!opt_i && e->var[i])
-	{
-		env[i] = ft_strdup(e->var[i]);
-		i++;
-	}
-	return (i);
 }

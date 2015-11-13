@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2015/10/09 21:25:29 by pbourrie         ###   ########.fr       */
+/*   Updated: 2015/11/13 18:17:52 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ char	*get_cmd_path(t_env *e, char *cmd)
 {
 	int		i;
 	char	cmd_path[MAXPATHLEN + 1];
+	char	type;
 
 	if (!e->path)
 		return (NULL);
@@ -48,7 +49,8 @@ char	*get_cmd_path(t_env *e, char *cmd)
 		ft_strcpy(cmd_path, e->path[i]);
 		ft_strcat(cmd_path, "/");
 		ft_strcat(cmd_path, cmd);
-		if (ft_get_file_type(cmd_path) == '-')
+		type = ft_get_file_type(cmd_path);
+		if (type == '-' || type == 'l')
 			return (ft_strdup(cmd_path));
 		i++;
 	}

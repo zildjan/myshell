@@ -1,30 +1,44 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   builtin_env_tools.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/10/09 12:18:49 by pbourrie          #+#    #+#             */
-/*   Updated: 2015/11/13 19:44:31 by pbourrie         ###   ########.fr       */
+/*   Created: 2015/11/13 19:03:38 by pbourrie          #+#    #+#             */
+/*   Updated: 2015/11/13 19:04:33 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "sh.h"
 
-#include <errno.h>
-
-int		main(void)
+char	**builtin_env_malloctab(t_env *e, int opt_i)
 {
-	t_env	*e;
+	int		size;
+	int		i;
+	char	**tab;
 
-	e = init_env();
-	sig_handler(e, 0);
-	catch_signal();
-	while (1)
+	size = 0;
+	while (!opt_i && e->var[size])
+		size++;
+	i = 1;
+	while (e->cmd[i])
+		i++;
+	size += i;
+	tab = (char**)ft_memalloc(sizeof(char*) * size);
+	return (tab);
+}
+
+int		builtin_env_filltab(t_env *e, char **env, int opt_i)
+{
+	int		i;
+
+	i = 0;
+	while (!opt_i && e->var[i])
 	{
-		print_prompt(e);
-		get_cmd(e);
+		env[i] = ft_strdup(e->var[i]);
+		i++;
 	}
-	return (0);
+	env[i] = NULL;
+	return (i);
 }

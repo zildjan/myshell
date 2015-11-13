@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:26:19 by pbourrie          #+#    #+#             */
-/*   Updated: 2015/11/12 18:56:54 by pbourrie         ###   ########.fr       */
+/*   Updated: 2015/11/13 21:47:47 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ char	*builtin_cd_oldpwd(t_env *e)
 	old_pwd = get_env_val(e, "OLDPWD");
 	new = ft_strjoin(old_pwd, pwd);
 	free(old_pwd);
-	return (new); 
+	return (new);
 }
 
 void	builtin_cd_error(char *path)

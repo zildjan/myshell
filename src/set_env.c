@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2015/11/12 21:13:14 by pbourrie         ###   ########.fr       */
+/*   Updated: 2015/11/13 21:55:37 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,8 +76,8 @@ void	resize_env_tab(t_env *e, int new)
 		i++;
 	if ((e->tab_size + new) <= i)
 		return ;
-	old_size =  sizeof(char*) * e->tab_size;
-	new_size =  sizeof(char*) * (e->tab_size + new);
+	old_size = sizeof(char*) * e->tab_size;
+	new_size = sizeof(char*) * (e->tab_size + new);
 	e->var = (char**)ft_memrealloc(e->var, old_size, new_size);
 	e->tab_size += new;
 }

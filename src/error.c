@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2015/11/12 19:21:11 by pbourrie         ###   ########.fr       */
+/*   Updated: 2015/11/13 19:51:42 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,6 @@ void	put_sig_error(int ret, char *path)
 		ft_putstr_fd(" aborted : ", 2);
 	else if (ret == SIGKILL)
 		ft_putstr_fd(" killed : ", 2);
-	else if (ret == SIGINT)
-		ft_putstr_fd(" interruped : ", 2);
 	else if (ret == SIGQUIT)
 		ft_putstr_fd(" quit : ", 2);
 	else

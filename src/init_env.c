@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2015/11/12 21:18:29 by pbourrie         ###   ########.fr       */
+/*   Updated: 2015/11/13 22:35:31 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,16 +31,14 @@ t_env	*init_env(void)
 		e->var[i] = ft_strdup(environ[i]);
 		i++;
 	}
-
+	e->jobs = NULL;
 	e->path = NULL;
 	set_bin_path(e);
 	e->home = NULL;
 	set_home_path(e);
 	e->pwd = getcwd(NULL, 0);
 	e->status = 0;
-
 	init_shlvl(e);
-
 	return (e);
 }
 

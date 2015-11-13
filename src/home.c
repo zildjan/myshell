@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2015/11/10 18:50:36 by pbourrie         ###   ########.fr       */
+/*   Updated: 2015/11/13 20:46:59 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ void	set_home_path(t_env *e)
 		e->home = path;
 	else
 		e->home = ft_strdup("");
+	if (e->home_dir)
+		free(e->home_dir);
 	e->home_dir = ft_get_dirup(e->home);
 }
 

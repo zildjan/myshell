@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/10 18:58:17 by pbourrie          #+#    #+#             */
-/*   Updated: 2015/11/12 22:39:52 by pbourrie         ###   ########.fr       */
+/*   Updated: 2015/11/13 22:15:38 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,11 @@ int		process_builtin(t_env *e)
 		builtin_unsetenv(e);
 	else if (ft_strequ(e->cmd[0], "env"))
 		builtin_env(e);
+	else if (ft_strequ(e->cmd[0], "fg"))
+	{
+		kill(e->spid, SIGCONT);
+		process_wait(e, e->spid);
+	}
 	else
 		return (0);
 	return (1);
@@ -53,16 +58,14 @@ void	process_cmd(t_env *e, char **env)
 void	process_fork(t_env *e, char *cmd_path, char **env)
 {
 	int		child;
-	int		ret;
 
-	ret = 0;
 	child = fork();
 	if (child > 0)
-		wait(&ret);
+		process_wait(e, child);
 	else if (child == 0)
 	{
 		if (execve(cmd_path, e->cmd, env) == -1)
-		{perror("!!!");
+		{
 			if (ft_get_file_mode(cmd_path) % 2 == 0)
 				put_error(ERRACCES, NULL, e->cmd[0]);
 			else
@@ -70,10 +73,25 @@ void	process_fork(t_env *e, char *cmd_path, char **env)
 			exit(0);
 		}
 	}
-	if (!WIFEXITED(ret))
+}
+
+void	process_wait(t_env *e, int pid)
+{
+	int		ret;
+
+	ret = 0;
+	e->spid = pid;
+	waitpid(pid, &ret, WUNTRACED);
+	if (WIFSIGNALED(ret))
 	{
-		put_sig_error(ret, e->cmd[0]);
+		if (ret != SIGINT)
+			put_sig_error(ret, e->cmd[0]);
 		e->status = (WTERMSIG(ret)) + 128;
+	}
+	else if (WIFSTOPPED(ret))
+	{
+		if (WSTOPSIG(ret) == SIGTSTP)
+			ft_printf("STOPED\n");
 	}
 	else
 		e->status = WEXITSTATUS(ret);
