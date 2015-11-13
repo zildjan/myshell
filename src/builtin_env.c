@@ -15,6 +15,8 @@
 void	builtin_env(t_env *e)
 {
 	int		opt_i;
+	int		i;
+	int		i2;
 
 	opt_i = 0;
 	if (!e->cmd[1])
@@ -22,33 +24,40 @@ void	builtin_env(t_env *e)
 		ft_putchartab(e->var);
 		return ;
 	}
-	else if (e->cmd[1][0] == '-')
+	i = 0;
+	i2 = 0;
+	while (e->cmd[++i] && e->cmd[i][0] == '-' && i2 >= 0)
 	{
-		if (e->cmd[1][1] == 'i')
-			opt_i = 1;
-		else if (e->cmd[1][1] != '-')
+		i2 = 0;
+		while (e->cmd[i][++i2])
 		{
-			ft_putstr_fd("env: illegal option -- ", 2);
-			ft_putchar_fd(e->cmd[1][1], 2);
-			ft_putstr_fd("\nusage: env [-i] [name=value ...] ", 2);
-			ft_putendl_fd("[utility [argument ...]]", 2);
-			return ;
+			if (e->cmd[i][i2] == 'i')
+				opt_i = 1;
+			else if (e->cmd[i][i2] == '-')
+			{
+				i2 = -1;
+				break ;
+			}
+			else if (e->cmd[i][i2] && e->cmd[i][i2] != 'i')
+			{
+				ft_putstr_fd("env: illegal option -- ", 2);
+				ft_putchar_fd(e->cmd[i][i2], 2);
+				ft_putstr_fd("\nusage: env [-i] [name=value ...] ", 2);
+				ft_putendl_fd("[utility [argument ...]]", 2);
+				return ;
+			}
 		}
 	}
-	builtin_env_setenvtab(e, opt_i);
+	builtin_env_setenvtab(e, opt_i, i);
 }
 
-void	builtin_env_setenvtab(t_env *e, int opt_i)
+void	builtin_env_setenvtab(t_env *e, int opt_i, int i)
 {
-	int		i;
 	int		id;
 	char	**env;
 
 	env = builtin_env_malloctab(e, opt_i);
 	id = builtin_env_filltab(e, env, opt_i);
-	i = 1;
-	if (opt_i)
-		i = 2;
 	while (e->cmd[i] && ft_strchr(e->cmd[i], '='))
 	{
 		if (!ft_strcheck(e->cmd[i], ft_isascii))
@@ -61,6 +70,10 @@ void	builtin_env_setenvtab(t_env *e, int opt_i)
 	env[id] = NULL;
 //	ft_putchartab(env);
 	builtin_env_exec(e, env, i);
+	i = 0;
+	while (env[i])
+		free(env[i++]);
+	free(env);
 }
 
 void	builtin_env_exec(t_env *e, char **env, int i)
@@ -88,10 +101,6 @@ void	builtin_env_exec(t_env *e, char **env, int i)
 		free(e->cmd);
 		e->cmd = cmd;
 		process_cmd(e, env);
-		i2 = 0;
-		while (env[i2])
-			free(env[i2++]);
-		free(env);
 	}
 }
 

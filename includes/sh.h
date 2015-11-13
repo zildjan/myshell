@@ -52,7 +52,7 @@ char		*builtin_cd_oldpwd(t_env *e);
 **   BUILTIN_ENV
 */
 void		builtin_env(t_env *e);
-void		builtin_env_setenvtab(t_env *e, int opt_i);
+void		builtin_env_setenvtab(t_env *e, int opt_i, int i);
 char		**builtin_env_malloctab(t_env *e, int opt_i);
 int			builtin_env_filltab(t_env *e, char **env, int opt_i);
 void		builtin_env_exec(t_env *e, char **env, int i);
