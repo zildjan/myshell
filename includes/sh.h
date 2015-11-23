@@ -96,14 +96,21 @@ void		split_cmd_args(t_env *e, char *cmd_seq);
 void		parse_cmd(t_env *e);
 void		parse_cmd_args(t_env *e);
 
-
 /*
 **   EXECUTE
 */
 int			process_builtin(t_env *e);
 void		process_cmd(t_env *e, char **env);
 void		process_fork(t_env *e, char *cmd_path, char **env);
-void		process_wait(t_env *e, int pid);
+void		process_wait(t_env *e, int pid, int job);
+
+/*
+**   JOBS
+*/
+void		jobs_add(t_env *e, int pid);
+void		jobs_continue(t_env *e);
+void		jobs_remove(t_env *e, int pid);
+void		jobs_list(t_env *e);
 
 /*
 **   PARSE_CMD_VAR

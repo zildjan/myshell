@@ -19,6 +19,13 @@
 # define ERRNOCMD 4
 # define ERREXEFORM 5
 
+typedef struct	s_job
+{
+	char			*name;
+	int				pid;
+	struct s_job	*next;
+}				t_job;
+
 typedef struct	s_env
 {
 	char	*usr_cmd;
@@ -30,13 +37,7 @@ typedef struct	s_env
 	char	*home_dir;
 	char	*pwd;
 	int		status;
-	t_jobs	*jobs;
+	t_job	*jobs;
 }				t_env;
-
-typedef struct	s_jobs
-{
-	char	*name;
-	int		pid;
-}				t_jobs;
 
 #endif

@@ -31,6 +31,7 @@ void	sig_print(int signum)
 
 void	catch_signal(void)
 {
+
 	signal(SIGINT, sig_mediator);
 	signal(SIGQUIT, sig_mediator);
 	signal(SIGTSTP, sig_mediator);
@@ -52,6 +53,12 @@ void	sig_handler(t_env *e, int signum)
 	if (signum == SIGINT)
 	{
 		print_prompt(se);
+	}
+	else if (signum == SIGTSTP)
+	{		
+//		ft_printf("STOP %ld\n", se->jobs->pid);
+//		if (se->jobs && se->jobs->pid)
+//			kill(se->jobs->pid, SIGTSTP);
 	}
 }
 
