@@ -31,7 +31,8 @@ t_env	*init_env(void)
 		e->var[i] = ft_strdup(environ[i]);
 		i++;
 	}
-	e->jobs = NULL;
+	e->job = NULL;
+	e->jobs_lst = NULL;
 	e->path = NULL;
 	set_bin_path(e);
 	e->home = NULL;

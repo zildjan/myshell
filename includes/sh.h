@@ -69,6 +69,7 @@ void		builtin_unsetenv(t_env *e);
 **   BUILTIN_EXIT
 */
 void		builtin_exit(t_env *e);
+void		builtin_exit_jobs(t_env *e, int status);
 
 /*
 **   GET_BIN_PATH
@@ -111,6 +112,8 @@ void		jobs_add(t_env *e, int pid);
 void		jobs_continue(t_env *e);
 void		jobs_remove(t_env *e, int pid);
 void		jobs_list(t_env *e);
+int			jobs_count(t_env *e, int pid);
+void		jobs_exit(t_env *e);
 
 /*
 **   PARSE_CMD_VAR

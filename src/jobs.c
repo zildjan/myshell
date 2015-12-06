@@ -15,47 +15,73 @@
 void	jobs_add(t_env *e, int pid)
 {
 	t_job	*new;
+	t_job	*tmp;
+	int		id;
 
-	new = e->jobs;
-	while (new)
+	if ((id = jobs_count(e, pid)) != -1)
 	{
-		if (new->pid == pid)
-			return ;
-		new = new->next;
+		tmp = e->jobs_lst;
+		while (tmp && tmp->next)
+			tmp = tmp->next;
+		new = (t_job*)ft_memalloc(sizeof(t_job));
+		new->pid = pid;
+		new->id = id + 1;
+		new->name = ft_strdup(e->cmd[0]);
+		new->next = NULL;
+		e->job = new;
+		if (!e->jobs_lst)
+			e->jobs_lst = new;
+		else
+			tmp->next = new;
 	}
-	new = (t_job*)ft_memalloc(sizeof(t_job));
-	new->pid = pid;
-	new->name = ft_strdup(e->cmd[0]);
-	new->next = e->jobs;
-	e->jobs = new;
+	ft_printf("\n[%ld]  - %ld suspended  %s\n", e->job->id, pid, e->job->name);
 }
 
 void	jobs_continue(t_env *e)
 {
-	if (!e->jobs)
+	e->job = e->jobs_lst;
+	while (e->job && e->job->next)
+		e->job = e->job->next;
+	if (!e->jobs_lst)
 	{
 		ft_putendl_fd("fg: no current job", 2);
 		return ;
 	}
-	ft_printf("   --  continued  %s %ld\n", e->jobs->name, e->jobs->pid);
-	ft_printf("pg=%ld\n", getpgid(e->jobs->pid));
-	if (kill(e->jobs->pid, SIGCONT))
+	ft_printf("[%ld]  - %ld continued  %s\n", e->job->id, e->job->pid, e->job->name);
+//	ft_putendl("ICI");
+//	ft_printf("pg=%ld\n", getpgid(e->job->pid));
+	tcsetpgrp(1, e->job->pid);
+	if (!killpg(e->job->pid, SIGCONT))
+		process_wait(e, e->job->pid, 1);
+	else
 		perror("");
-	process_wait(e, e->jobs->pid, 1);
 }
 
 void	jobs_remove(t_env *e, int pid)
 {
 	t_job	*job;
+	t_job	*pre_job;
 
-	if (e->jobs->pid != pid)
+	pre_job = NULL;
+	job = e->jobs_lst;
+	while (job && job->pid != pid)
+	{
+		pre_job = job;
+		job = job->next;
+	}
+	if (!job)
 		return ;
-	kill(e->jobs->pid, SIGINT);
-	job = e->jobs;
-	e->jobs = e->jobs->next;
+	killpg(job->pid, SIGINT);
+	ft_printf("removed -> %s\n", job->name);
+	if (pre_job)
+		pre_job->next = job->next;
+	else
+		e->jobs_lst = NULL;
 	if (job->name)
 		free(job->name);
 	free(job);
+	if (!e->job)
+		e->job = pre_job;
 }
 
 void	jobs_list(t_env *e)
@@ -64,11 +90,52 @@ void	jobs_list(t_env *e)
 	int		i;
 
 	i = 0;
-	job = e->jobs;
+	job = e->jobs_lst;
 	while (job)
 	{
 		i++;
-		ft_printf("[%ld]  %ld - %s\n", i, job->pid, job->name);
+		ft_printf("[%ld]  %ld - %s\n", job->id, job->pid, job->name);
 		job = job->next;
 	}
+}
+
+void	jobs_exit(t_env *e)
+{
+	t_job	*job;
+	t_job	*tmp;
+	int		i;
+
+	i = 0;
+	job = e->jobs_lst;
+	while (job)
+	{
+		i++;
+		kill(job->pid, SIGKILL);
+		process_wait(e, job->pid, 1);
+		ft_printf("[%ld]  killed  %ld - %s\n", job->id, job->pid, job->name);
+		tmp = job;
+		job = job->next;
+//		if (tmp->name)
+//			free(tmp->name);
+//		free(tmp);
+	}
+	e->jobs_lst = NULL;
+	e->job = NULL;
+}
+
+int		jobs_count(t_env *e, int pid)
+{
+	t_job	*tmp;
+	int		i;
+
+	tmp = e->jobs_lst;
+	i = 0;
+	while (tmp)
+	{
+		if (tmp->pid == pid)
+			return (-1);
+		tmp = tmp->next;
+		i++;
+	}
+	return (i);
 }

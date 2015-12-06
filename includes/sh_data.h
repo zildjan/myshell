@@ -22,6 +22,7 @@
 typedef struct	s_job
 {
 	char			*name;
+	int				id;
 	int				pid;
 	struct s_job	*next;
 }				t_job;
@@ -37,7 +38,8 @@ typedef struct	s_env
 	char	*home_dir;
 	char	*pwd;
 	int		status;
-	t_job	*jobs;
+	t_job	*job;
+	t_job	*jobs_lst;
 }				t_env;
 
 #endif

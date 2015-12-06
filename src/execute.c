@@ -28,11 +28,12 @@ int		process_builtin(t_env *e)
 		jobs_continue(e);
 	else if (ft_strequ(e->cmd[0], "jobs"))
 		jobs_list(e);
-//	else if (ft_strequ(e->cmd[0], "kill"))
-///	{
+	else if (ft_strequ(e->cmd[0], "kill"))
+	{
+		jobs_exit(e);
 //		if (e->jobs)
 //			kill(e->jobs->pid, ft_atoi(e->cmd[1]));
-//	}
+	}
 	else
 		return (0);
 	return (1);
@@ -65,9 +66,21 @@ void	process_fork(t_env *e, char *cmd_path, char **env)
 
 	child = fork();
 	if (child > 0)
+	{
+		if (setpgid(child, child))
+			perror("");
+		tcsetpgrp(1, child);
 		process_wait(e, child, 0);
+//		tcsetpgrp(1, getpid());
+//		killpg(child, SIGCONT);
+	}
 	else if (child == 0)
 	{
+//		ft_printf("AVANT\n");
+		if (setpgid(0, 0))
+			perror("");
+//		ft_printf("APRES\n");
+
 		if (execve(cmd_path, e->cmd, env) == -1)
 		{
 			if (ft_get_file_mode(cmd_path) % 2 == 0)
@@ -85,6 +98,7 @@ void	process_wait(t_env *e, int pid, int job)
 
 	ret = 0;
 	waitpid(pid, &ret, WUNTRACED);
+	tcsetpgrp(1, getpid());
 	if (WIFSIGNALED(ret))
 	{
 		if (ret != SIGINT)
@@ -96,7 +110,6 @@ void	process_wait(t_env *e, int pid, int job)
 		if (WSTOPSIG(ret) == SIGTSTP)
 		{
 			jobs_add(e, pid);
-			ft_printf("\n   --  suspended  %s %ld\n", e->jobs->name, pid);
 		}
 	}
 	else

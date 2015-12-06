@@ -18,6 +18,8 @@ int		main(void)
 {
 	t_env	*e;
 
+	ft_printf("tty='%ld' n='%s'\n", ttyslot(), ttyname(2));
+
 	e = init_env();
 	sig_handler(e, 0);
 	catch_signal();

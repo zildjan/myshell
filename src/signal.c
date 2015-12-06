@@ -24,9 +24,9 @@ void	sig_print(int signum)
 		nb = 0;
 		pre = signum;
 	}
-	if (nb > 50)
+	if (nb > 100)
 		exit(0);
-	ft_printf("signal = %ld\n", signum);
+	ft_printf("signal = %ld  (try %ld)\n", signum, nb);
 }
 
 void	catch_signal(void)
@@ -35,6 +35,9 @@ void	catch_signal(void)
 	signal(SIGINT, sig_mediator);
 	signal(SIGQUIT, sig_mediator);
 	signal(SIGTSTP, sig_mediator);
+	signal(21, sig_mediator);
+	signal(22, sig_mediator);
+
 // */
 /*
 	int	i;
@@ -60,6 +63,13 @@ void	sig_handler(t_env *e, int signum)
 //		if (se->jobs && se->jobs->pid)
 //			kill(se->jobs->pid, SIGTSTP);
 	}
+	else if (signum == 21 || signum == 22)
+	{
+//		ft_printf("signum = %ld\n", signum);
+		tcsetpgrp(1, getpid());
+	}
+//	else
+//		ft_printf("signum = %ld\n", signum);
 }
 
 void	sig_mediator(int signum)

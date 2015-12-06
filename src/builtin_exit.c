@@ -21,13 +21,19 @@ void	builtin_exit(t_env *e)
 		else if (e->cmd[1])
 		{
 			if (ft_strcheck(e->cmd[1], ft_isdigit))
-				exit(ft_atoi(e->cmd[1]));
+				builtin_exit_jobs(e, ft_atoi(e->cmd[1]));
 			else
-				exit(0);
+				builtin_exit_jobs(e, 0);
 		}
 		else
-			exit(e->status);
+			builtin_exit_jobs(e, e->status);
 	}
 	else
-		exit(e->status);
+		builtin_exit_jobs(e, e->status);
+}
+
+void	builtin_exit_jobs(t_env *e, int status)
+{
+	jobs_exit(e);
+	exit(status);
 }
