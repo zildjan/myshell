@@ -108,6 +108,14 @@ void		process_bin(t_env *e, char **env);
 void		process_fork(t_env *e, char *cmd_path, char **env);
 void		process_wait(t_env *e, int pid, int job);
 
+/*
+**   REDIRECTIONS
+*/
+
+
+/*
+**   PIPE
+*/
 void		pipe_new(t_env *e);
 void		pipe_assign(t_env *e);
 void		pipe_close(t_env *e);

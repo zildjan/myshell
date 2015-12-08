@@ -32,6 +32,9 @@ typedef struct	s_cmd
 	char		**arg;
 	int			pid;
 	int			pipe[2];
+	char		*in;
+	char		*out;
+	char		out_appending;
 }				t_cmd;
 
 typedef struct	s_env
@@ -41,6 +44,7 @@ typedef struct	s_env
 	char	**carg;
 	int		cid;
 	int		nb_cmd;
+	int		cmd_pgid;
 	char	**var;
 	int		tab_size;
 	char	**path;

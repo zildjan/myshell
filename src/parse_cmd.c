@@ -27,7 +27,7 @@ void	parse_cmd_args(t_env *e)
 
 	i = 0;
 	i2 = 0;
-	while (e->nb_cmd > i)
+	while (e->nb_cmd > i )
 	{
 		while (e->cmd[i].arg[i2])
 		{
@@ -39,3 +39,25 @@ void	parse_cmd_args(t_env *e)
 		i++;
 	}
 }
+
+/*
+void	parse_redirections(t_env *e)
+{
+	int		i;
+	int		i2;
+	char	**cmds;
+
+	i = -1;
+	i2 = 0;
+	while (cmds[++i])
+	{
+		while (cmds[i][i2])
+		{
+			if (cmds[i][i2] == '>' || cmds[i][i2] == '<')
+				i2++;
+		}
+		i2 = 0;
+	}
+}
+*/
+

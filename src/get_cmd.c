@@ -40,7 +40,8 @@ void	parse_cmd_seq(t_env *e)
 	i = 0;
 	while (cmd_seq[i] != NULL)
 	{
-		split_cmd_pipes(e, cmd_seq[i]);
+		if (!ft_isfullof(cmd_seq[i], ' '))
+			split_cmd_pipes(e, cmd_seq[i]);
 		free(cmd_seq[i]);
 		i++;
 	}
@@ -50,20 +51,32 @@ void	parse_cmd_seq(t_env *e)
 void	split_cmd_pipes(t_env *e, char *cmd)
 {
 	char	**pipes;
+	int		i;
 
 	pipes = ft_strsplit(cmd, '|');
 	if (pipes == NULL)
 		return ;
 	e->nb_cmd = 0;
-	while (pipes[e->nb_cmd])
-		e->nb_cmd++;
-	split_cmd_args(e, pipes);
+	i = -1;
+	while (pipes[++i])
+	{
+		if (!ft_isfullof(pipes[i], ' '))
+			pipes[e->nb_cmd++] = pipes[i];
+		else
+			free(pipes[i]);
+	}
+	pipes[e->nb_cmd] = NULL;
+	if (e->nb_cmd > 0)
+		split_cmd_args(e, pipes);
+	free(pipes);
 }
 
 void	split_cmd_args(t_env *e, char **pipes)
 {
-	int	i;
+	int		i;
 
+	e->cid = 0;
+	e->cmd_pgid = 0;
 	e->cmd = (t_cmd*)ft_memalloc(sizeof(t_cmd) * (e->nb_cmd));
 	i = -1;
 	while (pipes[++i])
@@ -71,9 +84,9 @@ void	split_cmd_args(t_env *e, char **pipes)
 		e->cmd[i].arg = ft_strsplit(pipes[i], ' ');
 		free(pipes[i]);
 	}
-	free(pipes);
 	if (e->cmd[0].arg == NULL)
 		return ;
+//	parse_redirections(e);
 	parse_cmd(e);
 	free_cmd(e);
 }
