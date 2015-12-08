@@ -12,15 +12,15 @@
 
 #include "sh.h"
 
-void	parse_env_var(t_env *e, int i)
+void	parse_env_var(t_env *e, int id_cmd, int id_arg)
 {
 	char	*arg;
 
-	arg = e->cmd[i];
+	arg = e->cmd[id_cmd].arg[id_arg];
 	if (arg[0] == '$' && arg[1])
 	{
 		arg++;
-		parse_env_var_replace(e, arg, &e->cmd[i]);
+		parse_env_var_replace(e, arg, &e->cmd[id_cmd].arg[id_arg]);
 	}
 }
 

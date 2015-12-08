@@ -14,14 +14,14 @@
 
 void	builtin_exit(t_env *e)
 {
-	if (e->cmd)
+	if (e->carg)
 	{
-		if (e->cmd[1] && e->cmd[2])
+		if (e->carg[1] && e->carg[2])
 			ft_putendl_fd("exit: too many arguments", 2);
-		else if (e->cmd[1])
+		else if (e->carg[1])
 		{
-			if (ft_strcheck(e->cmd[1], ft_isdigit))
-				builtin_exit_jobs(e, ft_atoi(e->cmd[1]));
+			if (ft_strcheck(e->carg[1], ft_isdigit))
+				builtin_exit_jobs(e, ft_atoi(e->carg[1]));
 			else
 				builtin_exit_jobs(e, 0);
 		}

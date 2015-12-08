@@ -22,7 +22,7 @@ char	**builtin_env_malloctab(t_env *e, int opt_i)
 	while (!opt_i && e->var[size])
 		size++;
 	i = 1;
-	while (e->cmd[i])
+	while (e->carg[i])
 		i++;
 	size += i;
 	tab = (char**)ft_memalloc(sizeof(char*) * size);

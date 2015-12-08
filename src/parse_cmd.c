@@ -14,22 +14,28 @@
 
 void	parse_cmd(t_env *e)
 {
-	if (e->cmd[0] == NULL)
+	if (e->cmd[0].arg[0] == NULL)
 		return ;
 	parse_cmd_args(e);
-	if (!process_builtin(e))
-		process_cmd(e, e->var);
+	process_cmd(e);
 }
 
 void	parse_cmd_args(t_env *e)
 {
 	int	i;
+	int	i2;
 
 	i = 0;
-	while (e->cmd[i])
+	i2 = 0;
+	while (e->nb_cmd > i)
 	{
-		parse_env_var(e, i);
-		parse_home_tilde(e, i);
+		while (e->cmd[i].arg[i2])
+		{
+			parse_env_var(e, i, i2);
+			parse_home_tilde(e, i, i2);
+			i2++;
+		}
+		i2 = 0;
 		i++;
 	}
 }

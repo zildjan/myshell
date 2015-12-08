@@ -23,14 +23,24 @@ typedef struct	s_job
 {
 	char			*name;
 	int				id;
-	int				pid;
+	int				pgid;
 	struct s_job	*next;
 }				t_job;
 
+typedef struct	s_cmd
+{
+	char		**arg;
+	int			pid;
+	int			pipe[2];
+}				t_cmd;
+
 typedef struct	s_env
 {
-	char	*usr_cmd;
-	char	**cmd;
+	char	*line;
+	t_cmd	*cmd;
+	char	**carg;
+	int		cid;
+	int		nb_cmd;
 	char	**var;
 	int		tab_size;
 	char	**path;

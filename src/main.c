@@ -14,13 +14,16 @@
 
 #include <errno.h>
 
-int		main(void)
+int		main(int argc, char **argv, char **environ)
 {
 	t_env	*e;
 
-	ft_printf("tty='%ld' n='%s'\n", ttyslot(), ttyname(2));
+//	ft_printf("tty='%ld' n='%s'\n", ttyslot(), ttyname(2));
+//	ft_printf("SDTIN %ld\n", STDIN_FILENO);
+//	ft_printf("SDTOUT %ld\n", STDOUT_FILENO);
+//	ft_printf("SDTERR %ld\n", STDERR_FILENO);
 
-	e = init_env();
+	e = init_env(argc, argv, environ);
 	sig_handler(e, 0);
 	catch_signal();
 	while (1)

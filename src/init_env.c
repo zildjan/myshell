@@ -12,14 +12,29 @@
 
 #include "sh.h"
 
-extern char **environ;
-
-t_env	*init_env(void)
+t_env	*init_env(int argc, char **argv, char **environ)
 {
 	t_env	*e;
-	int		i;
 
 	e = (t_env*)ft_memalloc(sizeof(t_env));
+	if (argc && argv)
+		init_env_var(e, environ);
+	e->job = NULL;
+	e->jobs_lst = NULL;
+	e->path = NULL;
+	set_bin_path(e);
+	e->home = NULL;
+	set_home_path(e);
+	e->pwd = getcwd(NULL, 0);
+	e->status = 0;
+	init_shlvl(e);
+	return (e);
+}
+
+void	init_env_var(t_env *e, char **environ)
+{
+	int		i;
+
 	i = 0;
 	while (environ[i] != NULL)
 		i++;
@@ -31,16 +46,6 @@ t_env	*init_env(void)
 		e->var[i] = ft_strdup(environ[i]);
 		i++;
 	}
-	e->job = NULL;
-	e->jobs_lst = NULL;
-	e->path = NULL;
-	set_bin_path(e);
-	e->home = NULL;
-	set_home_path(e);
-	e->pwd = getcwd(NULL, 0);
-	e->status = 0;
-	init_shlvl(e);
-	return (e);
 }
 
 void	init_shlvl(t_env *e)

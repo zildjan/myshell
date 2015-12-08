@@ -22,7 +22,8 @@
 /*
 **   INI_ENV
 */
-t_env		*init_env(void);
+t_env		*init_env(int argc, char **argv, char **environ);
+void		init_env_var(t_env *e, char **environ);
 void		init_shlvl(t_env *e);
 
 /*
@@ -81,7 +82,7 @@ char		*get_cmd_path(t_env *e, char *cmd);
 **   HOME
 */
 void		set_home_path(t_env *e);
-void		parse_home_tilde(t_env *e, int i);
+void		parse_home_tilde(t_env *e, int id_cmd, int id_arg);
 
 /*
 **   GET_CMD
@@ -89,7 +90,8 @@ void		parse_home_tilde(t_env *e, int i);
 void		get_cmd(t_env *e);
 
 void		parse_cmd_seq(t_env *e);
-void		split_cmd_args(t_env *e, char *cmd_seq);
+void		split_cmd_pipes(t_env *e, char *cmd);
+void		split_cmd_args(t_env *e, char **pipes);
 
 /*
 **   PARSE_CMD
@@ -101,9 +103,14 @@ void		parse_cmd_args(t_env *e);
 **   EXECUTE
 */
 int			process_builtin(t_env *e);
-void		process_cmd(t_env *e, char **env);
+void		process_cmd(t_env *e);
+void		process_bin(t_env *e, char **env);
 void		process_fork(t_env *e, char *cmd_path, char **env);
 void		process_wait(t_env *e, int pid, int job);
+
+void		pipe_new(t_env *e);
+void		pipe_assign(t_env *e);
+void		pipe_close(t_env *e);
 
 /*
 **   JOBS
@@ -118,7 +125,7 @@ void		jobs_exit(t_env *e);
 /*
 **   PARSE_CMD_VAR
 */
-void		parse_env_var(t_env *e, int i);
+void		parse_env_var(t_env *e, int id_cmd, int id_arg);
 void		parse_env_var_replace(t_env *e, char *arg, char **cmd);
 
 /*

@@ -16,17 +16,17 @@ void	builtin_cd(t_env *e)
 {
 	char	*new_pwd;
 
-	if (!e->cmd[1])
+	if (!e->carg[1])
 		new_pwd = ft_strdup(e->home);
-	else if (e->cmd[1] && e->cmd[2])
+	else if (e->carg[1] && e->carg[2])
 	{
 		ft_putendl_fd("cd: too many arguments", 2);
 		return ;
 	}
-	else if (e->cmd[1][0] == '-')
+	else if (e->carg[1][0] == '-')
 		new_pwd = builtin_cd_oldpwd(e);
 	else
-		new_pwd = ft_strdup(e->cmd[1]);
+		new_pwd = ft_strdup(e->carg[1]);
 	if (chdir(new_pwd) == -1)
 		builtin_cd_error(new_pwd);
 	else
@@ -45,7 +45,7 @@ char	*builtin_cd_oldpwd(t_env *e)
 	char	*pwd;
 	char	*new;
 
-	pwd = e->cmd[1];
+	pwd = e->carg[1];
 	pwd++;
 	old_pwd = get_env_val(e, "OLDPWD");
 	new = ft_strjoin(old_pwd, pwd);
