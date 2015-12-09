@@ -24,11 +24,15 @@ void	get_cmd(t_env *e)
 	}
 	if (e->line == NULL)
 		return ;
-	parse_cmd_seq(e);
+	parse_cmd(e);
 	free(e->line);
 	e->line = NULL;
 }
 
+
+
+
+/*
 void	parse_cmd_seq(t_env *e)
 {
 	char	**cmd_seq;
@@ -90,3 +94,4 @@ void	split_cmd_args(t_env *e, char **pipes)
 	parse_cmd(e);
 	free_cmd(e);
 }
+// */

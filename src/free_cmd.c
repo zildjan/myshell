@@ -28,6 +28,7 @@ void	free_cmd(t_env *e)
 			i2++;
 		}
 		free(e->cmd[i].arg);
+		free(e->cmd[i].quo);
 		e->cmd[i].arg = NULL;
 		i2 = 0;
 		i++;

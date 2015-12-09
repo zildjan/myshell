@@ -19,6 +19,10 @@
 # define ERRNOCMD 4
 # define ERREXEFORM 5
 
+# define NONE 0
+# define SIMP 1
+# define DOUB 2
+
 typedef struct	s_job
 {
 	char			*name;
@@ -27,9 +31,19 @@ typedef struct	s_job
 	struct s_job	*next;
 }				t_job;
 
+typedef struct	s_parse
+{
+	char	quo;
+	char	*buf;
+	int		ib;
+	int		a_id;
+	char	bslash;
+}				t_parse;
+
 typedef struct	s_cmd
 {
 	char		**arg;
+	char		*quo;
 	int			pid;
 	int			pipe[2];
 	char		*in;
