@@ -37,7 +37,7 @@ typedef struct	s_parse
 	char	*buf;
 	int		ib;
 	int		a_id;
-	char	bslash;
+	int		error;
 }				t_parse;
 
 typedef struct	s_cmd
@@ -45,6 +45,8 @@ typedef struct	s_cmd
 	char		**arg;
 	char		*quo;
 	int			pid;
+	char		pipe_in;
+	char		pipe_out;
 	int			pipe[2];
 	char		*in;
 	char		*out;

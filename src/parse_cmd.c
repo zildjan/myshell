@@ -22,20 +22,17 @@ void	parse_cmd(t_env *e)
 	p.a_id = 0;
 	e->nb_cmd = 1;
 	p.quo = NONE;
-	p.bslash = 0;
+	p.error = 0;
 	p.buf = ft_strnew(ft_strlen(e->line));
 
 	i = -1;
 	p.ib = 0;
 	e->cmd = (t_cmd*)ft_memalloc(sizeof(t_cmd) * (e->nb_cmd));
+	e->cmd[0].pipe_in = 0;
+	e->cmd[0].pipe_out = 0;
 
 	while (e->line[++i])
 	{
-		if (p.bslash)
-			p.bslash--;
-		if (e->line[i] == '\\' && !p.bslash)
-			p.bslash = 2;
-
 		if (e->line[i] == '\'' && (!p.quo || p.quo == SIMP)
 			&& e->line[i - 1] != '\\')
 		{
@@ -55,8 +52,14 @@ void	parse_cmd(t_env *e)
 		else if (e->line[i] == '|' && !p.quo
 				 && e->line[i - 1] != '\\')
 		{
-			if (e->line[i - 1] != ' ')
+			if (e->line[i - 1] != ' ' && p.ib > 0)
 				parse_add_arg(e, &p);
+			if (p.a_id == 0)
+			{
+				ft_putendl_fd("Invalid null command.", 2);
+				p.error = 1;
+				break ;
+			}
 			parse_add_cmd(e, &p, 1);
 			if (e->line[i + 1] == ' ')
 				i++;
@@ -65,9 +68,10 @@ void	parse_cmd(t_env *e)
 		else if (e->line[i] == ';' && !p.quo
 				 && e->line[i - 1] != '\\')
 		{
-			if (e->line[i - 1] != ' ')
+			if (e->line[i - 1] != ' ' && p.ib > 0)
 				parse_add_arg(e, &p);
-			parse_add_cmd(e, &p, 0);
+			if (p.a_id)
+				parse_add_cmd(e, &p, 0);
 			if (e->line[i + 1] == ' ')
 				i++;
 
@@ -102,22 +106,31 @@ void	parse_cmd(t_env *e)
 			return ;
 		}
 	}
+	if (p.a_id == 0)
+		e->nb_cmd--;
 // */
+
+//	p.error = 1;
 
 	free(p.buf);
 	e->cid = 0;
 //	ft_printf("'%s' %ld\n", e->cmd[0].arg[0], e->cmd[0].quo[0]);
 //	if (e->cmd[0].arg[0] == NULL)
 //		return ;
-	parse_cmd_args(e);
-	process_cmd(e);
+	if (!p.error)
+	{
+		parse_cmd_args(e);
+		process_cmd(e);
+	}
 	free_cmd(e);
 }
 
-void	parse_add_cmd(t_env *e, t_parse *p, char pipe)
+int		parse_add_cmd(t_env *e, t_parse *p, char pipe)
 {
 	int		old_size;
 	int		new_size;
+
+//	ft_printf("NEW CMD\n");
 
 	old_size = sizeof(t_cmd) * (e->nb_cmd);
 	new_size = sizeof(t_cmd) * (e->nb_cmd + 1);
@@ -126,11 +139,15 @@ void	parse_add_cmd(t_env *e, t_parse *p, char pipe)
 	e->nb_cmd++;
 	e->cid++;
 	p->a_id = 0;
+	e->cmd[e->cid].pipe_in = 0;
+	e->cmd[e->cid].pipe_out = 0;
 	if (pipe)
-		e->cmd[e->cid].pipe[0] = 1;
-	else
-		e->cmd[e->cid].pipe[0] = 0;
+		e->cmd[e->cid].pipe_in = 1;
+	if (pipe)
+		e->cmd[e->cid - 1].pipe_out = 1;
+
 //	ft_printf("ICI\n");
+	return (0);
 }
 
 void	parse_add_arg(t_env *e, t_parse *p)
@@ -141,6 +158,8 @@ void	parse_add_arg(t_env *e, t_parse *p)
 	int		new_isize;
 	char	***parg;
 	char	**pquo;
+
+//	ft_printf("NEW ARG\n");
 
 	old_size = sizeof(char*) * (p->a_id + 1);
 	new_size = sizeof(char*) * (p->a_id + 2);

@@ -37,6 +37,7 @@ void	catch_signal(void)
 	signal(SIGTSTP, sig_mediator);
 	signal(SIGTTIN, sig_mediator);
 	signal(SIGTTOU, sig_mediator);
+//	signal(SIGIOT, sig_mediator);
 
 // */
 /*
@@ -67,6 +68,11 @@ void	sig_handler(t_env *e, int signum)
 		tcsetpgrp(0, getpid());
 	else if (signum == SIGTTOU)
 		tcsetpgrp(0, getpid());
+//	else if (signum == SIGIOT)
+//	{
+//		ft_printf("OU YEAH\n");
+//		exit(6);
+//	}
 //	else
 //		ft_printf("signum = %ld\n", signum);
 }
