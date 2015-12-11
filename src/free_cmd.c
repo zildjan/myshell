@@ -21,14 +21,16 @@ void	free_cmd(t_env *e)
 	i2 = 0;
 	while (e->nb_cmd > i)
 	{
-		while (e->cmd[i].arg[i2])
+		while (e->cmd[i].arg &&e->cmd[i].arg[i2])
 		{
 			free(e->cmd[i].arg[i2]);
 			e->cmd[i].arg[i2] = NULL;
 			i2++;
 		}
-		free(e->cmd[i].arg);
-		free(e->cmd[i].quo);
+		if (e->cmd[i].arg)
+			free(e->cmd[i].arg);
+		if (e->cmd[i].quo)
+			free(e->cmd[i].quo);
 		if (e->cmd[i].in)
 			free(e->cmd[i].in);
 		if (e->cmd[i].out)

@@ -16,13 +16,15 @@ void	parse_cmd(t_env *e)
 {
 	t_parse	p;
 
+	parse_cmd_cleanline(e);
 	p.line_len = ft_strlen(e->line);
 	if (p.line_len > 1000)
 	{
-		return ;
 		ft_putendl_fd("input line too long", 2);
+		return ;
 	}
-	parse_cmd_cleanline(e);
+	if (!p.line_len)
+		return ;
 	e->cid = 0;
 	p.a_id = 0;
 	e->nb_cmd = 1;
@@ -111,20 +113,11 @@ void	parse_cmd(t_env *e)
 
 	if (p.ib)
 		parse_add_arg(e, &p);
-	else
-	{
-		if (!e->cid && !p.a_id)
-		{
-			free(p.buf);
-			free(e->cmd);
-			return ;
-		}
-	}
-	if (p.a_id == 0)
-		e->nb_cmd--;
-	if (p.redirec)
+	if (!p.error && p.a_id == 0)
+		p.error = EP_NULL_CMD;
+	if (!p.error && p.redirec)
 		p.error = EP_MISS_REDIREC;
-// */
+
 
 //	p.error = 1;
 
@@ -143,8 +136,8 @@ void	parse_cmd(t_env *e)
 	free(p.buf);
 	e->cid = 0;
 //	ft_printf("'%s' %ld\n", e->cmd[0].arg[0], e->cmd[0].quo[0]);
-//	if (e->cmd[0].arg[0] == NULL)
-//		return ;
+//	ft_printf("nb_cmd=%ld\n", e->nb_cmd);
+
 	if (!p.error)
 	{
 		parse_cmd_args(e);
@@ -158,10 +151,12 @@ void	parse_add_cmd(t_env *e, t_parse *p, char pipe)
 	int		old_size;
 	int		new_size;
 
-//	ft_printf("NEW CMD\n");
+//	ft_printf("NEW CMD  arg_id=%ld\n", p->a_id);
 
 	if (p->redirec)
 		p->error = EP_MISS_REDIREC;
+	if (p->a_id == 0)
+		p->error = EP_NULL_CMD;
 
 	old_size = sizeof(t_cmd) * (e->nb_cmd);
 	new_size = sizeof(t_cmd) * (e->nb_cmd + 1);
