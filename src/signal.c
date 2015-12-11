@@ -75,6 +75,7 @@ void	sig_handler(t_env *e, int signum)
 //	}
 //	else
 //		ft_printf("signum = %ld\n", signum);
+//		ft_printf("signum = %ld\n", signum);
 }
 
 void	sig_mediator(int signum)

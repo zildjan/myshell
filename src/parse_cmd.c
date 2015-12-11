@@ -14,82 +14,96 @@
 
 void	parse_cmd(t_env *e)
 {
-	int		i;
 	t_parse	p;
 
+	p.line_len = ft_strlen(e->line);
+	if (p.line_len > 1000)
+	{
+		return ;
+		ft_putendl_fd("input line too long", 2);
+	}
 	parse_cmd_cleanline(e);
 	e->cid = 0;
 	p.a_id = 0;
 	e->nb_cmd = 1;
 	p.quo = NONE;
+	p.redirec = NONE;
 	p.error = 0;
 	p.buf = ft_strnew(ft_strlen(e->line));
 
-	i = -1;
+	p.i = -1;
 	p.ib = 0;
 	e->cmd = (t_cmd*)ft_memalloc(sizeof(t_cmd) * (e->nb_cmd));
 	e->cmd[0].pipe_in = 0;
 	e->cmd[0].pipe_out = 0;
+	e->cmd[0].in_t = NONE;
+	e->cmd[0].out_t = NONE;
 
-	while (e->line[++i])
+	while (e->line[++p.i] && !p.error)
 	{
-		if (e->line[i] == '\'' && (!p.quo || p.quo == SIMP)
-			&& e->line[i - 1] != '\\')
+		if (e->line[p.i] == '\'' && (!p.quo || p.quo == SIMP)
+			&& e->line[p.i - 1] != '\\')
 		{
 			if (p.quo)
 				parse_add_arg(e, &p);
 			else
 				p.quo = SIMP;
 		}
-		else if (e->line[i] == '"' && (!p.quo || p.quo == DOUB)
-				 && e->line[i - 1] != '\\')
+		else if (e->line[p.i] == '"' && (!p.quo || p.quo == DOUB)
+				 && e->line[p.i - 1] != '\\')
 		{
 			if (p.quo)
 				parse_add_arg(e, &p);
 			else
 				p.quo = DOUB;
 		}
-		else if (e->line[i] == '|' && !p.quo
-				 && e->line[i - 1] != '\\')
+		else if (e->line[p.i] == '|' && !p.quo
+				 && e->line[p.i - 1] != '\\')
 		{
-			if (e->line[i - 1] != ' ' && p.ib > 0)
+			if (e->line[p.i - 1] != ' ' && p.ib > 0)
 				parse_add_arg(e, &p);
 			if (p.a_id == 0)
 			{
-				ft_putendl_fd("Invalid null command.", 2);
-				p.error = 1;
+				p.error = EP_NULL_CMD;
 				break ;
 			}
 			parse_add_cmd(e, &p, 1);
-			if (e->line[i + 1] == ' ')
-				i++;
+			if (e->line[p.i + 1] == ' ')
+				p.i++;
 
 		}
-		else if (e->line[i] == ';' && !p.quo
-				 && e->line[i - 1] != '\\')
+		else if (e->line[p.i] == ';' && !p.quo
+				 && e->line[p.i - 1] != '\\')
 		{
-			if (e->line[i - 1] != ' ' && p.ib > 0)
+			if (e->line[p.i - 1] != ' ' && p.ib > 0)
 				parse_add_arg(e, &p);
 			if (p.a_id)
 				parse_add_cmd(e, &p, 0);
-			if (e->line[i + 1] == ' ')
-				i++;
+			if (e->line[p.i + 1] == ' ')
+				p.i++;
 
 		}
-		else if (e->line[i] == ' ' && !p.quo
-				 && e->line[i - 1] != '\\')
+		else if ((e->line[p.i] == '<' || e->line[p.i] == '>')
+				 && !p.quo && e->line[p.i - 1] != '\\')
 		{
-			if (e->line[i - 1] != ' ')
+			parse_get_redirec_type(e, &p);
+		}
+		else if (e->line[p.i] == ' ' && !p.quo
+				 && e->line[p.i - 1] != '\\')
+		{
+			if (e->line[p.i - 1] != ' ')
 				parse_add_arg(e, &p);
 		}
 		else
 		{
-			if (e->line[i - 1] == '\\' 
-				&& ((e->line[i] == '\'' && p.quo == SIMP)
-					|| (e->line[i] == '"' && p.quo == DOUB)
-					|| (e->line[i] == ' ' && p.quo == NONE)))
+			if (e->line[p.i - 1] == '\\' 
+				&& ((e->line[p.i] == '\'' && p.quo == SIMP)
+					|| (e->line[p.i] == '"' && p.quo == DOUB)
+					|| (e->line[p.i] == ' ' && p.quo == NONE)))
 				p.ib--;
-			p.buf[p.ib++] = e->line[i];
+			if (!(e->line[p.i] == '\\'
+				  && p.quo == NONE && e->line[p.i + 1] != ' '))
+				p.buf[p.ib++] = e->line[p.i];
 //			ft_printf("'%c' = '%s'\n", p.buf[p.ib - 1], p.buf);
 		}
 
@@ -108,9 +122,23 @@ void	parse_cmd(t_env *e)
 	}
 	if (p.a_id == 0)
 		e->nb_cmd--;
+	if (p.redirec)
+		p.error = EP_MISS_REDIREC;
 // */
 
 //	p.error = 1;
+
+	if (p.error)
+	{
+		if (p.error == EP_NULL_CMD)
+			ft_putendl_fd("Invalid null command.", 2);
+		else if (p.error == EP_AMB_OUT)
+			ft_putendl_fd("Ambiguous output redirect.", 2);
+		else if (p.error == EP_AMB_IN)
+			ft_putendl_fd("Ambiguous input redirect.", 2);
+		else if (p.error == EP_MISS_REDIREC)
+			ft_putendl_fd("Missing name for redirect.", 2);
+	}
 
 	free(p.buf);
 	e->cid = 0;
@@ -125,12 +153,15 @@ void	parse_cmd(t_env *e)
 	free_cmd(e);
 }
 
-int		parse_add_cmd(t_env *e, t_parse *p, char pipe)
+void	parse_add_cmd(t_env *e, t_parse *p, char pipe)
 {
 	int		old_size;
 	int		new_size;
 
 //	ft_printf("NEW CMD\n");
+
+	if (p->redirec)
+		p->error = EP_MISS_REDIREC;
 
 	old_size = sizeof(t_cmd) * (e->nb_cmd);
 	new_size = sizeof(t_cmd) * (e->nb_cmd + 1);
@@ -141,13 +172,24 @@ int		parse_add_cmd(t_env *e, t_parse *p, char pipe)
 	p->a_id = 0;
 	e->cmd[e->cid].pipe_in = 0;
 	e->cmd[e->cid].pipe_out = 0;
+	e->cmd[e->cid].in_t = NONE;
+	e->cmd[e->cid].out_t = NONE;
+	e->cmd[e->cid].in = NULL;
+	e->cmd[e->cid].out = NULL;
+
+	if (pipe && e->cmd[e->cid - 1].out_t)
+	{
+		p->error = EP_AMB_OUT;
+	}
 	if (pipe)
+	{
+		e->cmd[e->cid].in_t = R_PIPE;
+		e->cmd[e->cid - 1].out_t = R_PIPE;
 		e->cmd[e->cid].pipe_in = 1;
-	if (pipe)
 		e->cmd[e->cid - 1].pipe_out = 1;
+	}
 
 //	ft_printf("ICI\n");
-	return (0);
 }
 
 void	parse_add_arg(t_env *e, t_parse *p)
@@ -158,6 +200,12 @@ void	parse_add_arg(t_env *e, t_parse *p)
 	int		new_isize;
 	char	***parg;
 	char	**pquo;
+
+	if (p->redirec)
+	{
+		parse_add_redirec(e, p);
+		return ;
+	}
 
 //	ft_printf("NEW ARG\n");
 
@@ -191,6 +239,58 @@ void	parse_add_arg(t_env *e, t_parse *p)
 //	ft_printf("ICI\n");
 }
 
+int		parse_add_redirec(t_env *e, t_parse *p)
+{
+	if (!p->ib)
+		return (p->error = EP_MISS_REDIREC);
+//	ft_printf("NEW REDIREC -> '%s'\n", p->buf);
+	if (p->redirec == R_OUTA || p->redirec == R_OUT)
+	{
+		if (e->cmd[e->cid].out_t)
+			return (p->error = EP_AMB_OUT);
+		e->cmd[e->cid].out = ft_strdup(p->buf);
+		e->cmd[e->cid].out_t = p->redirec;
+	}
+	else
+	{
+		if (e->cmd[e->cid].in_t)
+			return (p->error = EP_AMB_IN);
+		e->cmd[e->cid].in = ft_strdup(p->buf);
+		e->cmd[e->cid].in_t = p->redirec;
+	}
+	ft_strclr(p->buf);
+	p->ib = 0;
+	p->quo = NONE;
+	p->redirec = NONE;
+	return (0);
+}
+
+void	parse_get_redirec_type(t_env *e, t_parse *p)
+{
+	if (p->redirec)
+		p->error = EP_MISS_REDIREC;
+	if (e->line[p->i] == '>' && e->line[p->i + 1] != '>')
+	{
+		p->redirec = R_OUT;
+	}
+	else if (e->line[p->i] == '>' && e->line[p->i + 1] == '>')
+	{
+		p->redirec = R_OUTA;
+		p->i++;
+	}
+	else if (e->line[p->i] == '<' && e->line[p->i + 1] != '<')
+	{
+		p->redirec = R_IN;
+	}
+	else if (e->line[p->i] == '<' && e->line[p->i + 1] == '<')
+	{
+		p->redirec = R_HDOC;
+		p->i++;
+	}
+	while (e->line[p->i + 1] == ' ')
+		p->i++;
+//	ft_printf("->'%s'\n", e->line + p->i);
+}
 
 void	parse_cmd_cleanline(t_env *e)
 {

@@ -88,10 +88,6 @@ void		parse_home_tilde(t_env *e, int id_cmd, int id_arg);
 **   GET_CMD
 */
 void		get_cmd(t_env *e);
-void		parse_add_arg(t_env *e, t_parse *p);
-int			parse_add_cmd(t_env *e, t_parse *p, char pipe);
-
-void		parse_cmd_cleanline(t_env *e);
 
 //void		parse_cmd_seq(t_env *e);
 //void		split_cmd_pipes(t_env *e, char *cmd);
@@ -101,6 +97,14 @@ void		parse_cmd_cleanline(t_env *e);
 **   PARSE_CMD
 */
 void		parse_cmd(t_env *e);
+
+void		parse_add_arg(t_env *e, t_parse *p);
+void		parse_add_cmd(t_env *e, t_parse *p, char pipe);
+int			parse_add_redirec(t_env *e, t_parse *p);
+void		parse_get_redirec_type(t_env *e, t_parse *p);
+
+void		parse_cmd_cleanline(t_env *e);
+
 void		parse_cmd_args(t_env *e);
 
 /*

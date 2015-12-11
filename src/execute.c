@@ -68,6 +68,7 @@ void	process_bin(t_env *e, char **env)
 	}
 	else
 	{
+		pipe_close(e);
 		if (ft_strchr(cmd, '/'))
 			put_error(ERRNOENT, NULL, cmd);
 		else
