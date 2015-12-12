@@ -29,6 +29,7 @@
 # define R_OUTA 3
 # define R_HDOC 4
 # define R_PIPE 5
+# define R_PIPED 6
 
 # define EP_NULL_CMD 1
 # define EP_AMB_OUT 2

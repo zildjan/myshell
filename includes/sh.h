@@ -103,6 +103,7 @@ void		parse_add_cmd(t_env *e, t_parse *p, char pipe);
 int			parse_add_redirec(t_env *e, t_parse *p);
 void		parse_get_redirec_type(t_env *e, t_parse *p);
 
+int			is_escaped_char(t_env *e, int i);
 void		parse_cmd_cleanline(t_env *e);
 
 void		parse_cmd_args(t_env *e);

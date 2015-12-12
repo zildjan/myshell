@@ -36,31 +36,39 @@ void	parse_cmd(t_env *e)
 	p.i = -1;
 	p.ib = 0;
 	e->cmd = (t_cmd*)ft_memalloc(sizeof(t_cmd) * (e->nb_cmd));
-	e->cmd[0].pipe_in = 0;
-	e->cmd[0].pipe_out = 0;
 	e->cmd[0].in_t = NONE;
 	e->cmd[0].out_t = NONE;
 
 	while (e->line[++p.i] && !p.error)
 	{
+//		ft_printf("STA i=%ld c='%c'\n", p.i, e->line[p.i]);
+
 		if (e->line[p.i] == '\'' && (!p.quo || p.quo == SIMP)
-			&& e->line[p.i - 1] != '\\')
+			&& !is_escaped_char(e, p.i))
 		{
 			if (p.quo)
+			{
 				parse_add_arg(e, &p);
+				if (e->line[p.i + 1] == ' ')
+					p.i++;
+			}
 			else
 				p.quo = SIMP;
 		}
 		else if (e->line[p.i] == '"' && (!p.quo || p.quo == DOUB)
-				 && e->line[p.i - 1] != '\\')
+				 && !is_escaped_char(e, p.i))
 		{
 			if (p.quo)
+			{
 				parse_add_arg(e, &p);
+				if (e->line[p.i + 1] == ' ')
+					p.i++;
+			}
 			else
 				p.quo = DOUB;
 		}
 		else if (e->line[p.i] == '|' && !p.quo
-				 && e->line[p.i - 1] != '\\')
+				 && !is_escaped_char(e, p.i))
 		{
 			if (e->line[p.i - 1] != ' ' && p.ib > 0)
 				parse_add_arg(e, &p);
@@ -75,7 +83,7 @@ void	parse_cmd(t_env *e)
 
 		}
 		else if (e->line[p.i] == ';' && !p.quo
-				 && e->line[p.i - 1] != '\\')
+				&& !is_escaped_char(e, p.i))
 		{
 			if (e->line[p.i - 1] != ' ' && p.ib > 0)
 				parse_add_arg(e, &p);
@@ -86,29 +94,31 @@ void	parse_cmd(t_env *e)
 
 		}
 		else if ((e->line[p.i] == '<' || e->line[p.i] == '>')
-				 && !p.quo && e->line[p.i - 1] != '\\')
+				 && !p.quo && !is_escaped_char(e, p.i))
 		{
+			if (e->line[p.i - 1] != ' ' && p.ib > 0)
+				parse_add_arg(e, &p);
 			parse_get_redirec_type(e, &p);
 		}
 		else if (e->line[p.i] == ' ' && !p.quo
-				 && e->line[p.i - 1] != '\\')
+				 && !is_escaped_char(e, p.i))
 		{
 			if (e->line[p.i - 1] != ' ')
 				parse_add_arg(e, &p);
 		}
 		else
 		{
-			if (e->line[p.i - 1] == '\\' 
+			if (is_escaped_char(e, p.i) 
 				&& ((e->line[p.i] == '\'' && p.quo == SIMP)
 					|| (e->line[p.i] == '"' && p.quo == DOUB)
 					|| (e->line[p.i] == ' ' && p.quo == NONE)))
 				p.ib--;
-			if (!(e->line[p.i] == '\\'
+			if (!(e->line[p.i] == '\\' && !is_escaped_char(e, p.i)
 				  && p.quo == NONE && e->line[p.i + 1] != ' '))
 				p.buf[p.ib++] = e->line[p.i];
 //			ft_printf("'%c' = '%s'\n", p.buf[p.ib - 1], p.buf);
 		}
-
+//		ft_printf("END i=%ld c='%c'\n", p.i, e->line[p.i]);
 	}
 
 	if (p.ib)
@@ -146,6 +156,27 @@ void	parse_cmd(t_env *e)
 	free_cmd(e);
 }
 
+int		is_escaped_char(t_env *e, int i)
+{
+	if (i > 1)
+	{
+		if (e->line[i - 1] == '\\' && !is_escaped_char(e, i - 1))
+		{
+//			ft_printf("ESCAPED !  %ld %c\n", i, e->line[i]);
+			return (1);
+		}
+	}
+	else if (i > 0)
+	{
+		if (e->line[i - 1] == '\\')
+		{
+//			ft_printf("ESCAPED !  %ld %c\n", i, e->line[i]);
+			return (1);
+		}
+	}
+	return (0);
+}
+
 void	parse_add_cmd(t_env *e, t_parse *p, char pipe)
 {
 	int		old_size;
@@ -165,8 +196,6 @@ void	parse_add_cmd(t_env *e, t_parse *p, char pipe)
 	e->nb_cmd++;
 	e->cid++;
 	p->a_id = 0;
-	e->cmd[e->cid].pipe_in = 0;
-	e->cmd[e->cid].pipe_out = 0;
 	e->cmd[e->cid].in_t = NONE;
 	e->cmd[e->cid].out_t = NONE;
 	e->cmd[e->cid].in = NULL;
@@ -180,8 +209,6 @@ void	parse_add_cmd(t_env *e, t_parse *p, char pipe)
 	{
 		e->cmd[e->cid].in_t = R_PIPE;
 		e->cmd[e->cid - 1].out_t = R_PIPE;
-		e->cmd[e->cid].pipe_in = 1;
-		e->cmd[e->cid - 1].pipe_out = 1;
 	}
 
 //	ft_printf("ICI\n");
@@ -202,7 +229,7 @@ void	parse_add_arg(t_env *e, t_parse *p)
 		return ;
 	}
 
-//	ft_printf("NEW ARG\n");
+//	ft_printf("NEW ARG  '%s'\n", p->buf);
 
 	old_size = sizeof(char*) * (p->a_id + 1);
 	new_size = sizeof(char*) * (p->a_id + 2);
