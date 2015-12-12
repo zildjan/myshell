@@ -29,6 +29,7 @@ void	parse_cmd(t_env *e)
 	p.a_id = 0;
 	e->nb_cmd = 1;
 	p.quo = NONE;
+	p.escape = 0;
 	p.redirec = NONE;
 	p.error = 0;
 	p.buf = ft_strnew(ft_strlen(e->line));
@@ -47,11 +48,7 @@ void	parse_cmd(t_env *e)
 			&& !is_escaped_char(e, p.i))
 		{
 			if (p.quo)
-			{
-				parse_add_arg(e, &p);
-				if (e->line[p.i + 1] == ' ')
-					p.i++;
-			}
+				p.quo = NONE;
 			else
 				p.quo = SIMP;
 		}
@@ -59,11 +56,7 @@ void	parse_cmd(t_env *e)
 				 && !is_escaped_char(e, p.i))
 		{
 			if (p.quo)
-			{
-				parse_add_arg(e, &p);
-				if (e->line[p.i + 1] == ' ')
-					p.i++;
-			}
+				p.quo = NONE;
 			else
 				p.quo = DOUB;
 		}

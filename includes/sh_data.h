@@ -47,6 +47,7 @@ typedef struct	s_job
 typedef struct	s_parse
 {
 	char	quo;
+	char	escape;
 	char	*buf;
 	int		i;
 	int		ib;
@@ -61,8 +62,6 @@ typedef struct	s_cmd
 	char		**arg;
 	char		*quo;
 	int			pid;
-	char		pipe_in;
-	char		pipe_out;
 	int			pipe[2];
 	char		*in;
 	char		*out;
