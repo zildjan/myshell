@@ -99,11 +99,11 @@ void		get_cmd(t_env *e);
 void		parse_cmd(t_env *e);
 
 void		parse_add_arg(t_env *e, t_parse *p);
-void		parse_add_cmd(t_env *e, t_parse *p, char pipe);
+void		parse_add_cmd(t_env *e, t_parse *p, char sep);
 int			parse_add_redirec(t_env *e, t_parse *p);
 void		parse_get_redirec_type(t_env *e, t_parse *p);
 
-int			is_escaped_char(t_env *e, int i);
+int			is_aspace(char c);
 void		parse_cmd_cleanline(t_env *e);
 
 void		parse_cmd_args(t_env *e);

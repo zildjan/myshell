@@ -36,6 +36,10 @@
 # define EP_AMB_IN 3
 # define EP_MISS_REDIREC 4
 
+# define SEP_PIPE 1
+# define SEP_AND 2
+# define SEP_OR 3
+
 typedef struct	s_job
 {
 	char			*name;
@@ -60,7 +64,7 @@ typedef struct	s_parse
 typedef struct	s_cmd
 {
 	char		**arg;
-	char		*quo;
+	char		condi;
 	int			pid;
 	int			pipe[2];
 	char		*in;

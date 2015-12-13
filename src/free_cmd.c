@@ -29,8 +29,6 @@ void	free_cmd(t_env *e)
 		}
 		if (e->cmd[i].arg)
 			free(e->cmd[i].arg);
-		if (e->cmd[i].quo)
-			free(e->cmd[i].quo);
 		if (e->cmd[i].in)
 			free(e->cmd[i].in);
 		if (e->cmd[i].out)
