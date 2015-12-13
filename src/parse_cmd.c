@@ -39,6 +39,8 @@ void	parse_cmd(t_env *e)
 	e->cmd = (t_cmd*)ft_memalloc(sizeof(t_cmd) * (e->nb_cmd));
 	e->cmd[0].in_t = NONE;
 	e->cmd[0].out_t = NONE;
+	e->cmd[0].in_fd = 0;
+	e->cmd[0].out_fd = 1;
 	e->cmd[0].condi = 0;
 
 	while (e->line[++p.i] && !p.error)
@@ -65,7 +67,7 @@ void	parse_cmd(t_env *e)
 				 && !p.quo && !p.escape)
 		{
 			p.i++;
-			if (!is_aspace(e->line[p.i - 1]) && p.ib > 0)
+			if (p.ib > 0)
 				parse_add_arg(e, &p);
 			if (p.a_id == 0)
 			{
@@ -73,15 +75,12 @@ void	parse_cmd(t_env *e)
 				break ;
 			}
 			parse_add_cmd(e, &p, SEP_AND);
-			if (is_aspace(e->line[p.i + 1]))
-				p.i++;
-
 		}
 		else if (e->line[p.i] == '|' && e->line[p.i + 1] == '|'
 				 && !p.quo && !p.escape)
 		{
 			p.i++;
-			if (!is_aspace(e->line[p.i - 1]) && p.ib > 0)
+			if (p.ib > 0)
 				parse_add_arg(e, &p);
 			if (p.a_id == 0)
 			{
@@ -89,14 +88,11 @@ void	parse_cmd(t_env *e)
 				break ;
 			}
 			parse_add_cmd(e, &p, SEP_AND);
-			if (is_aspace(e->line[p.i + 1]))
-				p.i++;
-
 		}
 		else if (e->line[p.i] == '|' && !p.quo
 				 && !p.escape)
 		{
-			if (!is_aspace(e->line[p.i - 1]) && p.ib > 0)
+			if (p.ib > 0)
 				parse_add_arg(e, &p);
 			if (p.a_id == 0)
 			{
@@ -104,31 +100,30 @@ void	parse_cmd(t_env *e)
 				break ;
 			}
 			parse_add_cmd(e, &p, SEP_PIPE);
-			if (is_aspace(e->line[p.i + 1]))
-				p.i++;
-
 		}
 		else if (e->line[p.i] == ';' && !p.quo
 				&& !p.escape)
 		{
-			if (e->line[p.i - 1] != ' ' && p.ib > 0)
+			if (p.ib > 0)
 				parse_add_arg(e, &p);
 			if (p.a_id)
 				parse_add_cmd(e, &p, NONE);
-			if (is_aspace(e->line[p.i + 1]))
-				p.i++;
-
 		}
-		else if ((e->line[p.i] == '<' || e->line[p.i] == '>')
+		else if (((ft_isdigit(e->line[p.i])
+					&& (e->line[p.i + 1] == '<' || e->line[p.i + 1] == '>'))
+				   || (e->line[p.i] == '<' || e->line[p.i] == '>'))
 				 && !p.quo && !p.escape)
 		{
-			if (!is_aspace(e->line[p.i - 1]) && p.ib > 0)
+			if (p.ib > 0)
 				parse_add_arg(e, &p);
+			p.redirec_fd = -1;
+			if (ft_isdigit(e->line[p.i]))
+				p.redirec_fd = e->line[p.i++] - 48;
 			parse_get_redirec_type(e, &p);
 		}
 		else if (is_aspace(e->line[p.i]) && !p.quo && !p.escape)
 		{
-			if (!is_aspace(e->line[p.i - 1]))
+			if (p.ib > 0)
 				parse_add_arg(e, &p);
 		}
 		else if (e->line[p.i] == '\\' && !p.escape
@@ -190,7 +185,7 @@ void	parse_add_cmd(t_env *e, t_parse *p, char sep)
 	int		old_size;
 	int		new_size;
 
-//	ft_printf("NEW CMD  arg_id=%ld\n", p->a_id);
+	ft_printf("NEW CMD  arg_id=%ld\n", p->a_id);
 
 	if (p->redirec)
 		p->error = EP_MISS_REDIREC;
@@ -206,6 +201,8 @@ void	parse_add_cmd(t_env *e, t_parse *p, char sep)
 	p->a_id = 0;
 	e->cmd[e->cid].in_t = NONE;
 	e->cmd[e->cid].out_t = NONE;
+	e->cmd[e->cid].in_fd = 0;
+	e->cmd[e->cid].out_fd = 1;
 	e->cmd[e->cid].in = NULL;
 	e->cmd[e->cid].out = NULL;
 	e->cmd[e->cid].condi = NONE;
@@ -239,7 +236,7 @@ void	parse_add_arg(t_env *e, t_parse *p)
 		return ;
 	}
 
-//	ft_printf("NEW ARG  '%s'\n", p->buf);
+	ft_printf("NEW ARG  '%s'\n", p->buf);
 
 	old_size = sizeof(char*) * (p->a_id + 1);
 	new_size = sizeof(char*) * (p->a_id + 2);
@@ -264,11 +261,13 @@ int		parse_add_redirec(t_env *e, t_parse *p)
 {
 	if (!p->ib)
 		return (p->error = EP_MISS_REDIREC);
-//	ft_printf("NEW REDIREC -> '%s'\n", p->buf);
+	ft_printf("NEW REDIREC -> '%s'\n", p->buf);
 	if (p->redirec == R_OUTA || p->redirec == R_OUT)
 	{
 		if (e->cmd[e->cid].out)
 			free(e->cmd[e->cid].out);
+		if (p->redirec_fd >= 0)
+			e->cmd[e->cid].out_fd = p->redirec_fd;
 		e->cmd[e->cid].out = ft_strdup(p->buf);
 		e->cmd[e->cid].out_t = p->redirec;
 	}
@@ -276,6 +275,8 @@ int		parse_add_redirec(t_env *e, t_parse *p)
 	{
 		if (e->cmd[e->cid].in)
 			free(e->cmd[e->cid].in);
+		if (p->redirec_fd >= 0)
+			e->cmd[e->cid].in_fd = p->redirec_fd;
 		e->cmd[e->cid].in = ft_strdup(p->buf);
 		e->cmd[e->cid].in_t = p->redirec;
 	}
@@ -283,6 +284,7 @@ int		parse_add_redirec(t_env *e, t_parse *p)
 	p->ib = 0;
 	p->quo = NONE;
 	p->redirec = NONE;
+	p->redirec_fd = -1;
 	return (0);
 }
 

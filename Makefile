@@ -84,7 +84,6 @@ clean :
 	@rm -rf $(OBJ_PATH)
 	@echo "	$(B)Removing temporary files$(RT)"
 	@find . -name "*~" -delete
-	@find . -name "a.out" -delete
 
 fclean : clean
 	@echo "	$(B)Removing '$(NAME)'$(RT)"

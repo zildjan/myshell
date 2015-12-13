@@ -48,6 +48,17 @@ typedef struct	s_job
 	struct s_job	*next;
 }				t_job;
 
+typedef struct	s_redir
+{
+	char		*in;
+	char		*out;
+	int			in_t;
+	int			out_t;
+	int			in_fd;
+	int			out_fd;
+	struct s_redir	*next;
+}				t_redir;
+
 typedef struct	s_parse
 {
 	char	quo;
@@ -59,6 +70,7 @@ typedef struct	s_parse
 	int		error;
 	int		line_len;
 	int		redirec;
+	int		redirec_fd;
 }				t_parse;
 
 typedef struct	s_cmd
@@ -71,6 +83,8 @@ typedef struct	s_cmd
 	char		*out;
 	int			in_t;
 	int			out_t;
+	int			in_fd;
+	int			out_fd;
 }				t_cmd;
 
 typedef struct	s_env

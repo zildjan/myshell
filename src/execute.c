@@ -18,6 +18,8 @@ void	process_cmd(t_env *e)
 	while (e->nb_cmd > e->cid)
 	{
 		e->carg = e->cmd[e->cid].arg;
+		ft_printf("%s %ld>%s %ld<%s\n", e->carg[0], e->cmd[e->cid].out_fd, 
+				  e->cmd[e->cid].out, e->cmd[e->cid].in_fd, e->cmd[e->cid].in);
 		if (!process_builtin(e))
 			process_bin(e, e->var);
 		e->cid++;

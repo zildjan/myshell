@@ -17,6 +17,9 @@ void	print_prompt(t_env *e)
 	char *spwd;
 
 	spwd = ft_get_basename(e->pwd);
+//	ft_putstr_fd("{bold}/", 2);
+//	ft_putstr_fd(spwd, 2);
+//	ft_putstr_fd(" > {rt}", 2);
 	ft_printf("{bold}/%s > {rt}", spwd);
 	free(spwd);
 }
