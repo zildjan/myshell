@@ -71,6 +71,7 @@ typedef struct	s_parse
 	int		ib;
 	int		a_id;
 	int		error;
+	int		separ;
 	int		line_len;
 	int		redirec;
 	int		redirec_fd;

@@ -30,6 +30,7 @@ void	parse_cmd(t_env *e)
 	e->nb_cmd = 1;
 	p.quo = NONE;
 	p.escape = 0;
+	p.separ = 0;
 	p.redirec = NONE;
 	p.error = 0;
 	p.buf = ft_strnew(ft_strlen(e->line));
@@ -40,8 +41,40 @@ void	parse_cmd(t_env *e)
 	e->cmd[0].redir = NULL;
 	e->cmd[0].condi = 0;
 
-	while (e->line[++p.i] && !p.error)
+	while (1)
 	{
+		if (p.error)
+			break ;
+		if (!e->line[++p.i])
+		{
+			if (p.ib)
+				parse_add_arg(e, &p);
+			if (p.quo == SIMP)
+				get_cmd_end(e, '\'');
+			else if (p.quo == DOUB)
+				get_cmd_end(e, '"');
+			else if (p.escape)
+				get_cmd_end(e, 0);
+			else if (!p.a_id && p.separ)
+				get_cmd_end(e, p.separ);
+			else
+				break ;
+
+			if (!e->line)
+			{
+				ft_printf("MASSIVE ERROR\n");
+				while (1);
+			}
+			p.i = 0;
+			p.ib = 0;
+			p.escape = 0;
+			parse_cmd_cleanline(e);
+			p.line_len = ft_strlen(e->line);
+			if (p.line_len > 1000 || !p.line_len)
+				break ;
+			free(p.buf);
+			p.buf = ft_strnew(ft_strlen(e->line));
+		}
 //		ft_printf("STA i=%ld c='%c'\n", p.i, e->line[p.i]);
 
 		if (e->line[p.i] == '\'' && (!p.quo || p.quo == SIMP)
@@ -133,7 +166,7 @@ void	parse_cmd(t_env *e)
 		else
 		{
 			p.buf[p.ib++] = e->line[p.i];
-//			ft_printf("'%c' = '%s'\n", p.buf[p.ib - 1], p.buf);
+//			ft_printf("'%c' = '%s' = %d\n", p.buf[p.ib - 1], p.buf, p.buf[p.ib - 1]);
 		}
 
 		if (p.escape)
@@ -142,10 +175,18 @@ void	parse_cmd(t_env *e)
 //		ft_printf("END i=%ld c='%c'\n", p.i, e->line[p.i]);
 	}
 
-	if (p.ib)
-		parse_add_arg(e, &p);
+			if (p.ib)
+				parse_add_arg(e, &p);
 	if (!p.error && p.a_id == 0)
+	{
+		if (!p.separ)
+		{
+			free_cmd_redirec(e, e->cid);
+			e->nb_cmd--;
+		}
+		else
 		p.error = EP_NULL_CMD;
+	}
 	if (!p.error && p.redirec)
 		p.error = EP_MISS_REDIREC;
 
@@ -207,6 +248,7 @@ void	parse_add_cmd(t_env *e, t_parse *p, char sep)
 //	{
 //		p->error = EP_AMB_OUT;
 //	}
+	p->separ = sep;
 	if (sep == SEP_PIPE)
 	{
 		new_redirec(e, NULL, R_PIPEIN, 0);
@@ -329,7 +371,7 @@ void	parse_get_redirec_type(t_env *e, t_parse *p)
 		if (e->line[p->i + 1] == '&')
 			p->error = EP_SYNTAX;
 	}
-	while (e->line[p->i + 1] == ' ')
+	while (is_aspace(e->line[p->i + 1]))
 		p->i++;
 //	ft_printf("->'%s'\n", e->line + p->i);
 }

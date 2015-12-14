@@ -29,6 +29,33 @@ void	get_cmd(t_env *e)
 	e->line = NULL;
 }
 
+void	get_cmd_end(t_env *e, char type)
+{
+	int		ret;
+
+	if (e->line)
+		free(e->line);
+	e->line = NULL;
+	if (type == SEP_PIPE)
+		ft_putstr("pipe> ");
+	else if (type == SEP_AND)
+		ft_putstr("cmdand> ");
+	else if (type == SEP_OR)
+		ft_putstr("or> ");
+	else if (type == '\'')
+		ft_putstr("quote> ");
+	else if (type == '"')
+		ft_putstr("dquote> ");
+	else
+		ft_putstr("> ");
+	ret = get_next_line(0, &e->line);
+	if (ret == 0)
+	{
+		ft_printf("exit\n");
+		builtin_exit(e);
+	}
+}
+
 
 
 

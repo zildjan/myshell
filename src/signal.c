@@ -37,6 +37,8 @@ void	catch_signal(void)
 	signal(SIGTSTP, sig_mediator);
 	signal(SIGTTIN, sig_mediator);
 	signal(SIGTTOU, sig_mediator);
+	signal(SIGSEGV, sig_mediator);
+//	signal(SIGABRT, sig_mediator);
 //	signal(SIGIOT, sig_mediator);
 
 // */
@@ -57,7 +59,32 @@ void	sig_handler(t_env *e, int signum)
 	if (signum == SIGINT)
 	{
 		print_prompt(se);
-	}
+	}/*
+	else if (signum == SIGSEGV || signum == SIGABRT)
+	{
+		ft_printf("!!!!!! SEGVAULT\n");
+
+		ft_printf("\n\n\nline = '%s'\n->", se->line);
+		int i;
+		i = 0;
+		while (se->line[i])
+		{
+			if (ft_isalnum(se->line[i]))
+				ft_putchar(se->line[i]);
+			i++;
+		}
+		ft_printf("<-\n");
+		i = 0;
+		while (se->line[i])
+		{
+			ft_putnbr(se->line[i]);
+			ft_putchar(' ');
+			i++;
+		}
+		ft_printf("<-\n");
+//		while (1)
+		exit(1);
+	}  // */
 	else if (signum == SIGTSTP)
 	{		
 //		ft_printf("STOP %ld\n", se->jobs->pid);

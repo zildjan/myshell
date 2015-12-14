@@ -88,6 +88,7 @@ void		parse_home_tilde(t_env *e, int id_cmd, int id_arg);
 **   GET_CMD
 */
 void		get_cmd(t_env *e);
+void		get_cmd_end(t_env *e, char type);
 
 //void		parse_cmd_seq(t_env *e);
 //void		split_cmd_pipes(t_env *e, char *cmd);
