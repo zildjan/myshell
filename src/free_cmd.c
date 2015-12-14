@@ -29,14 +29,27 @@ void	free_cmd(t_env *e)
 		}
 		if (e->cmd[i].arg)
 			free(e->cmd[i].arg);
-		if (e->cmd[i].in)
-			free(e->cmd[i].in);
-		if (e->cmd[i].out)
-			free(e->cmd[i].out);
+		free_cmd_redirec(e, i);
 		e->cmd[i].arg = NULL;
 		i2 = 0;
 		i++;
 	}
 	free(e->cmd);
 	e->cmd = NULL;
+}
+
+void	free_cmd_redirec(t_env *e, int i)
+{
+	t_redir	*redir;
+	t_redir	*tmp;
+
+	redir = e->cmd[i].redir;
+	while (redir)
+	{
+		tmp = redir;
+		redir = redir->next;
+		if (tmp->file)
+			free(tmp->file);
+		free(tmp);
+	}
 }

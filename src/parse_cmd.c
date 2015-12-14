@@ -37,10 +37,7 @@ void	parse_cmd(t_env *e)
 	p.i = -1;
 	p.ib = 0;
 	e->cmd = (t_cmd*)ft_memalloc(sizeof(t_cmd) * (e->nb_cmd));
-	e->cmd[0].in_t = NONE;
-	e->cmd[0].out_t = NONE;
-	e->cmd[0].in_fd = 0;
-	e->cmd[0].out_fd = 1;
+	e->cmd[0].redir = NULL;
 	e->cmd[0].condi = 0;
 
 	while (e->line[++p.i] && !p.error)
@@ -109,7 +106,7 @@ void	parse_cmd(t_env *e)
 			if (p.a_id)
 				parse_add_cmd(e, &p, NONE);
 		}
-		else if (((ft_isdigit(e->line[p.i])
+		else if (((ft_isdigit(e->line[p.i]) && is_aspace(e->line[p.i - 1])
 					&& (e->line[p.i + 1] == '<' || e->line[p.i + 1] == '>'))
 				   || (e->line[p.i] == '<' || e->line[p.i] == '>'))
 				 && !p.quo && !p.escape)
@@ -165,6 +162,10 @@ void	parse_cmd(t_env *e)
 			ft_putendl_fd("Ambiguous input redirect.", 2);
 		else if (p.error == EP_MISS_REDIREC)
 			ft_putendl_fd("Missing name for redirect.", 2);
+		else if (p.error == EP_BAD_FD)
+			ft_putendl_fd("Bad file descriptor.", 2);
+		else if (p.error == EP_SYNTAX)
+			ft_putendl_fd("Syntax error.", 2);
 	}
 
 	free(p.buf);
@@ -185,7 +186,7 @@ void	parse_add_cmd(t_env *e, t_parse *p, char sep)
 	int		old_size;
 	int		new_size;
 
-	ft_printf("NEW CMD  arg_id=%ld\n", p->a_id);
+//	ft_printf("NEW CMD  arg_id=%ld\n", p->a_id);
 
 	if (p->redirec)
 		p->error = EP_MISS_REDIREC;
@@ -199,22 +200,19 @@ void	parse_add_cmd(t_env *e, t_parse *p, char sep)
 	e->nb_cmd++;
 	e->cid++;
 	p->a_id = 0;
-	e->cmd[e->cid].in_t = NONE;
-	e->cmd[e->cid].out_t = NONE;
-	e->cmd[e->cid].in_fd = 0;
-	e->cmd[e->cid].out_fd = 1;
-	e->cmd[e->cid].in = NULL;
-	e->cmd[e->cid].out = NULL;
 	e->cmd[e->cid].condi = NONE;
+	e->cmd[e->cid].redir = NULL;
 
-	if (sep == SEP_PIPE && e->cmd[e->cid - 1].out_t)
-	{
-		p->error = EP_AMB_OUT;
-	}
+//	if (sep == SEP_PIPE && e->cmd[e->cid - 1].out_t)
+//	{
+//		p->error = EP_AMB_OUT;
+//	}
 	if (sep == SEP_PIPE)
 	{
-		e->cmd[e->cid].in_t = R_PIPE;
-		e->cmd[e->cid - 1].out_t = R_PIPE;
+		new_redirec(e, NULL, R_PIPEIN, 0);
+		e->cid--;
+		new_redirec(e, NULL, R_PIPEOUT, 0);
+		e->cid++;
 	}
 	else if (sep == SEP_AND)
 		e->cmd[e->cid].condi = SEP_AND;
@@ -236,7 +234,7 @@ void	parse_add_arg(t_env *e, t_parse *p)
 		return ;
 	}
 
-	ft_printf("NEW ARG  '%s'\n", p->buf);
+//	ft_printf("NEW ARG  '%s'\n", p->buf);
 
 	old_size = sizeof(char*) * (p->a_id + 1);
 	new_size = sizeof(char*) * (p->a_id + 2);
@@ -261,25 +259,28 @@ int		parse_add_redirec(t_env *e, t_parse *p)
 {
 	if (!p->ib)
 		return (p->error = EP_MISS_REDIREC);
-	ft_printf("NEW REDIREC -> '%s'\n", p->buf);
-	if (p->redirec == R_OUTA || p->redirec == R_OUT)
+
+//	ft_printf("NEW REDIREC -> '%s'\n", p->buf);
+
+	if (p->redirec_fd < 0)
 	{
-		if (e->cmd[e->cid].out)
-			free(e->cmd[e->cid].out);
-		if (p->redirec_fd >= 0)
-			e->cmd[e->cid].out_fd = p->redirec_fd;
-		e->cmd[e->cid].out = ft_strdup(p->buf);
-		e->cmd[e->cid].out_t = p->redirec;
+		p->redirec_fd = 0;
+		if (p->redirec == R_OUTA || p->redirec == R_OUT)
+			p->redirec_fd = 1;
+	}
+	if (p->buf[0] == '&' )
+	{
+		if (!ft_isdigit(p->buf[1]))
+			p->error = EP_BAD_FD;
+		else if (p->buf[2])
+			p->error = EP_SYNTAX;
+		if (p->redirec == R_OUT)
+			new_redirec(e, p->buf + 1, R_FDOUT, p->redirec_fd);
+		else
+			new_redirec(e, p->buf + 1, R_FDIN, p->redirec_fd);
 	}
 	else
-	{
-		if (e->cmd[e->cid].in)
-			free(e->cmd[e->cid].in);
-		if (p->redirec_fd >= 0)
-			e->cmd[e->cid].in_fd = p->redirec_fd;
-		e->cmd[e->cid].in = ft_strdup(p->buf);
-		e->cmd[e->cid].in_t = p->redirec;
-	}
+		new_redirec(e, p->buf, p->redirec, p->redirec_fd);
 	ft_strclr(p->buf);
 	p->ib = 0;
 	p->quo = NONE;
@@ -288,27 +289,45 @@ int		parse_add_redirec(t_env *e, t_parse *p)
 	return (0);
 }
 
+void	new_redirec(t_env *e, char *file, int type, int fd)
+{
+	t_redir		*new;
+	t_redir		*tmp;
+
+	new = (t_redir*)ft_memalloc(sizeof(t_redir));
+	new->file = ft_strdup(file);
+	new->type = type;
+	new->fd = fd;
+	tmp = e->cmd[e->cid].redir;
+	while (tmp && tmp->next)
+		tmp = tmp->next;
+	if (tmp)
+		tmp->next = new;
+	else
+		e->cmd[e->cid].redir = new;
+}
+
 void	parse_get_redirec_type(t_env *e, t_parse *p)
 {
 	if (p->redirec)
 		p->error = EP_MISS_REDIREC;
 	if (e->line[p->i] == '>' && e->line[p->i + 1] != '>')
-	{
 		p->redirec = R_OUT;
-	}
 	else if (e->line[p->i] == '>' && e->line[p->i + 1] == '>')
 	{
 		p->redirec = R_OUTA;
 		p->i++;
+		if (e->line[p->i + 1] == '&')
+			p->error = EP_SYNTAX;
 	}
 	else if (e->line[p->i] == '<' && e->line[p->i + 1] != '<')
-	{
 		p->redirec = R_IN;
-	}
 	else if (e->line[p->i] == '<' && e->line[p->i + 1] == '<')
 	{
 		p->redirec = R_HDOC;
 		p->i++;
+		if (e->line[p->i + 1] == '&')
+			p->error = EP_SYNTAX;
 	}
 	while (e->line[p->i + 1] == ' ')
 		p->i++;

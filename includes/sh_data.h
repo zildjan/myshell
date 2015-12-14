@@ -28,13 +28,18 @@
 # define R_OUT 2
 # define R_OUTA 3
 # define R_HDOC 4
-# define R_PIPE 5
-# define R_PIPED 6
+# define R_PIPEIN 5
+# define R_PIPEOUT 6
+# define R_PIPED 7
+# define R_FDOUT 8
+# define R_FDIN 9
 
 # define EP_NULL_CMD 1
 # define EP_AMB_OUT 2
 # define EP_AMB_IN 3
 # define EP_MISS_REDIREC 4
+# define EP_BAD_FD 5
+# define EP_SYNTAX 6
 
 # define SEP_PIPE 1
 # define SEP_AND 2
@@ -50,12 +55,10 @@ typedef struct	s_job
 
 typedef struct	s_redir
 {
-	char		*in;
-	char		*out;
-	int			in_t;
-	int			out_t;
-	int			in_fd;
-	int			out_fd;
+	char		*file;
+	int			type;
+	int			fd;
+	int			fd_to;
 	struct s_redir	*next;
 }				t_redir;
 
@@ -79,12 +82,7 @@ typedef struct	s_cmd
 	char		condi;
 	int			pid;
 	int			pipe[2];
-	char		*in;
-	char		*out;
-	int			in_t;
-	int			out_t;
-	int			in_fd;
-	int			out_fd;
+	t_redir		*redir;
 }				t_cmd;
 
 typedef struct	s_env

@@ -12,6 +12,7 @@
 
 #include "sh.h"
 
+/*
 void	pipe_new(t_env *e)
 {
 	if (e->cid + 1 < e->nb_cmd && e->cmd[e->cid].out_t == R_PIPE)
@@ -53,3 +54,4 @@ void	pipe_close(t_env *e)
 	}
 }
 
+// */

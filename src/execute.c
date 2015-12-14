@@ -14,12 +14,17 @@
 
 void	process_cmd(t_env *e)
 {
+	t_redir	*tmp;
 	e->cid = 0;
 	while (e->nb_cmd > e->cid)
 	{
 		e->carg = e->cmd[e->cid].arg;
-		ft_printf("%s %ld>%s %ld<%s\n", e->carg[0], e->cmd[e->cid].out_fd, 
-				  e->cmd[e->cid].out, e->cmd[e->cid].in_fd, e->cmd[e->cid].in);
+		tmp = e->cmd[e->cid].redir;
+		while (tmp)
+		{
+			ft_printf("%s %ld %ld>%s\n", e->carg[0], tmp->type, tmp->fd, tmp->file);
+			tmp = tmp->next;
+		}
 		if (!process_builtin(e))
 			process_bin(e, e->var);
 		e->cid++;
@@ -70,7 +75,7 @@ void	process_bin(t_env *e, char **env)
 	}
 	else
 	{
-		pipe_close(e);
+//		pipe_close(e);
 		if (ft_strchr(cmd, '/'))
 			put_error(ERRNOENT, NULL, cmd);
 		else
@@ -82,7 +87,7 @@ void	process_fork(t_env *e, char *cmd_path, char **env)
 {
 	int		child;
 
-	pipe_new(e);
+//	pipe_new(e);
 	if ((child = fork()) == -1)
 		return ;
 	if (child > 0)
@@ -90,14 +95,14 @@ void	process_fork(t_env *e, char *cmd_path, char **env)
 		if (setpgid(child, child))
 			ft_putendl_fd("setpgid fail", 2);
 		tcsetpgrp(0, child);
-		pipe_close(e);
+//		pipe_close(e);
 		process_wait(e, child, 0);
 	}
 	else if (child == 0)
 	{
 		if (setpgid(0, 0))
 			ft_putendl_fd("setpgid fail", 2);
-		pipe_assign(e);
+//		pipe_assign(e);
 		if (execve(cmd_path, e->cmd[e->cid].arg, env) == -1)
 		{
 			if (ft_get_file_mode(cmd_path) % 2 == 0 

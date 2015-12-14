@@ -102,6 +102,7 @@ void		parse_add_arg(t_env *e, t_parse *p);
 void		parse_add_cmd(t_env *e, t_parse *p, char sep);
 int			parse_add_redirec(t_env *e, t_parse *p);
 void		parse_get_redirec_type(t_env *e, t_parse *p);
+void		new_redirec(t_env *e, char *file, int type, int fd);
 
 int			is_aspace(char c);
 void		parse_cmd_cleanline(t_env *e);
@@ -124,11 +125,11 @@ void		process_wait(t_env *e, int pid, int job);
 
 /*
 **   PIPE
-*/
+*
 void		pipe_new(t_env *e);
 void		pipe_assign(t_env *e);
 void		pipe_close(t_env *e);
-
+// */
 /*
 **   JOBS
 */
@@ -149,6 +150,7 @@ void		parse_env_var_replace(t_env *e, char *arg, char **cmd);
 **   FREE_CMD
 */
 void		free_cmd(t_env *e);
+void		free_cmd_redirec(t_env *e, int i);
 
 /*
 **   PROMPT
