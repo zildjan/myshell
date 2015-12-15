@@ -75,6 +75,7 @@ typedef struct	s_parse
 	int		line_len;
 	int		redirec;
 	int		redirec_fd;
+	char	*last_arg;
 }				t_parse;
 
 typedef struct	s_cmd

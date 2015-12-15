@@ -15,6 +15,7 @@
 
 #include <signal.h>
 #include <sys/mount.h>
+#include <fcntl.h>
 
 # include "libft.h"
 # include "sh_data.h"
@@ -82,17 +83,12 @@ char		*get_cmd_path(t_env *e, char *cmd);
 **   HOME
 */
 void		set_home_path(t_env *e);
-void		parse_home_tilde(t_env *e, int id_cmd, int id_arg);
 
 /*
 **   GET_CMD
 */
 void		get_cmd(t_env *e);
 void		get_cmd_end(t_env *e, char type);
-
-//void		parse_cmd_seq(t_env *e);
-//void		split_cmd_pipes(t_env *e, char *cmd);
-//void		split_cmd_args(t_env *e, char **pipes);
 
 /*
 **   PARSE_CMD
@@ -108,7 +104,11 @@ void		new_redirec(t_env *e, char *file, int type, int fd);
 int			is_aspace(char c);
 void		parse_cmd_cleanline(t_env *e);
 
-void		parse_cmd_args(t_env *e);
+/*
+**   PARSE_CMD_VAR
+*/
+void		parse_var_expansion(t_env *e, t_parse *p);
+void		parse_tilde_expansion(t_env *e, t_parse *p);
 
 /*
 **   EXECUTE
@@ -122,7 +122,10 @@ void		process_wait(t_env *e, int pid, int job);
 /*
 **   REDIRECTIONS
 */
-
+int			redirec_open(t_env *e);
+void		redirec_assign(t_env *e);
+void		redirec_close(t_env *e);
+int			redirec_open_files(t_redir *redir);
 
 /*
 **   PIPE
@@ -140,12 +143,6 @@ void		jobs_remove(t_env *e, int pid);
 void		jobs_list(t_env *e);
 int			jobs_count(t_env *e, int pid);
 void		jobs_exit(t_env *e);
-
-/*
-**   PARSE_CMD_VAR
-*/
-void		parse_env_var(t_env *e, int id_cmd, int id_arg);
-void		parse_env_var_replace(t_env *e, char *arg, char **cmd);
 
 /*
 **   FREE_CMD

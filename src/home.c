@@ -27,30 +27,3 @@ void	set_home_path(t_env *e)
 		free(e->home_dir);
 	e->home_dir = ft_get_dirup(e->home);
 }
-
-void	parse_home_tilde(t_env *e, int id_cmd, int id_arg)
-{
-	char	new[MAXPATHLEN + 1];
-	char	*path;
-
-	path = e->cmd[id_cmd].arg[id_arg];
-	if (path[0] != '~')
-		return ;
-	ft_bzero(new, MAXPATHLEN + 1);
-	if (path[1] == '/')
-	{
-		ft_strcpy(new, e->home);
-		path++;
-		ft_strcat(new, path);
-	}
-	else if (!path[1])
-		ft_strcpy(new, e->home);
-	else
-	{
-		path++;
-		ft_strcpy(new, e->home_dir);
-		ft_strcat(new, path);
-	}
-	free(e->cmd[id_cmd].arg[id_arg]);
-	e->cmd[id_cmd].arg[id_arg] = ft_strdup(new);
-}

@@ -41,6 +41,7 @@ SRCS =		main.c \
 			get_cmd.c \
 			parse_cmd.c \
 			parse_cmd_var.c \
+			redirection.c \
 			execute.c \
 			pipe.c \
 			free_cmd.c \

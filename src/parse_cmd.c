@@ -31,9 +31,10 @@ void	parse_cmd(t_env *e)
 	p.quo = NONE;
 	p.escape = 0;
 	p.separ = 0;
+	p.last_arg = NULL;
 	p.redirec = NONE;
 	p.error = 0;
-	p.buf = ft_strnew(ft_strlen(e->line));
+	p.buf = ft_strnew(p.line_len);
 
 	p.i = -1;
 	p.ib = 0;
@@ -59,14 +60,7 @@ void	parse_cmd(t_env *e)
 				get_cmd_end(e, p.separ);
 			else
 				break ;
-
-			if (!e->line)
-			{
-				ft_printf("MASSIVE ERROR\n");
-				while (1);
-			}
 			p.i = 0;
-			p.ib = 0;
 			p.escape = 0;
 			parse_cmd_cleanline(e);
 			p.line_len = ft_strlen(e->line);
@@ -139,6 +133,16 @@ void	parse_cmd(t_env *e)
 			if (p.a_id)
 				parse_add_cmd(e, &p, NONE);
 		}
+		else if (e->line[p.i] == '$' && p.quo !=SIMP
+				&& !p.escape)
+		{
+			parse_var_expansion(e, &p);
+		}
+		else if (e->line[p.i] == '~' && !p.quo && !p.ib
+				&& !p.escape)
+		{
+			parse_tilde_expansion(e, &p);
+		}
 		else if (((ft_isdigit(e->line[p.i]) && is_aspace(e->line[p.i - 1])
 					&& (e->line[p.i + 1] == '<' || e->line[p.i + 1] == '>'))
 				   || (e->line[p.i] == '<' || e->line[p.i] == '>'))
@@ -175,8 +179,7 @@ void	parse_cmd(t_env *e)
 //		ft_printf("END i=%ld c='%c'\n", p.i, e->line[p.i]);
 	}
 
-			if (p.ib)
-				parse_add_arg(e, &p);
+	set_env_var(e, "_", p.last_arg);
 	if (!p.error && p.a_id == 0)
 	{
 		if (!p.separ)
@@ -215,10 +218,7 @@ void	parse_cmd(t_env *e)
 //	ft_printf("nb_cmd=%ld\n", e->nb_cmd);
 
 	if (!p.error)
-	{
-		parse_cmd_args(e);
 		process_cmd(e);
-	}
 	free_cmd(e);
 }
 
@@ -244,10 +244,7 @@ void	parse_add_cmd(t_env *e, t_parse *p, char sep)
 	e->cmd[e->cid].condi = NONE;
 	e->cmd[e->cid].redir = NULL;
 
-//	if (sep == SEP_PIPE && e->cmd[e->cid - 1].out_t)
-//	{
-//		p->error = EP_AMB_OUT;
-//	}
+	set_env_var(e, "_", p->last_arg);
 	p->separ = sep;
 	if (sep == SEP_PIPE)
 	{
@@ -288,6 +285,7 @@ void	parse_add_arg(t_env *e, t_parse *p)
 
 //	ft_printf("->'%s' %ld '%ld'\n", p->buf, ft_strlen(p->buf), p->buf[ft_strlen(p->buf)]);
 	e->cmd[e->cid].arg[p->a_id] = ft_strdup(p->buf);
+	p->last_arg = e->cmd[e->cid].arg[p->a_id];
 	e->cmd[e->cid].arg[p->a_id + 1] = NULL;
 	ft_strclr(p->buf);
 	p->ib = 0;
@@ -340,6 +338,7 @@ void	new_redirec(t_env *e, char *file, int type, int fd)
 	new->file = ft_strdup(file);
 	new->type = type;
 	new->fd = fd;
+	new->fd_to = -1;
 	tmp = e->cmd[e->cid].redir;
 	while (tmp && tmp->next)
 		tmp = tmp->next;
@@ -401,47 +400,4 @@ void	parse_cmd_cleanline(t_env *e)
 	e->line = temp;
 //	ft_printf("line = '%s'\n", e->line);
 }
-
-
-void	parse_cmd_args(t_env *e)
-{
-	int	i;
-	int	i2;
-
-	i = 0;
-	i2 = 0;
-	while (e->nb_cmd > i )
-	{
-		while (e->cmd[i].arg[i2])
-		{
-				parse_env_var(e, i, i2);
-				parse_home_tilde(e, i, i2);
-			i2++;
-		}
-		i2 = 0;
-		i++;
-	}
-}
-
-
-/*
-void	parse_redirections(t_env *e)
-{
-	int		i;
-	int		i2;
-	char	**cmds;
-
-	i = -1;
-	i2 = 0;
-	while (cmds[++i])
-	{
-		while (cmds[i][i2])
-		{
-			if (cmds[i][i2] == '>' || cmds[i][i2] == '<')
-				i2++;
-		}
-		i2 = 0;
-	}
-}
-*/
 
