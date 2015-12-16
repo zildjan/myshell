@@ -12,46 +12,44 @@
 
 #include "sh.h"
 
-/*
-void	pipe_new(t_env *e)
+
+int 	pipe_new(t_env *e, t_redir *redir)
 {
-	if (e->cid + 1 < e->nb_cmd && e->cmd[e->cid].out_t == R_PIPE)
+	if ((pipe(e->cmd[e->cid].pipe) == -1))
 	{
-		e->cmd[e->cid].out_t = R_PIPED;
-//		ft_printf("un pipe\n");
-		pipe(e->cmd[e->cid].pipe);
+		ft_putstr_fd("Error : can't create pipe ", 2);
+		redir->type = R_PIPENOT;
+		return (0);
 	}
+//	ft_printf("new pipe n%ld %ld=%ld\n", e->cid, e->cmd[e->cid].pipe[0], e->cmd[e->cid].pipe[1]);
+//	ft_printf("un pipe\n");
+	return (1);
 }
 
-void	pipe_assign(t_env *e)
+void	pipe_assign(t_env *e, t_redir *redir)
 {
-	if (e->cid + 1 < e->nb_cmd && e->nb_cmd > 1
-		&& e->cmd[e->cid].out_t == R_PIPED)
-	{
-//		ft_printf("assign -> %ld vers %ld\n", e->cid, e->cid +1);
-		close(e->cmd[e->cid].pipe[0]);
-		dup2(e->cmd[e->cid].pipe[1], 1);
-		close(e->cmd[e->cid].pipe[1]);
-	}
-	if (e->cid > 0 && e->cmd[e->cid].in_t == R_PIPE
-		&& e->cmd[e->cid - 1].out_t == R_PIPED)
+	if (redir->type == R_PIPEIN)
 	{
 //		ft_printf("assign <- %ld depuis %ld\n", e->cid -1, e->cid);
 		close(e->cmd[e->cid - 1].pipe[1]);
-		dup2(e->cmd[e->cid - 1].pipe[0], 0);
+		if (dup2(e->cmd[e->cid - 1].pipe[0], 0) == -1)
+			perror("\n\n!!!!!!!!");
 		close(e->cmd[e->cid - 1].pipe[0]);
+	}
+	else if (redir->type == R_PIPEOUT)
+	{
+//		ft_printf("assign -> %ld vers %ld\n", e->cid, e->cid +1);
+		close(e->cmd[e->cid].pipe[0]);
+		if (dup2(e->cmd[e->cid].pipe[1], 1) == -1)
+			perror("\n\n!!!!!!!");
+		close(e->cmd[e->cid].pipe[1]);
 	}
 }
 
 void	pipe_close(t_env *e)
 {
-	if (e->cid > 0 && e->cmd[e->cid].in_t == R_PIPE
-		&& e->cmd[e->cid - 1].out_t == R_PIPED)
-	{
-//		ft_printf("close pipe\n");
-		close(e->cmd[e->cid - 1].pipe[0]);
-		close(e->cmd[e->cid - 1].pipe[1]);
-	}
+//	ft_printf("close pipe n%ld %ld=%ld\n", cid-1, e->cmd[cid - 1].pipe[0], e->cmd[cid - 1].pipe[1]);
+	close(e->cmd[e->cid - 1].pipe[0]);
+	close(e->cmd[e->cid - 1].pipe[1]);
 }
 
-// */

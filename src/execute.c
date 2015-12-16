@@ -14,17 +14,45 @@
 
 void	process_cmd(t_env *e)
 {
+	int		condi;
+
 	e->cid = 0;
+	e->wait_cid = 0;
 	while (e->nb_cmd > e->cid)
 	{
 		e->carg = e->cmd[e->cid].arg;
-		if (redirec_open(e))
+		condi = e->cmd[e->cid].condi;
+		if (redirec_open(e)
+			&& ((condi != SEP_AND && condi != SEP_OR)
+				|| (condi == SEP_AND && !e->status)
+				|| (condi == SEP_OR && e->status)))
+		{
 			if (!process_builtin(e))
+			{
 				process_bin(e, e->var);
-		redirec_close(e);
+//				if (e->status != 127) // GROS POBEME
+				process_wait_list(e);
+			}
+		}
 		e->cid++;
 	}
 	e->carg = NULL;
+}
+
+void	process_wait_list(t_env *e)
+{
+	redirec_close(e);
+	if (e->nb_cmd > e->cid + 1)
+	{
+		if (e->cmd[e->cid + 1].condi == SEP_PIPE)
+		{
+//			ft_printf("NOOOO %ld\n", e->cid);
+			return ;
+		}
+	}
+
+	while (e->wait_cid <= e->cid)
+		process_wait(e, e->cmd[e->wait_cid++].pid, 0);
 }
 
 int		process_builtin(t_env *e)
@@ -70,6 +98,7 @@ void	process_bin(t_env *e, char **env)
 	}
 	else
 	{
+		e->status = 127;
 		if (ft_strchr(cmd, '/'))
 			put_error(ERRNOENT, NULL, cmd);
 		else
@@ -85,15 +114,13 @@ void	process_fork(t_env *e, char *cmd_path, char **env)
 		return ;
 	if (child > 0)
 	{
-		if (setpgid(child, child))
-			ft_putendl_fd("setpgid fail", 2);
+		e->cmd[e->cid].pid = child;
+		process_setpgid(e);
 		tcsetpgrp(0, child);
-		process_wait(e, child, 0);
 	}
 	else if (child == 0)
 	{
-		if (setpgid(0, 0))
-			ft_putendl_fd("setpgid fail", 2);
+
 		redirec_assign(e);
 		if (execve(cmd_path, e->cmd[e->cid].arg, env) == -1)
 		{
@@ -102,7 +129,7 @@ void	process_fork(t_env *e, char *cmd_path, char **env)
 				put_error(ERRACCES, NULL, e->cmd[e->cid].arg[0]);
 			else
 				put_error(ERREXEFORM, NULL, e->cmd[e->cid].arg[0]);
-			exit(0);
+			exit(126);
 		}
 	}
 }
@@ -131,4 +158,19 @@ void	process_wait(t_env *e, int pid, int job)
 		e->status = WEXITSTATUS(ret);
 	if (!WIFSTOPPED(ret) && job)
 		jobs_remove(e, pid);
+}
+
+void	process_setpgid(t_env *e)
+{
+	if (e->cmd[e->cid].condi == SEP_PIPE)
+	{
+		if (setpgid(e->cmd[e->cid].pid, e->cmd_pgid))
+			ft_putendl_fd("setpgid fail", 2);
+	}
+	else
+	{
+		e->cmd_pgid = e->cmd[e->cid].pid;
+		if (setpgid(e->cmd[e->cid].pid, e->cmd_pgid))
+			ft_putendl_fd("setpgid fail", 2);
+	}
 }

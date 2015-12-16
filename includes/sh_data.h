@@ -30,9 +30,9 @@
 # define R_HDOC 4
 # define R_PIPEIN 5
 # define R_PIPEOUT 6
-# define R_PIPED 7
-# define R_FDOUT 8
-# define R_FDIN 9
+# define R_FDOUT 7
+# define R_FDIN 8
+# define R_PIPENOT 9
 
 # define EP_NULL_CMD 1
 # define EP_AMB_OUT 2
@@ -83,6 +83,7 @@ typedef struct	s_cmd
 	char		**arg;
 	char		condi;
 	int			pid;
+	int			pgid;
 	int			pipe[2];
 	t_redir		*redir;
 }				t_cmd;
@@ -94,6 +95,7 @@ typedef struct	s_env
 	char	**carg;
 	int		cid;
 	int		nb_cmd;
+	int		wait_cid;
 	int		cmd_pgid;
 	char	**var;
 	int		tab_size;

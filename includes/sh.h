@@ -119,6 +119,9 @@ void		process_bin(t_env *e, char **env);
 void		process_fork(t_env *e, char *cmd_path, char **env);
 void		process_wait(t_env *e, int pid, int job);
 
+void		process_wait_list(t_env *e);
+void		process_setpgid(t_env *e);
+
 /*
 **   REDIRECTIONS
 */
@@ -126,14 +129,16 @@ int			redirec_open(t_env *e);
 void		redirec_assign(t_env *e);
 void		redirec_close(t_env *e);
 int			redirec_open_files(t_redir *redir);
+int			redirec_open_dupfd(t_redir *redir);
+void		redirec_assign_dupfd(t_redir *redir);
 
 /*
 **   PIPE
-*
-void		pipe_new(t_env *e);
-void		pipe_assign(t_env *e);
+*/
+int			pipe_new(t_env *e, t_redir *redir);
+void		pipe_assign(t_env *e, t_redir *redir);
 void		pipe_close(t_env *e);
-// */
+
 /*
 **   JOBS
 */

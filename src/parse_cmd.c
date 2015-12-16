@@ -111,7 +111,7 @@ void	parse_cmd(t_env *e)
 				p.error = EP_NULL_CMD;
 				break ;
 			}
-			parse_add_cmd(e, &p, SEP_AND);
+			parse_add_cmd(e, &p, SEP_OR);
 		}
 		else if (e->line[p.i] == '|' && !p.quo
 				 && !p.escape)
@@ -248,6 +248,7 @@ void	parse_add_cmd(t_env *e, t_parse *p, char sep)
 	p->separ = sep;
 	if (sep == SEP_PIPE)
 	{
+		e->cmd[e->cid].condi = SEP_PIPE;
 		new_redirec(e, NULL, R_PIPEIN, 0);
 		e->cid--;
 		new_redirec(e, NULL, R_PIPEOUT, 0);
@@ -310,7 +311,7 @@ int		parse_add_redirec(t_env *e, t_parse *p)
 	}
 	if (p->buf[0] == '&' )
 	{
-		if (!ft_isdigit(p->buf[1]))
+		if (!ft_isdigit(p->buf[1]) && p->buf[1] != '-')
 			p->error = EP_BAD_FD;
 		else if (p->buf[2])
 			p->error = EP_SYNTAX;

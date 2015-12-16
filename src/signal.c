@@ -58,7 +58,7 @@ void	sig_handler(t_env *e, int signum)
 		se = e;
 	if (signum == SIGINT)
 	{
-		print_prompt(se);
+//		print_prompt(se);
 	}/*
 	else if (signum == SIGSEGV || signum == SIGABRT)
 	{
