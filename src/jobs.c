@@ -24,7 +24,8 @@ void	jobs_add(t_env *e, int pid)
 		while (tmp && tmp->next)
 			tmp = tmp->next;
 		new = (t_job*)ft_memalloc(sizeof(t_job));
-		new->pgid = pid;
+		new->pid = pid;
+		new->pgid = e->cmd_pgid;
 		new->id = id + 1;
 		new->name = ft_strdup(e->carg[0]);
 		new->next = NULL;
@@ -49,12 +50,12 @@ void	jobs_continue(t_env *e)
 	}
 	ft_printf("[%ld]  - %ld continued  %s\n", e->job->id, e->job->pgid, e->job->name);
 //	ft_putendl("ICI");
-//	ft_printf("pg=%ld\n", getpgid(e->job->pgid));
+//	ft_printf("pg=%ld\n", e->job->pgid);
 	tcsetpgrp(0, e->job->pgid);
 	if (!killpg(e->job->pgid, SIGCONT))
-		process_wait(e, e->job->pgid, 1);
+		process_wait(e, e->job->pid, 1);
 	else
-		perror("");
+		jobs_remove(e, e->job->pgid);
 }
 
 void	jobs_remove(t_env *e, int pid)
@@ -64,7 +65,7 @@ void	jobs_remove(t_env *e, int pid)
 
 	pre_job = NULL;
 	job = e->jobs_lst;
-	while (job && job->pgid != pid)
+	while (job && job->pid != pid)
 	{
 		pre_job = job;
 		job = job->next;
@@ -133,7 +134,7 @@ int		jobs_count(t_env *e, int pid)
 	i = 0;
 	while (tmp)
 	{
-		if (tmp->pgid == pid)
+		if (tmp->pid == pid)
 			return (-1);
 		tmp = tmp->next;
 		i++;

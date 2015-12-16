@@ -30,9 +30,11 @@ void	process_cmd(t_env *e)
 			if (!process_builtin(e))
 			{
 				process_bin(e, e->var);
-//				if (e->status != 127) // GROS POBEME
+				if (e->cmd[e->cid].status)
+				redirec_close(e);
 				process_wait_list(e);
 			}
+//			ft_printf("status %ld->%ld\n", e->cid, e->cmd[e->cid].status);
 		}
 		e->cid++;
 	}
@@ -41,7 +43,6 @@ void	process_cmd(t_env *e)
 
 void	process_wait_list(t_env *e)
 {
-	redirec_close(e);
 	if (e->nb_cmd > e->cid + 1)
 	{
 		if (e->cmd[e->cid + 1].condi == SEP_PIPE)
@@ -52,34 +53,42 @@ void	process_wait_list(t_env *e)
 	}
 
 	while (e->wait_cid <= e->cid)
-		process_wait(e, e->cmd[e->wait_cid++].pid, 0);
+	{
+		if (e->cmd[e->wait_cid].status)
+			process_wait(e, e->cmd[e->wait_cid].pid, 0);
+		if (!e->cmd[e->wait_cid].status)
+			redirec_close(e);
+		e->wait_cid++;
+	}
 }
 
-int		process_builtin(t_env *e)
+void	process_wait(t_env *e, int pid, int job)
 {
-	if (ft_strequ(e->cmd[e->cid].arg[0], "cd"))
-		builtin_cd(e);
-	else if (ft_strequ(e->cmd[e->cid].arg[0], "exit"))
-		builtin_exit(e);
-	else if (ft_strequ(e->cmd[e->cid].arg[0], "setenv"))
-		builtin_setenv(e);
-	else if (ft_strequ(e->cmd[e->cid].arg[0], "unsetenv"))
-		builtin_unsetenv(e);
-	else if (ft_strequ(e->cmd[e->cid].arg[0], "env"))
-		builtin_env(e);
-	else if (ft_strequ(e->cmd[e->cid].arg[0], "fg"))
-		jobs_continue(e);
-	else if (ft_strequ(e->cmd[e->cid].arg[0], "jobs"))
-		jobs_list(e);
-//	else if (ft_strequ(e->cmd[0], "kill"))
-//	{
-//		jobs_exit(e);
-//		if (e->jobs)
-//			kill(e->jobs->pid, ft_atoi(e->cmd[1]));
-//	}
+	int		ret;
+
+	ret = 0;
+	waitpid(pid, &ret, WUNTRACED);
+//	ft_printf("TERMINATED %ld\n", pid);
+	if (e->wait_cid == e->cid || job)
+		tcsetpgrp(0, getpid());
+
+	if (WIFSIGNALED(ret))
+	{
+		if (ret != SIGINT)
+			put_sig_error(ret, e->cmd[e->wait_cid].arg[0]);
+		e->status = (WTERMSIG(ret)) + 128;
+	}
+	else if (WIFSTOPPED(ret))
+	{
+		if (WSTOPSIG(ret) == SIGTSTP)
+		{
+			jobs_add(e, pid);
+		}
+	}
 	else
-		return (0);
-	return (1);
+		e->status = WEXITSTATUS(ret);
+	if (!WIFSTOPPED(ret) && job)
+		jobs_remove(e, pid);
 }
 
 void	process_bin(t_env *e, char **env)
@@ -116,11 +125,13 @@ void	process_fork(t_env *e, char *cmd_path, char **env)
 	{
 		e->cmd[e->cid].pid = child;
 		process_setpgid(e);
-		tcsetpgrp(0, child);
+		e->cmd[e->cid].status = 1;
+
 	}
 	else if (child == 0)
 	{
-
+//		ft_printf("TCSET\n");
+		tcsetpgrp(0, getpid());
 		redirec_assign(e);
 		if (execve(cmd_path, e->cmd[e->cid].arg, env) == -1)
 		{
@@ -132,32 +143,6 @@ void	process_fork(t_env *e, char *cmd_path, char **env)
 			exit(126);
 		}
 	}
-}
-
-void	process_wait(t_env *e, int pid, int job)
-{
-	int		ret;
-
-	ret = 0;
-	waitpid(pid, &ret, WUNTRACED);
-	tcsetpgrp(1, getpid());
-	if (WIFSIGNALED(ret))
-	{
-		if (ret != SIGINT)
-			put_sig_error(ret, e->cmd[e->cid].arg[0]);
-		e->status = (WTERMSIG(ret)) + 128;
-	}
-	else if (WIFSTOPPED(ret))
-	{
-		if (WSTOPSIG(ret) == SIGTSTP)
-		{
-			jobs_add(e, pid);
-		}
-	}
-	else
-		e->status = WEXITSTATUS(ret);
-	if (!WIFSTOPPED(ret) && job)
-		jobs_remove(e, pid);
 }
 
 void	process_setpgid(t_env *e)
@@ -174,3 +159,31 @@ void	process_setpgid(t_env *e)
 			ft_putendl_fd("setpgid fail", 2);
 	}
 }
+
+int		process_builtin(t_env *e)
+{
+	if (ft_strequ(e->cmd[e->cid].arg[0], "cd"))
+		builtin_cd(e);
+	else if (ft_strequ(e->cmd[e->cid].arg[0], "exit"))
+		builtin_exit(e);
+	else if (ft_strequ(e->cmd[e->cid].arg[0], "setenv"))
+		builtin_setenv(e);
+	else if (ft_strequ(e->cmd[e->cid].arg[0], "unsetenv"))
+		builtin_unsetenv(e);
+	else if (ft_strequ(e->cmd[e->cid].arg[0], "env"))
+		builtin_env(e);
+	else if (ft_strequ(e->cmd[e->cid].arg[0], "fg"))
+		jobs_continue(e);
+	else if (ft_strequ(e->cmd[e->cid].arg[0], "jobs"))
+		jobs_list(e);
+//	else if (ft_strequ(e->cmd[0], "kill"))
+//	{
+//		jobs_exit(e);
+//		if (e->jobs)
+//			kill(e->jobs->pid, ft_atoi(e->cmd[1]));
+//	}
+	else
+		return (0);
+	return (1);
+}
+

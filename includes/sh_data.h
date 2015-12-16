@@ -49,6 +49,7 @@ typedef struct	s_job
 {
 	char			*name;
 	int				id;
+	int				pid;
 	int				pgid;
 	struct s_job	*next;
 }				t_job;
@@ -86,6 +87,7 @@ typedef struct	s_cmd
 	int			pgid;
 	int			pipe[2];
 	t_redir		*redir;
+	int			status;
 }				t_cmd;
 
 typedef struct	s_env

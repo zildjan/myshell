@@ -92,9 +92,15 @@ void	sig_handler(t_env *e, int signum)
 //			kill(se->jobs->pid, SIGTSTP);
 	}
 	else if (signum == SIGTTIN)
-		tcsetpgrp(0, getpid());
+	{
+		tcsetpgrp(1, getpid());
+//		ft_printf("TCSET 1\n");
+	}
 	else if (signum == SIGTTOU)
+	{
 		tcsetpgrp(0, getpid());
+//		ft_printf("TCSET 2\n");
+	}
 //	else if (signum == SIGIOT)
 //	{
 //		ft_printf("OU YEAH\n");
