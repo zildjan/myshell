@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2015/11/12 21:46:48 by pbourrie         ###   ########.fr       */
+/*   Updated: 2015/12/17 21:48:35 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -241,6 +241,9 @@ void	parse_add_cmd(t_env *e, t_parse *p, char sep)
 	e->nb_cmd++;
 	e->cid++;
 	p->a_id = 0;
+	e->cmd[e->cid].fd_in = 0;
+	e->cmd[e->cid].fd_out = 1;
+	e->cmd[e->cid].fd_err = 2;	
 	e->cmd[e->cid].condi = NONE;
 	e->cmd[e->cid].redir = NULL;
 
@@ -340,6 +343,12 @@ void	new_redirec(t_env *e, char *file, int type, int fd)
 	new->type = type;
 	new->fd = fd;
 	new->fd_to = -1;
+	if (file == NULL)
+	{
+		new->next = e->cmd[e->cid].redir;
+		e->cmd[e->cid].redir = new;
+		return ;
+	}
 	tmp = e->cmd[e->cid].redir;
 	while (tmp && tmp->next)
 		tmp = tmp->next;

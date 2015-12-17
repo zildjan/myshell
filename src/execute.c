@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/10 18:58:17 by pbourrie          #+#    #+#             */
-/*   Updated: 2015/11/13 22:15:38 by pbourrie         ###   ########.fr       */
+/*   Updated: 2015/12/17 22:15:51 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void	process_wait_list(t_env *e)
 			return ;
 		}
 	}
-
+	
 	while (e->wait_cid <= e->cid)
 	{
 		if (e->cmd[e->wait_cid].status)
@@ -63,7 +63,7 @@ void	process_wait_list(t_env *e)
 			tcsetpgrp(0, getpid());
 //			ft_printf("YEAH22\n");
 		}
-		if (!e->cmd[e->wait_cid].status)
+		if (!e->cmd[e->wait_cid].status || !e->cmd[e->cid].piped)
 			redirec_close(e, e->wait_cid);
 		e->wait_cid++;
 	}

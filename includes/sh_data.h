@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2015/11/13 22:30:25 by pbourrie         ###   ########.fr       */
+/*   Updated: 2015/12/17 21:50:42 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,11 @@ typedef struct	s_cmd
 	char		condi;
 	int			pid;
 	int			pgid;
+	int			fd_in;
+	int			fd_out;
+	int			fd_err;
 	int			pipe[2];
+	char		piped;
 	t_redir		*redir;
 	int			status;
 }				t_cmd;
