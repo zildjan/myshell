@@ -59,11 +59,11 @@ void	redirec_assign(t_env *e)
 	}
 }
 
-void	redirec_close(t_env *e)
+void	redirec_close(t_env *e, int cid)
 {
 	t_redir	*redir;
 
-	redir = e->cmd[e->cid].redir;
+	redir = e->cmd[cid].redir;
 	while (redir)
 	{
 		if (redir->type == R_OUT || redir->type == R_OUTA
@@ -71,7 +71,7 @@ void	redirec_close(t_env *e)
 			if (redir->fd_to > -1)
 				close(redir->fd_to);
 		if (redir->type == R_PIPEIN)
-			pipe_close(e);
+			pipe_close(e, cid);
 		redir = redir->next;
 	}
 }

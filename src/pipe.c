@@ -21,7 +21,7 @@ int 	pipe_new(t_env *e, t_redir *redir)
 		redir->type = R_PIPENOT;
 		return (0);
 	}
-	ft_printf("new pipe n%ld %ld=%ld\n", e->cid, e->cmd[e->cid].pipe[0], e->cmd[e->cid].pipe[1]);
+//	ft_printf("new pipe n%ld %ld=%ld\n", e->cid, e->cmd[e->cid].pipe[0], e->cmd[e->cid].pipe[1]);
 //	ft_printf("un pipe\n");
 	return (1);
 }
@@ -46,11 +46,11 @@ void	pipe_assign(t_env *e, t_redir *redir)
 	}
 }
 
-void	pipe_close(t_env *e)
+void	pipe_close(t_env *e, int cid)
 {
-	ft_printf("close pipe n%ld %ld=%ld\n", e->cid-1, e->cmd[e->cid - 1].pipe[0],
-			  e->cmd[e->cid - 1].pipe[1]);
-	close(e->cmd[e->cid - 1].pipe[0]);
-	close(e->cmd[e->cid - 1].pipe[1]);
+//	ft_printf("close pipe n%ld %ld=%ld\n", cid-1, e->cmd[cid - 1].pipe[0],
+//			  e->cmd[cid - 1].pipe[1]);
+	close(e->cmd[cid - 1].pipe[0]);
+	close(e->cmd[cid - 1].pipe[1]);
 }
 
