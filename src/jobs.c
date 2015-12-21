@@ -112,7 +112,7 @@ void	jobs_exit(t_env *e)
 	while (job)
 	{
 		i++;
-		kill(job->pgid, SIGKILL);
+		kill(job->pgid, SIGHUP);
 		waitpid(job->pgid, &ret, WUNTRACED);
 //		ft_printf("[%ld]  killed  %ld - %s\n", job->id, job->pid, job->name);
 		tmp = job;

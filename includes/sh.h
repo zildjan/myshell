@@ -123,6 +123,14 @@ void		process_wait_list(t_env *e);
 void		process_setpgid(t_env *e);
 
 /*
+**   HEREDOC
+*/
+int			read_heredoc(t_env *e, t_redir *redir);
+void		heredoc_assign(t_env *e, t_redir *redir);
+void		get_heredoc(t_env *e, char *eof);
+void		free_heredoc(t_env *e, int cid);
+
+/*
 **   REDIRECTIONS
 */
 int			redirec_open(t_env *e);

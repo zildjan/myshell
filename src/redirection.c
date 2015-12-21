@@ -40,6 +40,11 @@ int		redirec_open(t_env *e)
 			if (!redirec_open_dupfd(redir))
 				return (0);
 		}
+		else if (redir->type == R_HDOC)
+		{
+			if (!read_heredoc(e, redir))
+				return (0);
+		}
 		redir = redir->next;
 	}
 	return (1);
@@ -59,6 +64,8 @@ void	redirec_assign(t_env *e)
 			pipe_assign(e, redir);
 		else if (redir->type == R_FDOUT || redir->type == R_FDIN)
 			redirec_assign_dupfd(redir);
+		else if (redir->type == R_HDOC)
+			heredoc_assign(e, redir);
 		redir = redir->next;
 	}
 }
@@ -76,6 +83,8 @@ void	redirec_close(t_env *e, int cid)
 				close(redir->fd_to);
 		if (redir->type == R_PIPEIN && e->cmd[cid].piped)
 			pipe_close(e, cid);
+		else if (redir->type == R_HDOC)
+			close(redir->fd_to);
 		redir = redir->next;
 	}
 }

@@ -30,6 +30,7 @@ void	free_cmd(t_env *e)
 		if (e->cmd[i].arg)
 			free(e->cmd[i].arg);
 		free_cmd_redirec(e, i);
+		free_heredoc(e, i);
 		e->cmd[i].arg = NULL;
 		i2 = 0;
 		i++;

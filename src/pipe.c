@@ -21,7 +21,7 @@ int 	pipe_new(t_env *e, t_redir *redir)
 		redir->type = R_PIPENOT;
 		return (0);
 	}
-//	ft_printf("new pipe n%ld %ld=%ld\n", e->cid, e->cmd[e->cid].pipe[0], e->cmd[e->cid]//.pipe[1]);
+//	ft_printf("new pipe n%ld %ld=%ld\n", e->cid, e->cmd[e->cid].pipe[0], e->cmd[e->cid].pipe[1]);
 //	ft_printf("un pipe\n");
 	return (1);
 }

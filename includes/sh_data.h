@@ -56,12 +56,18 @@ typedef struct	s_job
 
 typedef struct	s_redir
 {
-	char		*file;
-	int			type;
-	int			fd;
-	int			fd_to;
+	char			*file;
+	int				type;
+	int				fd;
+	int				fd_to;
 	struct s_redir	*next;
 }				t_redir;
+
+typedef struct	s_hdoc
+{
+	char			*content;
+	struct s_hdoc	*next;
+}				t_hdoc;
 
 typedef struct	s_parse
 {
@@ -91,6 +97,8 @@ typedef struct	s_cmd
 	int			pipe[2];
 	char		piped;
 	t_redir		*redir;
+	t_hdoc		*hdoc;
+	int			hdoc_pipe[2];
 	int			status;
 }				t_cmd;
 

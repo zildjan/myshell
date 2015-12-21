@@ -18,7 +18,7 @@ void	parse_cmd(t_env *e)
 
 	parse_cmd_cleanline(e);
 	p.line_len = ft_strlen(e->line);
-	if (p.line_len > 1000)
+	if (p.line_len > 1200)
 	{
 		ft_putendl_fd("input line too long", 2);
 		return ;
@@ -40,7 +40,11 @@ void	parse_cmd(t_env *e)
 	p.ib = 0;
 	e->cmd = (t_cmd*)ft_memalloc(sizeof(t_cmd) * (e->nb_cmd));
 	e->cmd[0].redir = NULL;
+	e->cmd[0].hdoc = NULL;
 	e->cmd[0].condi = 0;
+	e->cmd[0].fd_in = 0;
+	e->cmd[0].fd_out = 1;
+	e->cmd[0].fd_err = 2;
 
 	while (1)
 	{
@@ -246,6 +250,7 @@ void	parse_add_cmd(t_env *e, t_parse *p, char sep)
 	e->cmd[e->cid].fd_err = 2;	
 	e->cmd[e->cid].condi = NONE;
 	e->cmd[e->cid].redir = NULL;
+	e->cmd[e->cid].hdoc = NULL;
 
 	set_env_var(e, "_", p->last_arg);
 	p->separ = sep;
@@ -356,6 +361,8 @@ void	new_redirec(t_env *e, char *file, int type, int fd)
 		tmp->next = new;
 	else
 		e->cmd[e->cid].redir = new;
+	if (type == R_HDOC)
+		get_heredoc(e, file);
 }
 
 void	parse_get_redirec_type(t_env *e, t_parse *p)
