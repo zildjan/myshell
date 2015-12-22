@@ -20,7 +20,7 @@ void	builtin_cd(t_env *e)
 		new_pwd = ft_strdup(e->home);
 	else if (e->carg[1] && e->carg[2])
 	{
-		ft_putendl_fd("cd: too many arguments", 2);
+		ft_putendl_fd("cd: too many arguments", e->cmd[e->cid].fd_err);
 		return ;
 	}
 	else if (e->carg[1][0] == '-')
@@ -28,7 +28,7 @@ void	builtin_cd(t_env *e)
 	else
 		new_pwd = ft_strdup(e->carg[1]);
 	if (chdir(new_pwd) == -1)
-		builtin_cd_error(new_pwd);
+		builtin_cd_error(e, new_pwd);
 	else
 	{
 		set_env_var(e, "OLDPWD", e->pwd);
@@ -53,7 +53,7 @@ char	*builtin_cd_oldpwd(t_env *e)
 	return (new);
 }
 
-void	builtin_cd_error(char *path)
+void	builtin_cd_error(t_env *e, char *path)
 {
 	char	type;
 	int		mode;
@@ -61,11 +61,11 @@ void	builtin_cd_error(char *path)
 	type = ft_get_file_type(path);
 	mode = ft_get_file_mode(path);
 	if (type == -1)
-		put_error(ERRNOENT, ft_strdup("cd"), path);
+		put_error(ERRNOENT, ft_strdup("cd"), path, e->cmd[e->cid].fd_err);
 	else if (type == '-')
-		put_error(ERRNOTDIR, ft_strdup("cd"), path);
+		put_error(ERRNOTDIR, ft_strdup("cd"), path, e->cmd[e->cid].fd_err);
 	else if ((mode / 100) % 2 == 0)
-		put_error(ERRACCES, ft_strdup("cd"), path);
+		put_error(ERRACCES, ft_strdup("cd"), path, e->cmd[e->cid].fd_err);
 	else
-		put_error(0, ft_strdup("cd"), path);
+		put_error(0, ft_strdup("cd"), path, e->cmd[e->cid].fd_err);
 }

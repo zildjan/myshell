@@ -30,12 +30,15 @@ void	process_cmd(t_env *e)
 				|| (condi == SEP_OR && e->status)))
 		{
 			if (!process_builtin(e))
-			{
+//			{
 				process_bin(e, e->var);
 				if (e->cmd[e->cid].status)
+				{
+//					ft_printf("1 ->%ld\n", e->cid);
 					redirec_close(e, e->cid);
+				}
 				process_wait_list(e);
-			}
+//			}
 //			ft_printf("status %ld->%ld\n", e->cid, e->cmd[e->cid].status);
 		}
 		e->cid++;
@@ -63,8 +66,12 @@ void	process_wait_list(t_env *e)
 			tcsetpgrp(0, getpid());
 //			ft_printf("YEAH22\n");
 		}
-		if (!e->cmd[e->wait_cid].status || !e->cmd[e->cid].piped)
+		if (!e->cmd[e->wait_cid].status || !e->cmd[e->wait_cid].piped)
+		{
+//			ft_printf("2 ->%ld\n", e->wait_cid);
+			e->cmd[e->wait_cid].piped = 1;
 			redirec_close(e, e->wait_cid);
+		}
 		e->wait_cid++;
 	}
 }
@@ -85,7 +92,7 @@ void	process_wait(t_env *e, int pid, int job)
 	if (WIFSIGNALED(ret))
 	{
 		if (ret != SIGINT)
-			put_sig_error(ret, e->cmd[e->wait_cid].arg[0]);
+			put_sig_error(ret, e->cmd[e->wait_cid].arg[0], e->cmd[e->cid].fd_err);
 		e->status = (WTERMSIG(ret)) + 128;
 	}
 	else if (WIFSTOPPED(ret))
@@ -119,9 +126,9 @@ void	process_bin(t_env *e, char **env)
 	{
 		e->status = 127;
 		if (ft_strchr(cmd, '/'))
-			put_error(ERRNOENT, NULL, cmd);
+			put_error(ERRNOENT, NULL, cmd, e->cmd[e->cid].fd_err);
 		else
-			put_error(ERRNOCMD, NULL, cmd);
+			put_error(ERRNOCMD, NULL, cmd, e->cmd[e->cid].fd_err);
 	}
 }
 
@@ -152,9 +159,9 @@ void	process_fork(t_env *e, char *cmd_path, char **env)
 		{
 			if (ft_get_file_mode(cmd_path) % 2 == 0 
 				|| ft_get_file_type(cmd_path) != '-')
-				put_error(ERRACCES, NULL, e->cmd[e->cid].arg[0]);
+				put_error(ERRACCES, NULL, e->cmd[e->cid].arg[0], e->cmd[e->cid].fd_err);
 			else
-				put_error(ERREXEFORM, NULL, e->cmd[e->cid].arg[0]);
+				put_error(ERREXEFORM, NULL, e->cmd[e->cid].arg[0], e->cmd[e->cid].fd_err);
 			exit(126);
 		}
 	}

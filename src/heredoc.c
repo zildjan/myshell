@@ -22,7 +22,6 @@ int		read_heredoc(t_env *e, t_redir *redir)
 		redir->type = R_PIPENOT;
 		return (0);
 	}
-	e->cmd[e->cid].fd_in = e->cmd[e->cid].hdoc_pipe[0];
 	redir->fd_to = e->cmd[e->cid].hdoc_pipe[0];
 	tmp = e->cmd[e->cid].hdoc;
 	while (tmp)

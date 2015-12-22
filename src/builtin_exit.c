@@ -17,7 +17,7 @@ void	builtin_exit(t_env *e)
 	if (e->carg)
 	{
 		if (e->carg[1] && e->carg[2])
-			ft_putendl_fd("exit: too many arguments", 2);
+			ft_putendl_fd("exit: too many arguments", e->cmd[e->cid].fd_err);
 		else if (e->carg[1])
 		{
 			if (ft_strcheck(e->carg[1], ft_isdigit))

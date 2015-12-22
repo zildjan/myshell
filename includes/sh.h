@@ -47,7 +47,7 @@ void		refresh_sh_var(t_env *e, char *name);
 **   BUILTIN_CD
 */
 void		builtin_cd(t_env *e);
-void		builtin_cd_error(char *path);
+void		builtin_cd_error(t_env *e, char *path);
 char		*builtin_cd_oldpwd(t_env *e);
 
 /*
@@ -137,8 +137,11 @@ int			redirec_open(t_env *e);
 void		redirec_assign(t_env *e);
 void		redirec_close(t_env *e, int cid);
 int			redirec_open_files(t_redir *redir);
+
 int			redirec_open_dupfd(t_redir *redir);
 void		redirec_assign_dupfd(t_redir *redir);
+int			getcurstdfd(t_env *e, int fd);
+void		open_file_error(char *path, int type);
 
 /*
 **   PIPE
@@ -171,8 +174,8 @@ void		print_prompt(t_env *e);
 /*
 **   ERROR
 */
-void		put_error(int err, char *cmd, char *path);
-void		put_sig_error(int ret, char *path);
+void		put_error(int err, char *cmd, char *path, int fd);
+void		put_sig_error(int ret, char *path, int fd);
 
 /*
 **   SIGNAL

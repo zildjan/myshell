@@ -18,6 +18,7 @@
 # define ERRNOTDIR 3
 # define ERRNOCMD 4
 # define ERREXEFORM 5
+# define ERRISDIR 6
 
 # define NONE 0
 # define SIMP 1

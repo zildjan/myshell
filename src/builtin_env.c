@@ -20,7 +20,7 @@ void	builtin_env(t_env *e)
 	opt_i = 0;
 	if (!e->carg[1])
 	{
-		ft_putchartab(e->var);
+		ft_putchartab_fd(e->var, e->cmd[e->cid].fd_out);
 		return ;
 	}
 	i = 0;
@@ -45,10 +45,10 @@ int		builtin_env_getopt(t_env *e, int *i, int *opt_i)
 				return (++*i);
 			else if (e->carg[*i][i2] && e->carg[*i][i2] != 'i')
 			{
-				ft_putstr_fd("env: illegal option -- ", 2);
-				ft_putchar_fd(e->carg[*i][i2], 2);
-				ft_putstr_fd("\nusage: env [-i] [name=value ...] ", 2);
-				ft_putendl_fd("[utility [argument ...]]", 2);
+				ft_putstr_fd("env: illegal option -- ", e->cmd[e->cid].fd_err);
+				ft_putchar_fd(e->carg[*i][i2], e->cmd[e->cid].fd_err);
+				ft_putstr_fd("\nusage: env [-i] [name=value ...] ", e->cmd[e->cid].fd_err);
+				ft_putendl_fd("[utility [argument ...]]", e->cmd[e->cid].fd_err);
 				return (0);
 			}
 		}
@@ -67,7 +67,7 @@ void	builtin_env_setenvtab(t_env *e, int opt_i, int i)
 	{
 		if (!ft_strcheck(e->carg[i], ft_isascii))
 		{
-			ft_putendl_fd("env: Non ascii character.", 2);
+			ft_putendl_fd("env: Non ascii character.", e->cmd[e->cid].fd_err);
 			return ;
 		}
 		builtin_env_insertnewent(e, env, &id, i++);
@@ -114,7 +114,7 @@ void	builtin_env_exec(t_env *e, char **env, int i)
 	while (e->carg[i2++])
 		nb_args++;
 	if (!e->carg[i])
-		ft_putchartab(env);
+		ft_putchartab_fd(env, e->cmd[e->cid].fd_out);
 	else
 	{
 		cmd = (char**)ft_memalloc(sizeof(char*) * (nb_args + 1));

@@ -259,7 +259,7 @@ void	parse_add_cmd(t_env *e, t_parse *p, char sep)
 		e->cmd[e->cid].condi = SEP_PIPE;
 		new_redirec(e, NULL, R_PIPEIN, 0);
 		e->cid--;
-		new_redirec(e, NULL, R_PIPEOUT, 0);
+		new_redirec(e, NULL, R_PIPEOUT, 1);
 		e->cid++;
 	}
 	else if (sep == SEP_AND)
