@@ -31,6 +31,7 @@ void	builtin_cd(t_env *e)
 		builtin_cd_error(e, new_pwd);
 	else
 	{
+		e->status = 0;
 		set_env_var(e, "OLDPWD", e->pwd);
 		free(e->pwd);
 		e->pwd = getcwd(NULL, 0);
@@ -68,4 +69,5 @@ void	builtin_cd_error(t_env *e, char *path)
 		put_error(ERRACCES, ft_strdup("cd"), path, e->cmd[e->cid].fd_err);
 	else
 		put_error(0, ft_strdup("cd"), path, e->cmd[e->cid].fd_err);
+	e->status = 1;
 }

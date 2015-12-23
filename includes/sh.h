@@ -66,6 +66,7 @@ void		builtin_env_exec(t_env *e, char **env, int i);
 */
 void		builtin_setenv(t_env *e);
 void		builtin_unsetenv(t_env *e);
+int			builtin_setenv_check(char *str, int egual);
 
 /*
 **   BUILTIN_EXIT
@@ -120,7 +121,6 @@ void		process_fork(t_env *e, char *cmd_path, char **env);
 void		process_wait(t_env *e, int pid, int job);
 
 void		process_wait_list(t_env *e);
-void		process_setpgid(t_env *e);
 
 /*
 **   HEREDOC

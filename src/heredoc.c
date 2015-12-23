@@ -15,7 +15,7 @@
 int		read_heredoc(t_env *e, t_redir *redir)
 {
 	t_hdoc	*tmp;
-
+;
 	if ((pipe(e->cmd[e->cid].hdoc_pipe) == -1))
 	{
 		ft_putstr_fd("Error : can't create pipe ", 2);
@@ -48,13 +48,16 @@ void	get_heredoc(t_env *e, char *eof)
 	char	*line;
 	t_hdoc	*hdoc;
 	t_hdoc	*prev;
+	int		ret;
 
 	prev = NULL;
 	free_heredoc(e, e->cid);
 	ft_putstr("heredoc> ");
-	get_next_line(0, &line);
-	while (!ft_strequ(line, eof))
+	ret = get_next_line(0, &line);
+	while (!ft_strequ(line, eof) && ret != 0)
 	{
+		if (ft_strlen(line) > 1000)
+			break ;
 		hdoc = (t_hdoc*)ft_memalloc(sizeof(t_hdoc));
 		hdoc->content = ft_strdup(line);
 		if (prev)
@@ -65,7 +68,7 @@ void	get_heredoc(t_env *e, char *eof)
 		free(line);
 		line = NULL;
 		ft_putstr("heredoc> ");
-		get_next_line(0, &line);
+		ret = get_next_line(0, &line);
 	}
 	if (line)
 		free(line);

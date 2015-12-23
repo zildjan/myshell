@@ -18,7 +18,7 @@ void	parse_cmd(t_env *e)
 
 	parse_cmd_cleanline(e);
 	p.line_len = ft_strlen(e->line);
-	if (p.line_len > 1200)
+	if (p.line_len > 1000)
 	{
 		ft_putendl_fd("input line too long", 2);
 		return ;
@@ -188,6 +188,7 @@ void	parse_cmd(t_env *e)
 	{
 		if (!p.separ)
 		{
+			free_heredoc(e, e->cid);
 			free_cmd_redirec(e, e->cid);
 			e->nb_cmd--;
 		}
@@ -294,7 +295,8 @@ void	parse_add_arg(t_env *e, t_parse *p)
 
 //	ft_printf("->'%s' %ld '%ld'\n", p->buf, ft_strlen(p->buf), p->buf[ft_strlen(p->buf)]);
 	e->cmd[e->cid].arg[p->a_id] = ft_strdup(p->buf);
-	p->last_arg = e->cmd[e->cid].arg[p->a_id];
+	if (p->a_id == 0)
+		p->last_arg = e->cmd[e->cid].arg[p->a_id];
 	e->cmd[e->cid].arg[p->a_id + 1] = NULL;
 	ft_strclr(p->buf);
 	p->ib = 0;

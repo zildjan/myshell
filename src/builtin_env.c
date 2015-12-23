@@ -17,6 +17,7 @@ void	builtin_env(t_env *e)
 	int		opt_i;
 	int		i;
 
+	e->status = 0;
 	opt_i = 0;
 	if (!e->carg[1])
 	{
@@ -49,6 +50,7 @@ int		builtin_env_getopt(t_env *e, int *i, int *opt_i)
 				ft_putchar_fd(e->carg[*i][i2], e->cmd[e->cid].fd_err);
 				ft_putstr_fd("\nusage: env [-i] [name=value ...] ", e->cmd[e->cid].fd_err);
 				ft_putendl_fd("[utility [argument ...]]", e->cmd[e->cid].fd_err);
+				e->status = 1;
 				return (0);
 			}
 		}
@@ -60,19 +62,25 @@ void	builtin_env_setenvtab(t_env *e, int opt_i, int i)
 {
 	int		id;
 	char	**env;
+	int		error;
 
+	error = 0;
 	env = builtin_env_malloctab(e, opt_i);
 	id = builtin_env_filltab(e, env, opt_i);
 	while (e->carg[i] && ft_strchr(e->carg[i], '='))
 	{
-		if (!ft_strcheck(e->carg[i], ft_isascii))
+		if (builtin_setenv_check(e->carg[i], 1))
 		{
-			ft_putendl_fd("env: Non ascii character.", e->cmd[e->cid].fd_err);
-			return ;
+			ft_putendl_fd("env: Non alnum character.", e->cmd[e->cid].fd_err);
+			error = 1;
+			e->status = 1;
+			break ;
 		}
-		builtin_env_insertnewent(e, env, &id, i++);
+		if (!error)
+			builtin_env_insertnewent(e, env, &id, i++);
 	}
-	builtin_env_exec(e, env, i);
+	if (!error)
+		builtin_env_exec(e, env, i);
 	i = 0;
 	while (env[i])
 		free(env[i++]);
