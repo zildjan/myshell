@@ -102,6 +102,7 @@ int			parse_add_redirec(t_env *e, t_parse *p);
 void		parse_get_redirec_type(t_env *e, t_parse *p);
 void		new_redirec(t_env *e, char *file, int type, int fd);
 
+void		check_arg_buf_size(t_parse *p);
 int			is_aspace(char c);
 void		parse_cmd_cleanline(t_env *e);
 

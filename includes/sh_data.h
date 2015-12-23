@@ -13,6 +13,10 @@
 #ifndef FT_SH_DATA_H
 # define FT_SH_DATA_H
 
+# define MAX_LEN_LINE 1000000
+# define MAX_LEN_ARG 1000
+# define MAX_LEN_HDOC 50000
+
 # define ERRACCES 1
 # define ERRNOENT 2
 # define ERRNOTDIR 3

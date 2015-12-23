@@ -18,7 +18,7 @@ void	parse_cmd(t_env *e)
 
 	parse_cmd_cleanline(e);
 	p.line_len = ft_strlen(e->line);
-	if (p.line_len > 1000)
+	if (p.line_len > MAX_LEN_LINE)
 	{
 		ft_putendl_fd("input line too long", 2);
 		return ;
@@ -68,7 +68,7 @@ void	parse_cmd(t_env *e)
 			p.escape = 0;
 			parse_cmd_cleanline(e);
 			p.line_len = ft_strlen(e->line);
-			if (p.line_len > 1000 || !p.line_len)
+			if (p.line_len > MAX_LEN_LINE || !p.line_len)
 				break ;
 			free(p.buf);
 			p.buf = ft_strnew(ft_strlen(e->line));
@@ -277,6 +277,8 @@ void	parse_add_arg(t_env *e, t_parse *p)
 	int		new_size;
 	char	***parg;
 
+	check_arg_buf_size(p);
+
 	if (p->redirec)
 	{
 		parse_add_redirec(e, p);
@@ -399,6 +401,18 @@ int		is_aspace(char c)
 	if (c == ' ' || c == '\t')
 		return (1);
 	return (0);
+}
+
+void	check_arg_buf_size(t_parse *p)
+{
+	char *tmp;
+
+	if (p->ib >= MAX_LEN_ARG)
+	{
+		tmp = p->buf;
+		p->buf = ft_strsub(p->buf, 0, MAX_LEN_ARG);
+		free(tmp);
+	}
 }
 
 void	parse_cmd_cleanline(t_env *e)
