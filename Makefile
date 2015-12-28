@@ -54,7 +54,7 @@ SRC = $(sort $(SRCS))
 SRC_PATH = src/
 OBJ_PATH = obj/
 INC_PATH = -I libft/includes/ -I includes/
-LIBS = libft/libft.a
+LIBS = libft/libft.a -ltermcap
 OBJ = $(SRC:.c=.o)
 OBJS = $(addprefix $(OBJ_PATH), $(OBJ))
 

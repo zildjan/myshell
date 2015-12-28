@@ -18,7 +18,7 @@
 # include <sys/uio.h>
 # include <unistd.h>
 
-# define GNL_BUFF_SIZE 1000
+# define GNL_BUFF_SIZE 100
 
 int		get_next_line(int const fd, char **line);
 

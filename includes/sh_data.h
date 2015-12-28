@@ -15,7 +15,7 @@
 
 # define MAX_LEN_LINE 1000000
 # define MAX_LEN_ARG 1000
-# define MAX_LEN_HDOC 50000
+# define MAX_LEN_HDOC 60000
 
 # define ERRACCES 1
 # define ERRNOENT 2
@@ -85,6 +85,7 @@ typedef struct	s_parse
 	int		error;
 	int		separ;
 	int		line_len;
+	int		buf_len;
 	int		redirec;
 	int		redirec_fd;
 	char	*last_arg;
@@ -125,6 +126,7 @@ typedef struct	s_env
 	int		status;
 	t_job	*job;
 	t_job	*jobs_lst;
+	struct termios *term;
 }				t_env;
 
 #endif

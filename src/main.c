@@ -26,6 +26,22 @@ int		main(int argc, char **argv, char **environ)
 	e = init_env(argc, argv, environ);
 	sig_handler(e, 0);
 	catch_signal();
+
+/*
+	char *term;
+	term = get_env_val(e, "TERM");
+
+	if (tgetent(NULL, term) != 1)
+		ft_printf("tgetent failed\n");
+	if (isatty(0))
+	{
+		e->term = ft_memalloc(sizeof(struct termios));
+
+		if (tcgetattr(0, e->term) == -1)
+			ft_printf("tcgetattr failed\n");
+
+	}
+*/
 	while (1)
 	{
 		print_prompt(e);

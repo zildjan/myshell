@@ -16,7 +16,7 @@ char	**builtin_env_malloctab(t_env *e, int opt_i)
 {
 	int		size;
 	int		i;
-	char	**tab;
+	char	**stab;
 
 	size = 0;
 	while (!opt_i && e->var[size])
@@ -25,8 +25,8 @@ char	**builtin_env_malloctab(t_env *e, int opt_i)
 	while (e->carg[i])
 		i++;
 	size += i;
-	tab = (char**)ft_memalloc(sizeof(char*) * size);
-	return (tab);
+	stab = (char**)ft_memalloc(sizeof(char*) * size);
+	return (stab);
 }
 
 int		builtin_env_filltab(t_env *e, char **env, int opt_i)

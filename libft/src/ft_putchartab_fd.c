@@ -12,16 +12,16 @@
 
 #include "libft.h"
 
-void	ft_putchartab_fd(char **tab, int fd)
+void	ft_putchartab_fd(char **tabstr, int fd)
 {
 	int	i;
 
-	if (tab == NULL)
+	if (tabstr == NULL)
 		return ;
 	i = 0;
-	while (tab[i] != NULL)
+	while (tabstr[i] != NULL)
 	{
-		ft_putendl_fd(tab[i], fd);
+		ft_putendl_fd(tabstr[i], fd);
 		i++;
 	}
 }

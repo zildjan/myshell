@@ -34,7 +34,8 @@ void	parse_cmd(t_env *e)
 	p.last_arg = NULL;
 	p.redirec = NONE;
 	p.error = 0;
-	p.buf = ft_strnew(p.line_len);
+	p.buf_len = p.line_len;
+	p.buf = ft_strnew(p.buf_len);
 
 	p.i = -1;
 	p.ib = 0;
@@ -52,7 +53,7 @@ void	parse_cmd(t_env *e)
 			break ;
 		if (!e->line[++p.i])
 		{
-			if (p.ib)
+			if (p.ib && !p.quo && !p.escape)
 				parse_add_arg(e, &p);
 			if (p.quo == SIMP)
 				get_cmd_end(e, '\'');
@@ -64,16 +65,18 @@ void	parse_cmd(t_env *e)
 				get_cmd_end(e, p.separ);
 			else
 				break ;
+			if (p.quo && !p.escape)
+				p.buf[p.ib++] = '\n';
+
 			p.i = 0;
 			p.escape = 0;
 			parse_cmd_cleanline(e);
+
 			p.line_len = ft_strlen(e->line);
-			if (p.line_len > MAX_LEN_LINE || !p.line_len)
+			if (p.line_len > MAX_LEN_LINE)
 				break ;
-			free(p.buf);
-			p.buf = ft_strnew(ft_strlen(e->line));
+
 		}
-//		ft_printf("STA i=%ld c='%c'\n", p.i, e->line[p.i]);
 
 		if (e->line[p.i] == '\'' && (!p.quo || p.quo == SIMP)
 			&& !p.escape)
@@ -167,14 +170,17 @@ void	parse_cmd(t_env *e)
 		else if (e->line[p.i] == '\\' && !p.escape
 				 && ((!p.quo) 
 					 || (p.quo == DOUB && e->line[p.i + 1] == '"')
+					 || (p.quo == DOUB && !e->line[p.i + 1])
 					 || (e->line[p.i + 1] == '\\')))
 		{
 			p.escape = 2;
 		}
 		else
 		{
+			if (p.ib + 10 >= p.buf_len)
+				realloc_buffer(&p, 10);
 			p.buf[p.ib++] = e->line[p.i];
-//			ft_printf("'%c' = '%s' = %d\n", p.buf[p.ib - 1], p.buf, p.buf[p.ib - 1]);
+
 		}
 
 		if (p.escape)
@@ -182,6 +188,8 @@ void	parse_cmd(t_env *e)
 
 //		ft_printf("END i=%ld c='%c'\n", p.i, e->line[p.i]);
 	}
+
+//	p.error = 1;
 
 	set_env_var(e, "_", p.last_arg);
 	if (!p.error && p.a_id == 0)
@@ -198,8 +206,6 @@ void	parse_cmd(t_env *e)
 	if (!p.error && p.redirec)
 		p.error = EP_MISS_REDIREC;
 
-
-//	p.error = 1;
 
 	if (p.error)
 	{
@@ -277,8 +283,6 @@ void	parse_add_arg(t_env *e, t_parse *p)
 	int		new_size;
 	char	***parg;
 
-	check_arg_buf_size(p);
-
 	if (p->redirec)
 	{
 		parse_add_redirec(e, p);
@@ -296,7 +300,8 @@ void	parse_add_arg(t_env *e, t_parse *p)
 		*parg = (char**)ft_memrealloc(*parg, old_size, new_size);
 
 //	ft_printf("->'%s' %ld '%ld'\n", p->buf, ft_strlen(p->buf), p->buf[ft_strlen(p->buf)]);
-	e->cmd[e->cid].arg[p->a_id] = ft_strdup(p->buf);
+
+	e->cmd[e->cid].arg[p->a_id] = dup_arg(p->buf);
 	if (p->a_id == 0)
 		p->last_arg = e->cmd[e->cid].arg[p->a_id];
 	e->cmd[e->cid].arg[p->a_id + 1] = NULL;
@@ -348,7 +353,7 @@ void	new_redirec(t_env *e, char *file, int type, int fd)
 	t_redir		*tmp;
 
 	new = (t_redir*)ft_memalloc(sizeof(t_redir));
-	new->file = ft_strdup(file);
+	new->file = dup_arg(file);
 	new->type = type;
 	new->fd = fd;
 	new->fd_to = -1;
@@ -406,9 +411,10 @@ int		is_aspace(char c)
 void	check_arg_buf_size(t_parse *p)
 {
 	char *tmp;
-
+	return ;
 	if (p->ib >= MAX_LEN_ARG)
 	{
+		printf("|||ib=%d, len=%d, i=%d, len=%d\n", p->ib, p->buf_len, p->i, p->line_len);
 		tmp = p->buf;
 		p->buf = ft_strsub(p->buf, 0, MAX_LEN_ARG);
 		free(tmp);
@@ -434,3 +440,22 @@ void	parse_cmd_cleanline(t_env *e)
 //	ft_printf("line = '%s'\n", e->line);
 }
 
+void	realloc_buffer(t_parse *p, int add)
+{
+	int		old;
+	int		new;
+
+	old = sizeof(char) * p->buf_len;
+	new = sizeof(char) * (p->buf_len + add);
+	p->buf = ft_memrealloc(p->buf, old, new);
+	p->buf_len += add;
+}
+
+char	*dup_arg(char *buf)
+{
+	if (!buf)
+		return (NULL);
+	if (ft_strlen(buf) > MAX_LEN_ARG)
+		return (ft_strndup(buf, MAX_LEN_ARG));
+	return (ft_strdup(buf));
+}

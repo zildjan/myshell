@@ -47,8 +47,7 @@ void	parse_var_expansion(t_env *e, t_parse *p)
 		i = ft_strlen(new);
 		p->ib += i;
 		p->line_len += i;
-		free(p->buf);
-		p->buf = ft_strnew(p->line_len);		
+		realloc_buffer(p, i);
 		ft_strcat(p->buf, new);
 		free(new);
 	}
@@ -57,6 +56,7 @@ void	parse_var_expansion(t_env *e, t_parse *p)
 void	parse_tilde_expansion(t_env *e, t_parse *p)
 {
 	char	new[MAXPATHLEN + 1];
+	int		len;
 
 	ft_bzero(new, MAXPATHLEN + 1);
 	if (e->line[p->i + 1] == '/' || is_aspace(e->line[p->i + 1])
@@ -67,9 +67,9 @@ void	parse_tilde_expansion(t_env *e, t_parse *p)
 		p->buf[p->ib++] = '~';
 		return ;
 	}
-	p->line_len += ft_strlen(new);
-	p->ib += ft_strlen(new);
-	free(p->buf);
-	p->buf = ft_strnew(p->line_len);
+	len = ft_strlen(new);
+	p->line_len += len;
+	p->ib += len;
+	realloc_buffer(p, len);
 	ft_strcat(p->buf, new);
 }

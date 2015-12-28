@@ -88,8 +88,8 @@ char			*ft_strjoin(char const *s1, char const *s2);
 char			*ft_strtrim(char const *s);
 char			**ft_strsplit(char const *s, char c);
 unsigned int	ft_count_word(char const *s, char c);
-void			ft_putchartab(char **tab);
-void			ft_putchartab_fd(char **tab, int fd);
+void			ft_putchartab(char **tabstr);
+void			ft_putchartab_fd(char **tabstr, int fd);
 int				ft_strcheck(char const *s, int (*f)(int));
 int				ft_isfullof(char *str, int c);
 

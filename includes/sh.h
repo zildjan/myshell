@@ -13,9 +13,14 @@
 #ifndef FT_SH_H
 # define FT_SH_H
 
-#include <signal.h>
-#include <sys/mount.h>
-#include <fcntl.h>
+# include <curses.h>
+# include <term.h>
+# include <termios.h>
+# include <termcap.h>
+
+# include <signal.h>
+# include <sys/mount.h>
+# include <fcntl.h>
 
 # include "libft.h"
 # include "sh_data.h"
@@ -90,6 +95,7 @@ void		set_home_path(t_env *e);
 */
 void		get_cmd(t_env *e);
 void		get_cmd_end(t_env *e, char type);
+void		get_input_line(t_env *e);
 
 /*
 **   PARSE_CMD
@@ -105,6 +111,8 @@ void		new_redirec(t_env *e, char *file, int type, int fd);
 void		check_arg_buf_size(t_parse *p);
 int			is_aspace(char c);
 void		parse_cmd_cleanline(t_env *e);
+void		realloc_buffer(t_parse *p, int add);
+char		*dup_arg(char *buf);
 
 /*
 **   PARSE_CMD_VAR
