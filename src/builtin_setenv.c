@@ -43,7 +43,7 @@ int		builtin_setenv_check(char *str, int egual)
 	while (egual && str[0] == '=')
 		return (1);
 	i = 0;
-	while (ft_isalnum(str[i]) || str[i] == '_' || (egual && str[i] == '='))
+	while (ft_isprint(str[i]))
 		i++;
 	if (ft_strlen(str) == i)
 		return (0);

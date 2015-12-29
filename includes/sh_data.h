@@ -110,23 +110,28 @@ typedef struct	s_cmd
 
 typedef struct	s_env
 {
-	char	*line;
-	t_cmd	*cmd;
-	char	**carg;
-	int		cid;
-	int		nb_cmd;
-	int		wait_cid;
-	int		cmd_pgid;
-	char	**var;
-	int		tab_size;
-	char	**path;
-	char	*home;
-	char	*home_dir;
-	char	*pwd;
-	int		status;
-	t_job	*job;
-	t_job	*jobs_lst;
-	struct termios *term;
+	char			*line;
+	t_cmd			*cmd;
+	char			**carg;
+	int				cid;
+	int				nb_cmd;
+	int				wait_cid;
+	int				cmd_pgid;
+	char			**var;
+	int				tab_size;
+	char			**path;
+	char			*home;
+	char			*home_dir;
+	char			*pwd;
+	int				status;
+	t_job			*job;
+	t_job			*jobs_lst;
+	char			*term_name;
+	struct termios	*term;
+	struct termios	*term_back;
+	int				line_size;
+	int				line_len;
+	int				cur;
 }				t_env;
 
 #endif

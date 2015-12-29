@@ -25,12 +25,15 @@
 # include "libft.h"
 # include "sh_data.h"
 
+//#include <errno.h>
+
 /*
 **   INI_ENV
 */
 t_env		*init_env(int argc, char **argv, char **environ);
 void		init_env_var(t_env *e, char **environ);
 void		init_shlvl(t_env *e);
+void		free_env(t_env *e);
 
 /*
 **   GET_ENV
@@ -97,6 +100,11 @@ void		get_cmd(t_env *e);
 void		get_cmd_end(t_env *e, char type);
 void		get_input_line(t_env *e);
 
+void		get_term_input(t_env *e);
+void		get_input_char(t_env *e, char c);
+
+int			ft_outc(int c);
+
 /*
 **   PARSE_CMD
 */
@@ -158,6 +166,13 @@ void		open_file_error(char *path, int type);
 int			pipe_new(t_env *e, t_redir *redir);
 void		pipe_assign(t_env *e, t_redir *redir);
 void		pipe_close(t_env *e, int cid);
+
+/*
+**   TERM
+*/
+void		term_init(t_env *e);
+void		term_backup(t_env *e);
+void		term_restore(struct termios *back);
 
 /*
 **   JOBS

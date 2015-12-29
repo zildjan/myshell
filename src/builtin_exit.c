@@ -35,5 +35,6 @@ void	builtin_exit(t_env *e)
 void	builtin_exit_jobs(t_env *e, int status)
 {
 	jobs_exit(e);
+	free_env(e);
 	exit(status);
 }

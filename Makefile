@@ -45,6 +45,7 @@ SRCS =		main.c \
 			heredoc.c \
 			execute.c \
 			pipe.c \
+			term.c \
 			free_cmd.c \
 			prompt.c \
 			error.c \

@@ -28,6 +28,7 @@ t_env	*init_env(int argc, char **argv, char **environ)
 	e->pwd = getcwd(NULL, 0);
 	e->status = 0;
 	init_shlvl(e);
+	term_init(e);
 	return (e);
 }
 
@@ -61,4 +62,10 @@ void	init_shlvl(t_env *e)
 	set_env_var(e, "SHLVL", new_shlvl);
 	free(shlvl);
 	free(new_shlvl);
+}
+
+void	free_env(t_env *e)
+{
+	term_restore(NULL);
+	free(e);
 }
