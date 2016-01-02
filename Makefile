@@ -39,6 +39,7 @@ SRCS =		main.c \
 			get_bin_path.c \
 			home.c \
 			get_cmd.c \
+			history.c \
 			parse_cmd.c \
 			parse_cmd_var.c \
 			redirection.c \

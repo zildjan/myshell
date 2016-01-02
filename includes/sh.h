@@ -102,8 +102,19 @@ void		get_input_line(t_env *e);
 
 void		get_term_input(t_env *e);
 void		get_input_char(t_env *e, char c);
+void		delete_input_char(t_env *e);
+
+void		switch_to_histo(t_env *e);
 
 int			ft_outc(int c);
+
+/*
+**   HISTORY
+*/
+void		history_load(t_env *e);
+void		history_add(t_env *e, char *line);
+void		history_add_to_mem(t_env *e, char *line);
+void		history_print(t_env *e);
 
 /*
 **   PARSE_CMD

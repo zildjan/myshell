@@ -161,6 +161,8 @@ int		process_builtin(t_env *e)
 		jobs_continue(e);
 	else if (ft_strequ(e->cmd[e->cid].arg[0], "jobs"))
 		jobs_list(e);
+	else if (ft_strequ(e->cmd[e->cid].arg[0], "history"))
+		history_print(e);
 	else
 		return (0);
 	return (1);

@@ -68,21 +68,13 @@ void	get_term_input(t_env *e)
 	char	buf[8];
 	int		ret;
 
-	char *key_r;
-	char *key_l;
-	key_r = ft_strnew(100);
-	key_l = ft_strnew(100);
-	key_r = tgetstr("kr", NULL);
-	key_l = tgetstr("kl", NULL);
-	ft_printf("'%d' '%d' '%d' '%d' '%d' '%d' '%d' '%d' '%d' '%d' '%d' '%d' '%d' '%d' '%d' '%d' '%d' '%d' '%d'- ", 
-			  key_r[0], key_r[1],
-			  key_r[2], key_r[3], key_r[4], key_r[5], key_r[6], key_r[7], key_r[8],
-			  key_r[9], key_r[10], key_r[11], key_r[12], key_r[13], key_r[14], key_r[15], key_r[16], key_r[17], key_r[18]);
-	ft_printf("'%c' '%c' '%c' '%c' '%c'\n", key_r[0], key_r[1], key_r[2], key_r[3], key_r[4]);
 	e->cur = 0;
 	e->line_len = 0;
 	e->line_size = 100 + 1000;
-	e->line = (char*)ft_memalloc(sizeof(char) * e->line_len);
+	e->line = (char*)ft_memalloc(sizeof(char) * e->line_size);
+	e->line_save = e->line;
+	e->histo_cur = NULL;
+
 	while (1)
 	{
 		ft_bzero(buf, 8);
@@ -93,21 +85,50 @@ void	get_term_input(t_env *e)
 //				  buf[2], buf[3], buf[4], buf[5], buf[6], ret);
 
 
-		if (!ft_strcmp(buf, key_l))
+		if (ret == 3 && buf[0] == 27 && buf[1] == 91 && buf[2] == 68)
 		{
 			if (e->cur > 0)
 			{
 				tputs(tgetstr("le", NULL), 0, ft_outc);
 				e->cur--;
 			}
+			else
+				ft_putchar(7);
 		}
-		else if (!ft_strcmp(buf, key_r))
+		else if (ret == 3 && buf[0] == 27 && buf[1] == 91 && buf[2] == 67)
 		{
 			if (e->cur < e->line_len)
 			{
 				tputs(tgetstr("nd", NULL), 0, ft_outc);
-				e->cur--;
+				e->cur++;
 			}
+			else
+				ft_putchar(7);
+		}
+		else if (ret == 3 && buf[0] == 27 && buf[1] == 91 && buf[2] == 65)
+		{
+			if (!e->histo_cur)
+			{
+				e->histo_cur = e->histo;
+				switch_to_histo(e);
+			}
+			else if (e->histo_cur->up)
+			{
+				e->histo_cur = e->histo_cur->up;
+				switch_to_histo(e);
+			}
+			else
+				ft_putchar(7);
+		}
+		else if (ret == 3 && buf[0] == 27 && buf[1] == 91 && buf[2] == 66)
+		{
+			if (e->histo_cur)
+			{
+				e->histo_cur = e->histo_cur->down;
+				switch_to_histo(e);
+			}
+			else
+				ft_putchar(7);
 		}
 		else if (ret == 1 && buf[0] == 10)
 		{
@@ -119,16 +140,87 @@ void	get_term_input(t_env *e)
 			ft_putendl("exit");
 			builtin_exit(e);
 		}
+		else if (ret == 1 && buf[0] == 127)
+		{
+			if (e->cur > 0)
+				delete_input_char(e);
+			else
+				ft_putchar(7);
+		}
 		else if (ret == 1 && ft_isprint(buf[0]))
 			get_input_char(e, buf[0]);
 	}
+
+//	ft_printf("buf=%s\n", e->line);
+	if (e->line_len && !ft_strequ(e->histo->line, e->line))
+		history_add(e, e->line);
 }
 
 void	get_input_char(t_env *e, char c)
 {
+	int		i;
+	char	tmp;
+	char	tmp_pre;
+
+	i = e->cur;
+	tmp_pre = e->line[i++];
+	while (tmp_pre)
+	{
+		tmp = e->line[i];
+		e->line[i] = tmp_pre;
+		tmp_pre = tmp;
+		i++;
+	}
 	e->line[e->cur++] = c;
 	e->line_len++;
+	tputs(tgetstr("im", NULL), 0, ft_outc);
+	tputs(tgetstr("ic", NULL), 0, ft_outc);
 	ft_putchar(c);
+	tputs(tgetstr("ip", NULL), 0, ft_outc);
+	tputs(tgetstr("ei", NULL), 0, ft_outc);
+}
+
+void	delete_input_char(t_env *e)
+{
+	int		i;
+//	char	tmp;
+
+	i = e->cur - 1;
+	while (e->line[i])
+	{
+		e->line[i] = e->line[i + 1];
+		i++;
+	}
+	e->cur--;
+	e->line_len--;
+	tputs(tgetstr("le", NULL), 0, ft_outc);
+	tputs(tgetstr("dm", NULL), 0, ft_outc);
+	tputs(tgetstr("dc", NULL), 0, ft_outc);
+	tputs(tgetstr("ed", NULL), 0, ft_outc);
+}
+
+void	switch_to_histo(t_env *e)
+{
+	while (e->cur++ < e->line_len)
+		tputs(tgetstr("nd", NULL), 0, ft_outc);
+	e->cur--;
+	while (e->cur)
+	{
+		tputs(tgetstr("le", NULL), 0, ft_outc);
+		tputs(tgetstr("dm", NULL), 0, ft_outc);
+		tputs(tgetstr("dc", NULL), 0, ft_outc);
+		tputs(tgetstr("ed", NULL), 0, ft_outc);
+		e->cur--;
+	}
+	if (e->line != e->line_save)
+		free(e->line);
+	if (e->histo_cur)
+		e->line = ft_strdup(e->histo_cur->line);
+	else
+		e->line = e->line_save;
+	ft_putstr(e->line);
+	e->line_len = ft_strlen(e->line);
+	e->cur = e->line_len;
 }
 
 int		ft_outc(int c)

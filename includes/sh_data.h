@@ -59,6 +59,13 @@ typedef struct	s_job
 	struct s_job	*next;
 }				t_job;
 
+typedef struct	s_histo
+{
+	char			*line;
+	struct s_histo	*up;
+	struct s_histo	*down;
+}				t_histo;
+
 typedef struct	s_redir
 {
 	char			*file;
@@ -127,10 +134,15 @@ typedef struct	s_env
 	t_job			*job;
 	t_job			*jobs_lst;
 	char			*term_name;
+	t_histo			*histo_begin;
+	t_histo			*histo;
+	t_histo			*histo_cur;
+	int				histo_size;
 	struct termios	*term;
 	struct termios	*term_back;
 	int				line_size;
 	int				line_len;
+	char			*line_save;
 	int				cur;
 }				t_env;
 

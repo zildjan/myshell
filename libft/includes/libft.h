@@ -160,6 +160,7 @@ void			ft_putendl_fd(char const *s, int fd);
 void			ft_putnbr_fd(long n, int fd);
 void			ft_putnspace(int len);
 void			ft_putnchar(int len, char c);
+void			ft_putnchar_fd(int len, char c, int fd);
 
 /*
 **    WCHAR

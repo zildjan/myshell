@@ -108,6 +108,7 @@ SRCS =		ft_bzero.c \
 			ft_putnbr_fd.c \
 			ft_putnspace.c \
 			ft_putnchar.c \
+			ft_putnchar_fd.c \
 			ft_putwchar.c \
 			ft_putwstr.c \
 			ft_wcharlen.c \
