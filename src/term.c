@@ -31,6 +31,7 @@ void	term_init(t_env *e)
 		term_restore(e->term_back);
 		(e->term)->c_lflag &= ~(ICANON);
 		(e->term)->c_lflag &= ~(ECHO);
+		(e->term)->c_lflag &= ~(ISIG);
 		(e->term)->c_cc[VMIN] = 1;
 		(e->term)->c_cc[VTIME] = 0;
 		tcsetattr(0, TCSADRAIN, e->term);

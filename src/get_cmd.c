@@ -70,7 +70,7 @@ void	get_term_input(t_env *e)
 
 	e->cur = 0;
 	e->line_len = 0;
-	e->line_size = 100 + 1000;
+	e->line_size = 100;
 	e->line = (char*)ft_memalloc(sizeof(char) * e->line_size);
 	e->line_save = e->line;
 	e->histo_cur = NULL;
@@ -135,10 +135,21 @@ void	get_term_input(t_env *e)
 			ft_putchar('\n');
 			break ;
 		}
+		else if (ret == 1 && buf[0] == 3)
+		{
+			ft_putchar('\n');
+			ft_bzero(e->line, e->line_len);
+			break ;
+		}
 		else if (ret == 1 && buf[0] == 4)
 		{
-			ft_putendl("exit");
-			builtin_exit(e);
+			if (!e->line_len)
+			{
+				ft_putendl("exit");
+				builtin_exit(e);
+			}
+			else
+				ft_putchar(7);
 		}
 		else if (ret == 1 && buf[0] == 127)
 		{
@@ -149,9 +160,23 @@ void	get_term_input(t_env *e)
 		}
 		else if (ret == 1 && ft_isprint(buf[0]))
 			get_input_char(e, buf[0]);
+		if (e->cur + 10 >= e->line_size)
+		{
+			char	refresh;
+
+			refresh = 0;
+			if (e->line_save == e->line)
+				refresh = 1;
+			e->line = ft_memrealloc(e->line, e->line_size, e->line_size + 10);
+			if (refresh)
+				e->line_save = e->line;
+			e->line_size += 10;
+		}
 	}
 
 //	ft_printf("buf=%s\n", e->line);
+	if (e->line != e->line_save)
+		free(e->line_save);
 	if (e->line_len && !ft_strequ(e->histo->line, e->line))
 		history_add(e, e->line);
 }
@@ -220,6 +245,7 @@ void	switch_to_histo(t_env *e)
 		e->line = e->line_save;
 	ft_putstr(e->line);
 	e->line_len = ft_strlen(e->line);
+	e->line_size = e->line_len;
 	e->cur = e->line_len;
 }
 
