@@ -111,8 +111,10 @@ int			ft_outc(int c);
 /*
 **   HISTORY
 */
+void		history_init(t_env *e);
 void		history_load(t_env *e);
-void		history_add(t_env *e, char *line);
+void		history_add(t_env *e, char escape);
+void		history_save_ent(t_env *e);
 void		history_add_to_mem(t_env *e, char *line);
 void		history_print(t_env *e);
 
@@ -183,7 +185,9 @@ void		pipe_close(t_env *e, int cid);
 */
 void		term_init(t_env *e);
 void		term_backup(t_env *e);
-void		term_restore(struct termios *back);
+void		term_restore(t_env *e);
+void		term_restore_back(t_env *e);
+void		term_restore_backup(struct termios *back);
 
 /*
 **   JOBS
@@ -205,6 +209,7 @@ void		free_cmd_redirec(t_env *e, int i);
 **   PROMPT
 */
 void		print_prompt(t_env *e);
+char		*ft_get_up_dir(char *path, int level);
 
 /*
 **   ERROR

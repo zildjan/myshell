@@ -53,6 +53,7 @@ void	parse_cmd(t_env *e)
 			break ;
 		if (!e->line[++p.i])
 		{
+			history_add(e, p.escape);
 			if (p.ib && !p.quo && !p.escape)
 				parse_add_arg(e, &p);
 			if (p.quo == SIMP)
@@ -227,6 +228,8 @@ void	parse_cmd(t_env *e)
 	e->cid = 0;
 //	ft_printf("'%s' %ld\n", e->cmd[0].arg[0], e->cmd[0].quo[0]);
 //	ft_printf("nb_cmd=%ld\n", e->nb_cmd);
+
+	history_save_ent(e);
 
 	if (!p.error)
 		process_cmd(e);

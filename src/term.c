@@ -15,6 +15,7 @@
 void	term_init(t_env *e)
 {
 	e->term_name = get_env_val(e, "TERM");
+	e->term_status = 0;
 	if (tgetent(NULL, e->term_name) != 1)
 		return ;
 	if (isatty(0))
@@ -28,7 +29,7 @@ void	term_init(t_env *e)
 		}
 		else
 			term_backup(e);
-		term_restore(e->term_back);
+		term_restore_backup(e->term_back);
 		(e->term)->c_lflag &= ~(ICANON);
 		(e->term)->c_lflag &= ~(ECHO);
 		(e->term)->c_lflag &= ~(ISIG);
@@ -47,7 +48,34 @@ void	term_backup(t_env *e)
 	ft_memcpy(e->term_back, e->term, size);
 }
 
-void	term_restore(struct termios *back)
+void	term_restore(t_env *e)
+{
+	if (e->term)
+	{
+		if (e->term_status == 1)
+		{
+			tcsetattr(0, TCSADRAIN, e->term);
+//			ft_printf("RESTORED SHELL %d\n", e->term_status);
+		}
+		if (e->term_status > 0)
+			e->term_status--;
+	}
+}
+
+void	term_restore_back(t_env *e)
+{
+	if (!e->term)
+		return ;
+	if (e->term_status == 0)
+	{
+		term_restore_backup(NULL);
+//		ft_printf("RESTORED BACKUP %d\n", e->term_status);
+	}
+	e->term_status++;
+
+}
+
+void	term_restore_backup(struct termios *back)
 {
 	static struct termios *backup;
 
@@ -55,7 +83,9 @@ void	term_restore(struct termios *back)
 		backup = back;
 	else
 	{
-		tcsetattr(0, TCSADRAIN, backup);
-//		ft_printf("RESTORED\n");
+		if (backup)
+		{
+			tcsetattr(0, TCSADRAIN, backup);
+		}
 	}
 }

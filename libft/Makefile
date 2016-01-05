@@ -40,6 +40,7 @@ SRCS =		ft_bzero.c \
 			ft_memdel.c \
 			ft_strlen.c \
 			ft_strdup.c \
+			ft_strdupcat.c \
 			ft_strndup.c \
 			ft_strcpy.c \
 			ft_strncpy.c \

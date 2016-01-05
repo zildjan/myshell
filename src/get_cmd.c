@@ -48,16 +48,15 @@ void	get_input_line(t_env *e)
 	int		ret;
 
 	if (e->term)
-	{
-//		ft_printf("GET\n");
 		get_term_input(e);
-		return ;
-	}
-	ret = get_next_line(0, &e->line);
-	if (ret == 0)
+	else
 	{
-		ft_printf("exit\n");
-		builtin_exit(e);
+		ret = get_next_line(0, &e->line);
+		if (ret == 0)
+		{
+			ft_printf("exit\n");
+			builtin_exit(e);
+		}
 	}
 	if (!e->line)
 		e->line = ft_strdup("");
@@ -177,8 +176,6 @@ void	get_term_input(t_env *e)
 //	ft_printf("buf=%s\n", e->line);
 	if (e->line != e->line_save)
 		free(e->line_save);
-	if (e->line_len && !ft_strequ(e->histo->line, e->line))
-		history_add(e, e->line);
 }
 
 void	get_input_char(t_env *e, char c)

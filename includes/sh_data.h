@@ -134,12 +134,15 @@ typedef struct	s_env
 	t_job			*job;
 	t_job			*jobs_lst;
 	char			*term_name;
+	char			*histo_file;
 	t_histo			*histo_begin;
 	t_histo			*histo;
 	t_histo			*histo_cur;
 	int				histo_size;
+	char			*histo_line;
 	struct termios	*term;
 	struct termios	*term_back;
+	int				term_status;
 	int				line_size;
 	int				line_len;
 	char			*line_save;

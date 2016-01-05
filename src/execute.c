@@ -72,6 +72,7 @@ void	process_wait(t_env *e, int pid, int job)
 	waitpid(pid, &ret, WUNTRACED);
 	if (e->wait_cid == e->cid || job)
 		tcsetpgrp(0, getpid());
+	term_restore(e);
 	if (WIFSIGNALED(ret))
 	{
 		if (ret != SIGINT)
@@ -102,6 +103,7 @@ void	process_bin(t_env *e, char **env)
 		cmd_path = ft_strdup(cmd);
 	if (cmd_path != NULL)
 	{
+		term_restore_back(e);
 		process_fork(e, cmd_path, env);
 		free(cmd_path);
 	}

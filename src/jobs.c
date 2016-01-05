@@ -51,11 +51,10 @@ void	jobs_continue(t_env *e)
 	ft_printf("[%ld]  - %ld continued  %s\n", e->job->id, e->job->pgid, e->job->name);
 //	ft_putendl("ICI");
 //	ft_printf("pg=%ld\n", e->job->pgid);
+	term_restore_back(e);
 	tcsetpgrp(0, e->job->pgid);
-	if (!killpg(e->job->pgid, SIGCONT))
-		process_wait(e, e->job->pid, 1);
-	else
-		jobs_remove(e, e->job->pgid);
+	killpg(e->job->pgid, SIGCONT);
+	process_wait(e, e->job->pid, 1);
 }
 
 void	jobs_remove(t_env *e, int pid)

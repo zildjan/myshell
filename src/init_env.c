@@ -29,7 +29,7 @@ t_env	*init_env(int argc, char **argv, char **environ)
 	e->status = 0;
 	init_shlvl(e);
 	term_init(e);
-	history_load(e);
+	history_init(e);
 	return (e);
 }
 
@@ -67,6 +67,6 @@ void	init_shlvl(t_env *e)
 
 void	free_env(t_env *e)
 {
-	term_restore(NULL);
+	term_restore_backup(NULL);
 	free(e);
 }

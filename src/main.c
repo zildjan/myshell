@@ -25,7 +25,6 @@ int		main(int argc, char **argv, char **environ)
 	sig_handler(e, 0);
 	catch_signal();
 
-
 	while (1)
 	{
 		print_prompt(e);

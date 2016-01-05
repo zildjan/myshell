@@ -19,13 +19,13 @@ void	history_load(t_env *e)
 	int		fd;
 
 	e->histo_size = 0;
-	if ((fd = open("history", O_RDONLY , 0444)) == -1)
+	e->histo_line = NULL;
+	if ((fd = open(e->histo_file, O_RDONLY , 0444)) == -1)
 		return ;
 	while ((ret = get_next_line(fd, &line)))
 	{
-		history_add_to_mem(e, line);
-		if (!*line)
-			break ;
+		if (ft_strlen(line))
+			history_add_to_mem(e, line);
 		if (line)
 			free(line);
 		line = NULL;
@@ -35,17 +35,54 @@ void	history_load(t_env *e)
 	close(fd);
 }
 
-void	history_add(t_env *e, char *line)
+void	history_init(t_env *e)
+{
+	if (e->home)
+	{
+		e->histo_file = ft_strjoin(e->home, "/.21sh_history");
+	}
+	else
+		e->histo_file = NULL;
+	history_load(e);
+}
+
+void	history_add(t_env *e, char escape)
+{
+	int		len;
+
+	e->histo_line = ft_strdupcat(e->histo_line, e->line);
+	if (e->histo_line && escape)
+	{
+		len = ft_strlen(e->histo_line);
+		if (e->histo_line[len - 1] == '\\')
+			e->histo_line[len - 1] = 0;
+	}
+}
+
+void	history_save_ent(t_env *e)
 {
 	int		fd;
 
-	fd = open("history", O_WRONLY | O_CREAT | O_APPEND, 0644);
+	if (!e->histo_line)
+		return ;
+	if (e->histo)
+		if (ft_strequ(e->histo->line, e->histo_line))
+		{
+			if (e->histo_line)
+				free(e->histo_line);
+			e->histo_line = NULL;
+			return ;
+		}
+	fd = open(e->histo_file, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (fd != -1)
 	{
-		ft_putendl_fd(line, fd);
+		ft_putendl_fd(e->histo_line, fd);
 		close(fd);
 	}
-	history_add_to_mem(e, line);
+	history_add_to_mem(e, e->histo_line);
+	if (e->histo_line)
+		free(e->histo_line);
+	e->histo_line = NULL;
 }
 
 void	history_add_to_mem(t_env *e, char *line)

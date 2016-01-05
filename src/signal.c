@@ -69,7 +69,7 @@ void	sig_handler(t_env *e, int signum)
 	{
 		put_sig_error(signum, "\nEXIT", 2);
 //		ft_printf("SIGNAL %ld\nEXIT\n", signum);
-		term_restore(NULL);
+		term_restore_backup(NULL);
 		exit(1);
 	}
 	else if (signum == SIGTSTP)
