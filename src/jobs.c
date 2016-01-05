@@ -36,6 +36,8 @@ void	jobs_add(t_env *e, int pid)
 			tmp->next = new;
 	}
 	ft_printf("\n[%ld]  - %ld suspended  %s\n", e->job->id, pid, e->job->name);
+	if (e->term)
+		tcsetattr(0, TCSADRAIN, e->term);
 }
 
 void	jobs_continue(t_env *e)

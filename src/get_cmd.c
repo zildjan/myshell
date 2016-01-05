@@ -83,99 +83,185 @@ void	get_term_input(t_env *e)
 //		ft_printf("'%c' '%c' '%c' '%c' '%c' '%c' '%c' =%d\n", buf[0], buf[1],
 //				  buf[2], buf[3], buf[4], buf[5], buf[6], ret);
 
+		if (process_all_key(e, ret, buf))	
+			(void)e;
+		else if (process_break_key(e, ret, buf))	
+			break ;
+		else if (ret == 1 && ft_isprint(buf[0]))
+			get_input_char(e, buf[0]);
+		resize_input_line(e);
+	}
+	if (e->line != e->line_save)
+		free(e->line_save);
+}
 
-		if (ret == 3 && buf[0] == 27 && buf[1] == 91 && buf[2] == 68)
+int		process_all_key(t_env *e, int ret, char *buf)
+{
+	if (!process_cursor_key(e, ret, buf))
+		return (0);
+	return (1);
+}
+
+int		process_break_key(t_env *e, int ret, char *buf)
+{
+	if (ret == 1 && buf[0] == 10)
+		ft_putchar('\n');
+	else if (ret == 1 && buf[0] == 3)
+	{
+		ft_putchar('\n');
+		ft_bzero(e->line, e->line_len);
+	}
+	else
+		return (0);
+	return (1);
+}
+
+int		process_cursor_key(t_env *e, int ret, char *buf)
+{
+	if (ret == 3 && buf[0] == 27 && buf[1] == 91 && buf[2] == 68)
+	{
+		if (e->cur > 0)
 		{
-			if (e->cur > 0)
+			tputs(tgetstr("le", NULL), 0, ft_outc);
+			e->cur--;
+		}
+		else
+			ft_putchar(7);
+	}
+	else if (ret == 3 && buf[0] == 27 && buf[1] == 91 && buf[2] == 67)
+	{
+		if (e->cur < e->line_len)
+		{
+			tputs(tgetstr("nd", NULL), 0, ft_outc);
+			e->cur++;
+		}
+		else
+			ft_putchar(7);
+	}
+	else
+		return (process_cursor_key2(e, ret, buf));
+	return (1);
+}
+
+int		process_cursor_key2(t_env *e, int ret, char *buf)
+{
+	if (ret == 3 && buf[0] == 27 && buf[1] == 91 && buf[2] == 72)
+	{
+		while (e->cur > 0)
+		{
+			tputs(tgetstr("le", NULL), 0, ft_outc);
+			e->cur--;
+		}
+	}
+	else if (ret == 3 && buf[0] == 27 && buf[1] == 91 && buf[2] == 70)
+	{
+		while (e->cur < e->line_len)
+		{
+			tputs(tgetstr("nd", NULL), 0, ft_outc);
+			e->cur++;
+		}
+	}
+	else if (ret == 4
+			 && buf[0] == 27 && buf[1] == 27 && buf[2] == 91 && buf[3] == 68)
+	{
+		if (e->cur > 0)
+			while (e->cur > 0 && e->line[e->cur - 1] == ' ')
 			{
 				tputs(tgetstr("le", NULL), 0, ft_outc);
 				e->cur--;
 			}
-			else
-				ft_putchar(7);
-		}
-		else if (ret == 3 && buf[0] == 27 && buf[1] == 91 && buf[2] == 67)
-		{
-			if (e->cur < e->line_len)
+		if (e->cur > 0)
+			while (e->cur > 0 && e->line[e->cur - 1] != ' ')
 			{
-				tputs(tgetstr("nd", NULL), 0, ft_outc);
-				e->cur++;
+				tputs(tgetstr("le", NULL), 0, ft_outc);
+				e->cur--;
 			}
-			else
-				ft_putchar(7);
-		}
-		else if (ret == 3 && buf[0] == 27 && buf[1] == 91 && buf[2] == 65)
+	}
+	else if (ret == 4
+			 && buf[0] == 27 && buf[1] == 27 && buf[2] == 91 && buf[3] == 67)
+	{
+		while (e->cur < e->line_len && e->line[e->cur] == ' ')
 		{
-			if (!e->histo_cur)
-			{
-				e->histo_cur = e->histo;
-				switch_to_histo(e);
-			}
-			else if (e->histo_cur->up)
-			{
-				e->histo_cur = e->histo_cur->up;
-				switch_to_histo(e);
-			}
-			else
-				ft_putchar(7);
+			tputs(tgetstr("nd", NULL), 0, ft_outc);
+			e->cur++;
 		}
-		else if (ret == 3 && buf[0] == 27 && buf[1] == 91 && buf[2] == 66)
+		while (e->cur < e->line_len  && e->line[e->cur] != ' ')
 		{
-			if (e->histo_cur)
-			{
-				e->histo_cur = e->histo_cur->down;
-				switch_to_histo(e);
-			}
-			else
-				ft_putchar(7);
-		}
-		else if (ret == 1 && buf[0] == 10)
-		{
-			ft_putchar('\n');
-			break ;
-		}
-		else if (ret == 1 && buf[0] == 3)
-		{
-			ft_putchar('\n');
-			ft_bzero(e->line, e->line_len);
-			break ;
-		}
-		else if (ret == 1 && buf[0] == 4)
-		{
-			if (!e->line_len)
-			{
-				ft_putendl("exit");
-				builtin_exit(e);
-			}
-			else
-				ft_putchar(7);
-		}
-		else if (ret == 1 && buf[0] == 127)
-		{
-			if (e->cur > 0)
-				delete_input_char(e);
-			else
-				ft_putchar(7);
-		}
-		else if (ret == 1 && ft_isprint(buf[0]))
-			get_input_char(e, buf[0]);
-		if (e->cur + 10 >= e->line_size)
-		{
-			char	refresh;
-
-			refresh = 0;
-			if (e->line_save == e->line)
-				refresh = 1;
-			e->line = ft_memrealloc(e->line, e->line_size, e->line_size + 10);
-			if (refresh)
-				e->line_save = e->line;
-			e->line_size += 10;
+			tputs(tgetstr("nd", NULL), 0, ft_outc);
+			e->cur++;
 		}
 	}
+	else if (ret == 1 && buf[0] == 4)
+	{
+		if (!e->line_len)
+		{
+			ft_putendl("exit");
+			builtin_exit(e);
+		}
+		else
+			ft_putchar(7);
+	}
+	else
+		return (process_edition_key(e, ret, buf));
+	return (1);
+}
 
-//	ft_printf("buf=%s\n", e->line);
-	if (e->line != e->line_save)
-		free(e->line_save);
+int		process_edition_key(t_env *e, int ret, char *buf)
+{
+	if (ret == 1 && buf[0] == 127)
+	{
+		if (e->cur > 0)
+			backdelete_input_char(e);
+		else
+			ft_putchar(7);
+	}
+	else if (ret == 4
+			 && buf[0] == 27 && buf[1] == 91 && buf[2] == 51 && buf[3] == 126)
+	{
+		if (e->cur < e->line_len)
+			delete_input_char(e);
+		else
+			ft_putchar(7);
+	}
+	else if (ret == 1 && buf[0] == 11)
+		cut_input_line(e);
+	else if (ret == 1 && buf[0] == 25)
+		paste_input_line(e);
+	else
+		return (process_histo_key(e, ret, buf));
+	return (1);
+}
+
+int		process_histo_key(t_env *e, int ret, char *buf)
+{
+	if (ret == 3 && buf[0] == 27 && buf[1] == 91 && buf[2] == 65)
+	{
+		if (!e->histo_cur)
+		{
+			e->histo_cur = e->histo;
+			switch_to_histo(e);
+		}
+		else if (e->histo_cur->up)
+		{
+			e->histo_cur = e->histo_cur->up;
+			switch_to_histo(e);
+		}
+		else
+			ft_putchar(7);
+	}
+	else if (ret == 3 && buf[0] == 27 && buf[1] == 91 && buf[2] == 66)
+	{
+		if (e->histo_cur)
+		{
+			e->histo_cur = e->histo_cur->down;
+			switch_to_histo(e);
+		}
+		else
+			ft_putchar(7);
+	}
+	else
+		return (0);
+	return (1);
 }
 
 void	get_input_char(t_env *e, char c)
@@ -202,10 +288,9 @@ void	get_input_char(t_env *e, char c)
 	tputs(tgetstr("ei", NULL), 0, ft_outc);
 }
 
-void	delete_input_char(t_env *e)
+void	backdelete_input_char(t_env *e)
 {
 	int		i;
-//	char	tmp;
 
 	i = e->cur - 1;
 	while (e->line[i])
@@ -216,6 +301,22 @@ void	delete_input_char(t_env *e)
 	e->cur--;
 	e->line_len--;
 	tputs(tgetstr("le", NULL), 0, ft_outc);
+	tputs(tgetstr("dm", NULL), 0, ft_outc);
+	tputs(tgetstr("dc", NULL), 0, ft_outc);
+	tputs(tgetstr("ed", NULL), 0, ft_outc);
+}
+
+void	delete_input_char(t_env *e)
+{
+	int		i;
+
+	i = e->cur;
+	while (e->line[i])
+	{
+		e->line[i] = e->line[i + 1];
+		i++;
+	}
+	e->line_len--;
 	tputs(tgetstr("dm", NULL), 0, ft_outc);
 	tputs(tgetstr("dc", NULL), 0, ft_outc);
 	tputs(tgetstr("ed", NULL), 0, ft_outc);
@@ -250,4 +351,49 @@ int		ft_outc(int c)
 {
 	ft_putchar(c);
 	return (1);
+}
+
+void	cut_input_line(t_env *e)
+{
+	char	*cpy;
+	int		i;
+	int		len;
+
+	cpy = e->line + e->cur;
+	if (e->clipboard)
+		free(e->clipboard);
+	e->clipboard = ft_strdup(cpy);
+	i = -1;
+	len = ft_strlen(e->clipboard);
+	while (++i < len)
+		delete_input_char(e);
+}
+
+void	paste_input_line(t_env *e)
+{
+	int		i;
+	int		len;
+
+	i = -1;
+	len = ft_strlen(e->clipboard);
+	if (len == 0)
+		ft_putchar(7);
+	while (++i < len)
+		get_input_char(e, e->clipboard[i]);
+}
+
+void	resize_input_line(t_env *e)
+{
+	char	refresh;
+
+	if (e->cur + 10 >= e->line_size)
+	{		
+		refresh = 0;
+		if (e->line_save == e->line)
+			refresh = 1;
+		e->line = ft_memrealloc(e->line, e->line_size, e->line_size + 10);
+		if (refresh)
+			e->line_save = e->line;
+		e->line_size += 10;
+	}
 }

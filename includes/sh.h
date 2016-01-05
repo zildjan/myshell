@@ -99,10 +99,22 @@ void		set_home_path(t_env *e);
 void		get_cmd(t_env *e);
 void		get_cmd_end(t_env *e, char type);
 void		get_input_line(t_env *e);
+void		resize_input_line(t_env *e);
+
+int			process_all_key(t_env *e, int ret, char *buf);
+int			process_cursor_key(t_env *e, int ret, char *buf);
+int			process_cursor_key2(t_env *e, int ret, char *buf);
+int			process_edition_key(t_env *e, int ret, char *buf);
+int			process_histo_key(t_env *e, int ret, char *buf);
+int			process_break_key(t_env *e, int ret, char *buf);
 
 void		get_term_input(t_env *e);
 void		get_input_char(t_env *e, char c);
 void		delete_input_char(t_env *e);
+void		backdelete_input_char(t_env *e);
+
+void		cut_input_line(t_env *e);
+void		paste_input_line(t_env *e);
 
 void		switch_to_histo(t_env *e);
 

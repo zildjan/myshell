@@ -147,6 +147,7 @@ typedef struct	s_env
 	int				line_len;
 	char			*line_save;
 	int				cur;
+	char			*clipboard;
 }				t_env;
 
 #endif
