@@ -127,7 +127,12 @@ void		paste_input_line(t_env *e);
 
 void		switch_to_histo(t_env *e);
 
+int			move_cursor_right(t_env *e);
+int			move_cursor_left(t_env *e);
+int			is_end_of_line(t_env *e, int cur);
 int			ft_outc(int c);
+
+void	close_line_edition(t_env *e);
 
 /*
 **   HISTORY

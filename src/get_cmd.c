@@ -93,6 +93,7 @@ void	get_term_input(t_env *e)
 	}
 	if (e->line != e->line_save)
 		free(e->line_save);
+	close_line_edition(e);
 }
 
 int		process_all_key(t_env *e, int ret, char *buf)
@@ -124,25 +125,12 @@ int		process_cursor_key(t_env *e, int ret, char *buf)
 {
 	if (ft_strequ(buf, tgetstr("kl", NULL)))
 	{
-		if (e->cur > 0)
-		{
-			tputs(tgetstr("le", NULL), 0, ft_outc);
-			e->cur--;
-		}
-		else
+		if (!move_cursor_left(e))
 			ft_putchar(7);
 	}
 	else if (ft_strequ(buf, tgetstr("kr", NULL)))
 	{
-		if (e->cur < e->line_len)
-		{
-			e->cur++;
-			if (!(e->cur % (e->ws_col - e->prompt_len)))
-				tputs(tgetstr("do", NULL), 0, ft_outc);
-			else
-				tputs(tgetstr("nd", NULL), 0, ft_outc);
-		}
-		else
+		if (!move_cursor_right(e))
 			ft_putchar(7);
 	}
 	else
@@ -154,24 +142,16 @@ int		process_cursor2_key(t_env *e, int ret, char *buf)
 {
 	int		i;
 
-	i = tgetnum("co");
+	i = e->ws_col;
 	if (ft_strequ(buf, tgetstr("#2", NULL)))
 	{
-		while (e->cur > 0 && i)
-		{
-			tputs(tgetstr("le", NULL), 0, ft_outc);
-			e->cur--;
-			i--;
-		}
+		while (e->cur > 0 && i--)
+			move_cursor_left(e);
 	}
 	else if (ft_strequ(buf, tgetstr("*7", NULL)))
 	{
-		while (e->cur < e->line_len && i)
-		{
-			tputs(tgetstr("nd", NULL), 0, ft_outc);
-			e->cur++;
-			i--;
-		}
+		while (e->cur < e->line_len && i--)
+			move_cursor_right(e);
 	}
 	else
 		return (process_home_end_key(e, ret, buf));
@@ -183,18 +163,12 @@ int		process_home_end_key(t_env *e, int ret, char *buf)
 	if (ft_strequ(buf, tgetstr("kh", NULL)))
 	{
 		while (e->cur > 0)
-		{
-			tputs(tgetstr("le", NULL), 0, ft_outc);
-			e->cur--;
-		}
+			move_cursor_left(e);
 	}
 	else if (ft_strequ(buf, tgetstr("@7", NULL)))
 	{
 		while (e->cur < e->line_len)
-		{
-			tputs(tgetstr("nd", NULL), 0, ft_outc);
-			e->cur++;
-		}
+			move_cursor_right(e);
 	}
 	else
 		return (process_prev_word_key(e, ret, buf));
@@ -207,16 +181,10 @@ int		process_prev_word_key(t_env *e, int ret, char *buf)
 	{
 		if (e->cur > 0)
 			while (e->cur > 0 && e->line[e->cur - 1] == ' ')
-			{
-				tputs(tgetstr("le", NULL), 0, ft_outc);
-				e->cur--;
-			}
+				move_cursor_left(e);
 		if (e->cur > 0)
 			while (e->cur > 0 && e->line[e->cur - 1] != ' ')
-			{
-				tputs(tgetstr("le", NULL), 0, ft_outc);
-				e->cur--;
-			}
+				move_cursor_left(e);
 	}
 	else
 		return (process_next_word_key(e, ret, buf));
@@ -228,15 +196,9 @@ int		process_next_word_key(t_env *e, int ret, char *buf)
 	if (ft_strequ(buf, tgetstr("%i", NULL)))
 	{
 		while (e->cur < e->line_len && e->line[e->cur] == ' ')
-		{
-			tputs(tgetstr("nd", NULL), 0, ft_outc);
-			e->cur++;
-		}
+			move_cursor_right(e);
 		while (e->cur < e->line_len  && e->line[e->cur] != ' ')
-		{
-			tputs(tgetstr("nd", NULL), 0, ft_outc);
-			e->cur++;
-		}
+			move_cursor_right(e);
 	}
 	else
 		return (process_edition_key(e, ret, buf));
@@ -324,6 +286,33 @@ int		process_option_key(t_env *e, int ret, char *buf)
 	return (1);
 }
 
+int		move_cursor_right(t_env *e)
+{
+	if (e->cur < e->line_len)
+	{
+		e->cur++;
+		if (is_end_of_line(e, e->cur))
+			tputs(tgetstr("do", NULL), 0, ft_outc);
+		else
+			tputs(tgetstr("nd", NULL), 0, ft_outc);
+		return (1);
+	}
+	else
+		return (0);
+}
+
+int		move_cursor_left(t_env *e)
+{
+	if (e->cur > 0)
+	{
+		tputs(tgetstr("le", NULL), 0, ft_outc);
+		e->cur--;
+		return (1);
+	}
+	else
+		return (0);
+}
+
 void	get_input_char(t_env *e, char c)
 {
 	int		i;
@@ -335,9 +324,8 @@ void	get_input_char(t_env *e, char c)
 	while (tmp_pre)
 	{
 		tmp = e->line[i];
-		e->line[i] = tmp_pre;
+		e->line[i++] = tmp_pre;
 		tmp_pre = tmp;
-		i++;
 	}
 	e->line[e->cur++] = c;
 	e->line_len++;
@@ -346,12 +334,28 @@ void	get_input_char(t_env *e, char c)
 	ft_putchar(c);
 	tputs(tgetstr("ip", NULL), 0, ft_outc);
 	tputs(tgetstr("ei", NULL), 0, ft_outc);
+	ft_putstr(e->line + e->cur);
+	i = e->line_len - e->cur;
+	if (is_end_of_line(e, e->line_len))
+		i--;
+	while (i-- > 0)
+		tputs(tgetstr("le", NULL), 0, ft_outc);
+}
+
+int		is_end_of_line(t_env *e, int cur)
+{
+	if (!((cur + e->prompt_len) % e->ws_col))
+	{
+		return (1);
+	}
+	return (0);
 }
 
 void	backdelete_input_char(t_env *e)
 {
 	int		i;
 
+	tputs(tgetstr("vi", NULL), 0, ft_outc);
 	i = e->cur - 1;
 	while (e->line[i])
 	{
@@ -359,27 +363,44 @@ void	backdelete_input_char(t_env *e)
 		i++;
 	}
 	e->cur--;
-	e->line_len--;
 	tputs(tgetstr("le", NULL), 0, ft_outc);
 	tputs(tgetstr("dm", NULL), 0, ft_outc);
 	tputs(tgetstr("dc", NULL), 0, ft_outc);
 	tputs(tgetstr("ed", NULL), 0, ft_outc);
+	ft_putstr(e->line + e->cur);
+	ft_putchar(' ');
+	i = e->line_len - e->cur;
+	if (is_end_of_line(e, e->line_len))
+		i--;
+	while (i-- > 0)
+		tputs(tgetstr("le", NULL), 0, ft_outc);
+	e->line_len--;
+	tputs(tgetstr("ve", NULL), 0, ft_outc);
 }
 
 void	delete_input_char(t_env *e)
 {
 	int		i;
 
+	tputs(tgetstr("vi", NULL), 0, ft_outc);
 	i = e->cur;
 	while (e->line[i])
 	{
 		e->line[i] = e->line[i + 1];
 		i++;
 	}
-	e->line_len--;
 	tputs(tgetstr("dm", NULL), 0, ft_outc);
 	tputs(tgetstr("dc", NULL), 0, ft_outc);
 	tputs(tgetstr("ed", NULL), 0, ft_outc);
+	ft_putstr(e->line + e->cur);
+	ft_putchar(' ');
+	i = e->line_len - e->cur;
+	if (is_end_of_line(e, e->line_len))
+		i--;
+	while (i-- > 0)
+		tputs(tgetstr("le", NULL), 0, ft_outc);
+	e->line_len--;
+	tputs(tgetstr("ve", NULL), 0, ft_outc);
 }
 
 void	switch_to_histo(t_env *e)
@@ -472,3 +493,16 @@ void	refresh_nb_col(t_env *e)
 	else
 		e->ws_col = 80;
 }
+
+void	close_line_edition(t_env *e)
+{
+	int		i;
+
+	i = (e->line_len + e->prompt_len) - (e->cur + e->prompt_len);
+	while (i > e->ws_col)
+	{
+		ft_putchar('\n');
+		i -= e->ws_col;
+	}
+}
+
