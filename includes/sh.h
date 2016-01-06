@@ -17,6 +17,7 @@
 # include <term.h>
 # include <termios.h>
 # include <termcap.h>
+# include <sys/ioctl.h>
 
 # include <signal.h>
 # include <sys/mount.h>
@@ -34,6 +35,7 @@ t_env		*init_env(int argc, char **argv, char **environ);
 void		init_env_var(t_env *e, char **environ);
 void		init_shlvl(t_env *e);
 void		free_env(t_env *e);
+void		refresh_nb_col(t_env *e);
 
 /*
 **   GET_ENV
@@ -102,11 +104,18 @@ void		get_input_line(t_env *e);
 void		resize_input_line(t_env *e);
 
 int			process_all_key(t_env *e, int ret, char *buf);
+
 int			process_cursor_key(t_env *e, int ret, char *buf);
-int			process_cursor_key2(t_env *e, int ret, char *buf);
+int			process_cursor2_key(t_env *e, int ret, char *buf);
+int			process_home_end_key(t_env *e, int ret, char *buf);
+int			process_prev_word_key(t_env *e, int ret, char *buf);
+int			process_next_word_key(t_env *e, int ret, char *buf);
+
 int			process_edition_key(t_env *e, int ret, char *buf);
-int			process_histo_key(t_env *e, int ret, char *buf);
+int			process_histo_up_key(t_env *e, int ret, char *buf);
+int			process_histo_down_key(t_env *e, int ret, char *buf);
 int			process_break_key(t_env *e, int ret, char *buf);
+int			process_option_key(t_env *e, int ret, char *buf);
 
 void		get_term_input(t_env *e);
 void		get_input_char(t_env *e, char c);

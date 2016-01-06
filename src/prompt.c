@@ -21,6 +21,7 @@ void	print_prompt(t_env *e)
 //	ft_putstr_fd(spwd, 2);
 //	ft_putstr_fd(" > {rt}", 2);
 	ft_printf("{bold}%s > {rt}", spwd);
+	e->prompt_len = ft_strlen(spwd) + 3;
 	free(spwd);
 }
 

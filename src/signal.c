@@ -42,6 +42,7 @@ void	catch_signal(void)
 	signal(SIGABRT, sig_mediator);
 	signal(SIGFPE, sig_mediator);
 	signal(SIGBUS, sig_mediator);
+	signal(SIGWINCH, sig_mediator);
 //	signal(SIGABRT, sig_mediator);
 //	signal(SIGIOT, sig_mediator);
 
@@ -70,7 +71,8 @@ void	sig_handler(t_env *e, int signum)
 		put_sig_error(signum, "\nEXIT", 2);
 //		ft_printf("SIGNAL %ld\nEXIT\n", signum);
 		term_restore_backup(NULL);
-		exit(1);
+		while (1)
+			exit(1);
 	}
 	else if (signum == SIGTSTP)
 	{		
@@ -87,6 +89,10 @@ void	sig_handler(t_env *e, int signum)
 	{
 		tcsetpgrp(0, getpid());
 //		ft_printf("TCSET 2\n");
+	}
+	else if (signum == SIGWINCH)
+	{
+		refresh_nb_col(se);
 	}
 //	else if (signum == SIGIOT)
 //	{

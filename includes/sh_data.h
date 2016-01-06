@@ -117,6 +117,9 @@ typedef struct	s_cmd
 
 typedef struct	s_env
 {
+	char			*prompt;
+	int				prompt_len;
+	int				ws_col;
 	char			*line;
 	t_cmd			*cmd;
 	char			**carg;

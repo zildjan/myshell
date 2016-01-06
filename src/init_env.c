@@ -28,6 +28,7 @@ t_env	*init_env(int argc, char **argv, char **environ)
 	e->pwd = getcwd(NULL, 0);
 	e->status = 0;
 	e->clipboard = NULL;
+	refresh_nb_col(e);
 	init_shlvl(e);
 	term_init(e);
 	history_init(e);

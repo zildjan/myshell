@@ -97,6 +97,10 @@ void	get_term_input(t_env *e)
 
 int		process_all_key(t_env *e, int ret, char *buf)
 {
+	if (ret == 3 && buf[1] == 91)
+			buf[1] = 79;
+	else if (ret == 4 && buf[2] == 91)
+		buf[2] = 79;
 	if (!process_cursor_key(e, ret, buf))
 		return (0);
 	return (1);
@@ -118,7 +122,7 @@ int		process_break_key(t_env *e, int ret, char *buf)
 
 int		process_cursor_key(t_env *e, int ret, char *buf)
 {
-	if (ret == 3 && buf[0] == 27 && buf[1] == 91 && buf[2] == 68)
+	if (ft_strequ(buf, tgetstr("kl", NULL)))
 	{
 		if (e->cur > 0)
 		{
@@ -128,24 +132,55 @@ int		process_cursor_key(t_env *e, int ret, char *buf)
 		else
 			ft_putchar(7);
 	}
-	else if (ret == 3 && buf[0] == 27 && buf[1] == 91 && buf[2] == 67)
+	else if (ft_strequ(buf, tgetstr("kr", NULL)))
 	{
 		if (e->cur < e->line_len)
 		{
-			tputs(tgetstr("nd", NULL), 0, ft_outc);
 			e->cur++;
+			if (!(e->cur % (e->ws_col - e->prompt_len)))
+				tputs(tgetstr("do", NULL), 0, ft_outc);
+			else
+				tputs(tgetstr("nd", NULL), 0, ft_outc);
 		}
 		else
 			ft_putchar(7);
 	}
 	else
-		return (process_cursor_key2(e, ret, buf));
+		return (process_cursor2_key(e, ret, buf));
 	return (1);
 }
 
-int		process_cursor_key2(t_env *e, int ret, char *buf)
+int		process_cursor2_key(t_env *e, int ret, char *buf)
 {
-	if (ret == 3 && buf[0] == 27 && buf[1] == 91 && buf[2] == 72)
+	int		i;
+
+	i = tgetnum("co");
+	if (ft_strequ(buf, tgetstr("#2", NULL)))
+	{
+		while (e->cur > 0 && i)
+		{
+			tputs(tgetstr("le", NULL), 0, ft_outc);
+			e->cur--;
+			i--;
+		}
+	}
+	else if (ft_strequ(buf, tgetstr("*7", NULL)))
+	{
+		while (e->cur < e->line_len && i)
+		{
+			tputs(tgetstr("nd", NULL), 0, ft_outc);
+			e->cur++;
+			i--;
+		}
+	}
+	else
+		return (process_home_end_key(e, ret, buf));
+	return (1);
+}
+
+int		process_home_end_key(t_env *e, int ret, char *buf)
+{
+	if (ft_strequ(buf, tgetstr("kh", NULL)))
 	{
 		while (e->cur > 0)
 		{
@@ -153,7 +188,7 @@ int		process_cursor_key2(t_env *e, int ret, char *buf)
 			e->cur--;
 		}
 	}
-	else if (ret == 3 && buf[0] == 27 && buf[1] == 91 && buf[2] == 70)
+	else if (ft_strequ(buf, tgetstr("@7", NULL)))
 	{
 		while (e->cur < e->line_len)
 		{
@@ -161,8 +196,14 @@ int		process_cursor_key2(t_env *e, int ret, char *buf)
 			e->cur++;
 		}
 	}
-	else if (ret == 4
-			 && buf[0] == 27 && buf[1] == 27 && buf[2] == 91 && buf[3] == 68)
+	else
+		return (process_prev_word_key(e, ret, buf));
+	return (1);
+}
+
+int		process_prev_word_key(t_env *e, int ret, char *buf)
+{
+	if (ft_strequ(buf, tgetstr("#4", NULL)))
 	{
 		if (e->cur > 0)
 			while (e->cur > 0 && e->line[e->cur - 1] == ' ')
@@ -177,8 +218,14 @@ int		process_cursor_key2(t_env *e, int ret, char *buf)
 				e->cur--;
 			}
 	}
-	else if (ret == 4
-			 && buf[0] == 27 && buf[1] == 27 && buf[2] == 91 && buf[3] == 67)
+	else
+		return (process_next_word_key(e, ret, buf));
+	return (1);
+}
+
+int		process_next_word_key(t_env *e, int ret, char *buf)
+{
+	if (ft_strequ(buf, tgetstr("%i", NULL)))
 	{
 		while (e->cur < e->line_len && e->line[e->cur] == ' ')
 		{
@@ -190,16 +237,6 @@ int		process_cursor_key2(t_env *e, int ret, char *buf)
 			tputs(tgetstr("nd", NULL), 0, ft_outc);
 			e->cur++;
 		}
-	}
-	else if (ret == 1 && buf[0] == 4)
-	{
-		if (!e->line_len)
-		{
-			ft_putendl("exit");
-			builtin_exit(e);
-		}
-		else
-			ft_putchar(7);
 	}
 	else
 		return (process_edition_key(e, ret, buf));
@@ -215,8 +252,7 @@ int		process_edition_key(t_env *e, int ret, char *buf)
 		else
 			ft_putchar(7);
 	}
-	else if (ret == 4
-			 && buf[0] == 27 && buf[1] == 91 && buf[2] == 51 && buf[3] == 126)
+	else if (ft_strequ(buf, tgetstr("kD", NULL)))
 	{
 		if (e->cur < e->line_len)
 			delete_input_char(e);
@@ -228,13 +264,13 @@ int		process_edition_key(t_env *e, int ret, char *buf)
 	else if (ret == 1 && buf[0] == 25)
 		paste_input_line(e);
 	else
-		return (process_histo_key(e, ret, buf));
+		return (process_histo_up_key(e, ret, buf));
 	return (1);
 }
 
-int		process_histo_key(t_env *e, int ret, char *buf)
+int		process_histo_up_key(t_env *e, int ret, char *buf)
 {
-	if (ret == 3 && buf[0] == 27 && buf[1] == 91 && buf[2] == 65)
+	if (ft_strequ(buf, tgetstr("ku", NULL)))
 	{
 		if (!e->histo_cur)
 		{
@@ -249,12 +285,36 @@ int		process_histo_key(t_env *e, int ret, char *buf)
 		else
 			ft_putchar(7);
 	}
-	else if (ret == 3 && buf[0] == 27 && buf[1] == 91 && buf[2] == 66)
+	else
+		return (process_histo_down_key(e, ret, buf));
+	return (1);
+}
+
+int		process_histo_down_key(t_env *e, int ret, char *buf)
+{
+	if (ft_strequ(buf, tgetstr("kd", NULL)))
 	{
 		if (e->histo_cur)
 		{
 			e->histo_cur = e->histo_cur->down;
 			switch_to_histo(e);
+		}
+		else
+			ft_putchar(7);
+	}
+	else
+		return (process_option_key(e, ret, buf));
+	return (1);
+}
+
+int		process_option_key(t_env *e, int ret, char *buf)
+{
+	if (ret == 1 && buf[0] == 4)
+	{
+		if (!e->line_len)
+		{
+			ft_putendl("exit");
+			builtin_exit(e);
 		}
 		else
 			ft_putchar(7);
@@ -375,18 +435,23 @@ void	paste_input_line(t_env *e)
 	int		len;
 
 	i = -1;
-	len = ft_strlen(e->clipboard);
+	len = 0;
+	if (e->clipboard)
+		len = ft_strlen(e->clipboard);
 	if (len == 0)
 		ft_putchar(7);
 	while (++i < len)
+	{
 		get_input_char(e, e->clipboard[i]);
+		resize_input_line(e);
+	}
 }
 
 void	resize_input_line(t_env *e)
 {
 	char	refresh;
 
-	if (e->cur + 10 >= e->line_size)
+	if (e->line_len + 10 >= e->line_size)
 	{		
 		refresh = 0;
 		if (e->line_save == e->line)
@@ -396,4 +461,14 @@ void	resize_input_line(t_env *e)
 			e->line_save = e->line;
 		e->line_size += 10;
 	}
+}
+
+void	refresh_nb_col(t_env *e)
+{
+	struct winsize win;
+
+	if (ioctl(1, TIOCGWINSZ, &win) == 0)
+		e->ws_col = win.ws_col;
+	else
+		e->ws_col = 80;
 }
