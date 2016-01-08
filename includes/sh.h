@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2015/11/13 21:51:04 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/08 02:21:42 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@
 t_env		*init_env(int argc, char **argv, char **environ);
 void		init_env_var(t_env *e, char **environ);
 void		init_shlvl(t_env *e);
-void		free_env(t_env *e);
 void		refresh_nb_col(t_env *e);
 
 /*
@@ -82,7 +81,12 @@ int			builtin_setenv_check(char *str, int egual);
 **   BUILTIN_EXIT
 */
 void		builtin_exit(t_env *e);
-void		builtin_exit_jobs(t_env *e, int status);
+void		builtin_exit_all(t_env *e, int status);
+
+/*
+**   BUILTIN_HISTORY
+*/
+void		history_print(t_env *e);
 
 /*
 **   GET_BIN_PATH
@@ -117,9 +121,11 @@ int			process_histo_down_key(t_env *e, int ret, char *buf);
 int			process_break_key(t_env *e, int ret, char *buf);
 int			process_option_key(t_env *e, int ret, char *buf);
 
-void		get_term_input(t_env *e);
+void		get_term_line_input(t_env *e);
+void		get_input_chars(t_env *e, char *buf);
 void		get_input_char(t_env *e, char c);
 void		delete_input_char(t_env *e);
+void		delete_input_nchar(t_env *e, int n);
 void		backdelete_input_char(t_env *e);
 
 void		cut_input_line(t_env *e);
@@ -132,7 +138,7 @@ int			move_cursor_left(t_env *e);
 int			is_end_of_line(t_env *e, int cur);
 int			ft_outc(int c);
 
-void	close_line_edition(t_env *e);
+void		close_line_edition(t_env *e);
 
 /*
 **   HISTORY
@@ -142,7 +148,6 @@ void		history_load(t_env *e);
 void		history_add(t_env *e, char escape);
 void		history_save_ent(t_env *e);
 void		history_add_to_mem(t_env *e, char *line);
-void		history_print(t_env *e);
 
 /*
 **   PARSE_CMD
@@ -223,19 +228,26 @@ void		jobs_continue(t_env *e);
 void		jobs_remove(t_env *e, int pid);
 void		jobs_list(t_env *e);
 int			jobs_count(t_env *e, int pid);
-void		jobs_exit(t_env *e);
-
-/*
-**   FREE_CMD
-*/
-void		free_cmd(t_env *e);
-void		free_cmd_redirec(t_env *e, int i);
 
 /*
 **   PROMPT
 */
 void		print_prompt(t_env *e);
 char		*ft_get_up_dir(char *path, int level);
+
+/*
+**   FREE_ENV
+*/
+void		free_env(t_env *e);
+void		free_history(t_env *e);
+void		kill_jobs(t_env *e);
+void		free_path_and_env(t_env *e);
+
+/*
+**   FREE_CMD
+*/
+void		free_cmd(t_env *e);
+void		free_cmd_redirec(t_env *e, int i);
 
 /*
 **   ERROR

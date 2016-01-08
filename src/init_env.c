@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2015/11/13 22:35:31 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/07 22:48:02 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,10 +65,4 @@ void	init_shlvl(t_env *e)
 	set_env_var(e, "SHLVL", new_shlvl);
 	free(shlvl);
 	free(new_shlvl);
-}
-
-void	free_env(t_env *e)
-{
-	term_restore_backup(NULL);
-	free(e);
 }

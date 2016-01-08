@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/13 22:16:21 by pbourrie          #+#    #+#             */
-/*   Updated: 2015/11/13 22:35:24 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/07 19:39:03 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,31 +99,6 @@ void	jobs_list(t_env *e)
 		ft_printf("[%ld]  %ld - %s\n", job->id, job->pgid, job->name);
 		job = job->next;
 	}
-}
-
-void	jobs_exit(t_env *e)
-{
-	t_job	*job;
-	t_job	*tmp;
-	int		i;
-	int		ret;
-
-	i = 0;
-	job = e->jobs_lst;
-	while (job)
-	{
-		i++;
-		kill(job->pgid, SIGHUP);
-		waitpid(job->pgid, &ret, WUNTRACED);
-//		ft_printf("[%ld]  killed  %ld - %s\n", job->id, job->pid, job->name);
-		tmp = job;
-		job = job->next;
-		if (tmp->name)
-			free(tmp->name);
-		free(tmp);
-	}
-	e->jobs_lst = NULL;
-	e->job = NULL;
 }
 
 int		jobs_count(t_env *e, int pid)

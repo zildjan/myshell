@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2015/11/13 21:54:46 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/08 02:23:04 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ void	get_cmd(t_env *e)
 
 void	get_cmd_end(t_env *e, char type)
 {
-//	ft_printf("GET END\n");
 	if (e->line)
 		free(e->line);
 	e->line = NULL;
@@ -48,7 +47,7 @@ void	get_input_line(t_env *e)
 	int		ret;
 
 	if (e->term)
-		get_term_input(e);
+		get_term_line_input(e);
 	else
 	{
 		ret = get_next_line(0, &e->line);
@@ -62,7 +61,7 @@ void	get_input_line(t_env *e)
 		e->line = ft_strdup("");
 }
 
-void	get_term_input(t_env *e)
+void	get_term_line_input(t_env *e)
 {
 	char	buf[8];
 	int		ret;
@@ -73,22 +72,16 @@ void	get_term_input(t_env *e)
 	e->line = (char*)ft_memalloc(sizeof(char) * e->line_size);
 	e->line_save = e->line;
 	e->histo_cur = NULL;
-
 	while (1)
 	{
 		ft_bzero(buf, 8);
 		ret = read(0, &buf, 7);
-//		ft_printf("%d %d %d %d %d %d %d - ", buf[0], buf[1], buf[2],
-//				  buf[3], buf[4], buf[5], buf[6]);
-//		ft_printf("'%c' '%c' '%c' '%c' '%c' '%c' '%c' =%d\n", buf[0], buf[1],
-//				  buf[2], buf[3], buf[4], buf[5], buf[6], ret);
-
-		if (process_all_key(e, ret, buf))	
+		if (process_all_key(e, ret, buf))
 			(void)e;
-		else if (process_break_key(e, ret, buf))	
+		else if (process_break_key(e, ret, buf))
 			break ;
-		else if (ret == 1 && ft_isprint(buf[0]))
-			get_input_char(e, buf[0]);
+		else
+			get_input_chars(e, buf);
 		resize_input_line(e);
 	}
 	if (e->line != e->line_save)
@@ -99,7 +92,7 @@ void	get_term_input(t_env *e)
 int		process_all_key(t_env *e, int ret, char *buf)
 {
 	if (ret == 3 && buf[1] == 91)
-			buf[1] = 79;
+		buf[1] = 79;
 	else if (ret == 4 && buf[2] == 91)
 		buf[2] = 79;
 	if (!process_cursor_key(e, ret, buf))
@@ -197,7 +190,7 @@ int		process_next_word_key(t_env *e, int ret, char *buf)
 	{
 		while (e->cur < e->line_len && e->line[e->cur] == ' ')
 			move_cursor_right(e);
-		while (e->cur < e->line_len  && e->line[e->cur] != ' ')
+		while (e->cur < e->line_len && e->line[e->cur] != ' ')
 			move_cursor_right(e);
 	}
 	else
@@ -217,7 +210,7 @@ int		process_edition_key(t_env *e, int ret, char *buf)
 	else if (ft_strequ(buf, tgetstr("kD", NULL)))
 	{
 		if (e->cur < e->line_len)
-			delete_input_char(e);
+			delete_input_nchar(e, 1);
 		else
 			ft_putchar(7);
 	}
@@ -305,12 +298,28 @@ int		move_cursor_left(t_env *e)
 {
 	if (e->cur > 0)
 	{
-		tputs(tgetstr("le", NULL), 0, ft_outc);
 		e->cur--;
+		if (is_end_of_line(e, e->cur + 1))
+		{
+			tputs(tgetstr("up", NULL), 0, ft_outc);
+			tputs(tgoto(tgetstr("ch", NULL), 0, e->ws_col - 1), 0, ft_outc);
+		}
+		else
+			tputs(tgetstr("le", NULL), 0, ft_outc);
 		return (1);
 	}
 	else
 		return (0);
+}
+
+void	get_input_chars(t_env *e, char *buf)
+{
+	while (ft_isprint(*buf))
+	{
+		if (*buf == '\t')
+			*buf = ' ';
+		get_input_char(e, *buf++);
+	}
 }
 
 void	get_input_char(t_env *e, char c)
@@ -332,6 +341,8 @@ void	get_input_char(t_env *e, char c)
 	tputs(tgetstr("im", NULL), 0, ft_outc);
 	tputs(tgetstr("ic", NULL), 0, ft_outc);
 	ft_putchar(c);
+	if (is_end_of_line(e, e->cur))
+		ft_putchar('\n');
 	tputs(tgetstr("ip", NULL), 0, ft_outc);
 	tputs(tgetstr("ei", NULL), 0, ft_outc);
 	ft_putstr(e->line + e->cur);
@@ -355,15 +366,13 @@ void	backdelete_input_char(t_env *e)
 {
 	int		i;
 
-	tputs(tgetstr("vi", NULL), 0, ft_outc);
 	i = e->cur - 1;
 	while (e->line[i])
 	{
 		e->line[i] = e->line[i + 1];
 		i++;
 	}
-	e->cur--;
-	tputs(tgetstr("le", NULL), 0, ft_outc);
+	move_cursor_left(e);
 	tputs(tgetstr("dm", NULL), 0, ft_outc);
 	tputs(tgetstr("dc", NULL), 0, ft_outc);
 	tputs(tgetstr("ed", NULL), 0, ft_outc);
@@ -372,10 +381,14 @@ void	backdelete_input_char(t_env *e)
 	i = e->line_len - e->cur;
 	if (is_end_of_line(e, e->line_len))
 		i--;
+	if (is_end_of_line(e, e->line_len) && !i)
+	{
+		tputs(tgetstr("le", NULL), 0, ft_outc);
+		tputs(tgetstr("nd", NULL), 0, ft_outc);
+	}
 	while (i-- > 0)
 		tputs(tgetstr("le", NULL), 0, ft_outc);
 	e->line_len--;
-	tputs(tgetstr("ve", NULL), 0, ft_outc);
 }
 
 void	delete_input_char(t_env *e)
@@ -403,11 +416,42 @@ void	delete_input_char(t_env *e)
 	tputs(tgetstr("ve", NULL), 0, ft_outc);
 }
 
+void	delete_input_nchar(t_env *e, int n)
+{
+	int		i;
+
+	if (e->line_len - e->cur < n)
+		n = e->line_len - e->cur;
+	if (!n)
+		return ;
+	i = e->cur;
+	while (e->line[i])
+	{
+		if (i + n - 1 <= e->line_len)
+			e->line[i] = e->line[i + n];
+		else
+			e->line[i] = 0;
+		i++;
+	}
+	tputs(tgetstr("dm", NULL), 0, ft_outc);
+	i = n;
+	while (i--)
+		tputs(tgetstr("dc", NULL), 0, ft_outc);
+	tputs(tgetstr("ed", NULL), 0, ft_outc);
+	ft_putstr(e->line + e->cur);
+	ft_putnchar(n, ' ');
+	i = e->line_len - e->cur;
+	if (is_end_of_line(e, e->line_len))
+		i--;
+	while (i-- > 0)
+		tputs(tgetstr("le", NULL), 0, ft_outc);
+	e->line_len -= n;
+}
+
 void	switch_to_histo(t_env *e)
 {
-	while (e->cur++ < e->line_len)
-		tputs(tgetstr("nd", NULL), 0, ft_outc);
-	e->cur--;
+	while (e->cur < e->line_len)
+		move_cursor_right(e);
 	while (e->cur)
 	{
 		tputs(tgetstr("le", NULL), 0, ft_outc);
@@ -446,8 +490,7 @@ void	cut_input_line(t_env *e)
 	e->clipboard = ft_strdup(cpy);
 	i = -1;
 	len = ft_strlen(e->clipboard);
-	while (++i < len)
-		delete_input_char(e);
+	delete_input_nchar(e, len);
 }
 
 void	paste_input_line(t_env *e)
@@ -473,7 +516,7 @@ void	resize_input_line(t_env *e)
 	char	refresh;
 
 	if (e->line_len + 10 >= e->line_size)
-	{		
+	{
 		refresh = 0;
 		if (e->line_save == e->line)
 			refresh = 1;
@@ -498,11 +541,11 @@ void	close_line_edition(t_env *e)
 {
 	int		i;
 
-	i = (e->line_len + e->prompt_len) - (e->cur + e->prompt_len);
-	while (i > e->ws_col)
-	{
-		ft_putchar('\n');
-		i -= e->ws_col;
-	}
+	i = (e->line_len + e->prompt_len) / e->ws_col;
+	if (((e->line_len + e->prompt_len) % e->ws_col))
+		i++;
+	i *= e->ws_col;
+	i -= e->cur + 1 + e->prompt_len;
+	i /= e->ws_col;
+	ft_putnchar(i, '\n');
 }
-

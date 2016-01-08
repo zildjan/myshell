@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2015/11/13 21:51:04 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/07 19:24:51 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	history_load(t_env *e)
 
 	e->histo_size = 0;
 	e->histo_line = NULL;
-	if ((fd = open(e->histo_file, O_RDONLY , 0444)) == -1)
+	if ((fd = open(e->histo_file, O_RDONLY, 0444)) == -1)
 		return ;
 	while ((ret = get_next_line(fd, &line)))
 	{
@@ -90,7 +90,6 @@ void	history_add_to_mem(t_env *e, char *line)
 	t_histo	*cur;
 	t_histo	*new;
 
-//	ft_printf("->'%s' \n", line);
 	new = (t_histo*)ft_memalloc(sizeof(t_histo));
 	new->line = ft_strdup(line);
 	cur = e->histo;
@@ -104,25 +103,4 @@ void	history_add_to_mem(t_env *e, char *line)
 	cur->down = new;
 	e->histo = new;
 	e->histo_size++;
-}
-
-void	history_print(t_env *e)
-{
-	t_histo	*cur;
-	int		i;
-	int		fd;
-
-	i = 1;
-	fd = e->cmd[e->cid].fd_out;
-	cur = e->histo_begin;
-	while (cur)
-	{
-		ft_putnchar_fd((ft_nbrlen(e->histo_size) - ft_nbrlen(i)) + 1, ' ', fd);
-
-		ft_putnbr_fd(i, fd);
-		ft_putstr_fd("  ", fd);
-		ft_putendl_fd(cur->line, fd);
-		cur = cur->down;
-		i++;
-	}
 }

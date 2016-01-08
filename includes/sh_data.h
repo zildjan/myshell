@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2015/12/17 21:50:42 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/07 19:56:33 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,6 +117,13 @@ typedef struct	s_cmd
 
 typedef struct	s_env
 {
+	char			**var;
+	int				tab_size;
+	char			**path;
+	char			*home;
+	char			*home_dir;
+	char			*pwd;
+	int				status;
 	char			*prompt;
 	int				prompt_len;
 	int				ws_col;
@@ -127,22 +134,15 @@ typedef struct	s_env
 	int				nb_cmd;
 	int				wait_cid;
 	int				cmd_pgid;
-	char			**var;
-	int				tab_size;
-	char			**path;
-	char			*home;
-	char			*home_dir;
-	char			*pwd;
-	int				status;
 	t_job			*job;
 	t_job			*jobs_lst;
-	char			*term_name;
 	char			*histo_file;
 	t_histo			*histo_begin;
 	t_histo			*histo;
 	t_histo			*histo_cur;
 	int				histo_size;
 	char			*histo_line;
+	char			*term_name;
 	struct termios	*term;
 	struct termios	*term_back;
 	int				term_status;

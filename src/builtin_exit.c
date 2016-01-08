@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2015/11/12 18:58:52 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/07 22:37:50 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,20 +21,23 @@ void	builtin_exit(t_env *e)
 		else if (e->carg[1])
 		{
 			if (ft_strcheck(e->carg[1], ft_isdigit))
-				builtin_exit_jobs(e, ft_atoi(e->carg[1]));
+				builtin_exit_all(e, ft_atoi(e->carg[1]));
 			else
-				builtin_exit_jobs(e, 0);
+				builtin_exit_all(e, 0);
 		}
 		else
-			builtin_exit_jobs(e, e->status);
+			builtin_exit_all(e, e->status);
 	}
 	else
-		builtin_exit_jobs(e, e->status);
+		builtin_exit_all(e, e->status);
 }
 
-void	builtin_exit_jobs(t_env *e, int status)
+void	builtin_exit_all(t_env *e, int status)
 {
-	jobs_exit(e);
+	kill_jobs(e);
+	term_restore_backup(NULL);
 	free_env(e);
+//	while (1)
+//		usleep(1000);
 	exit(status);
 }

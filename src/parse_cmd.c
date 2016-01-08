@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2015/12/17 21:48:35 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/07 22:44:49 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,8 @@ void	parse_cmd(t_env *e)
 			break ;
 		if (!e->line[++p.i])
 		{
-			history_add(e, p.escape);
+			if (e->term)
+				history_add(e, p.escape);
 			if (p.ib && !p.quo && !p.escape)
 				parse_add_arg(e, &p);
 			if (p.quo == SIMP)

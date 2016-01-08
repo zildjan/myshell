@@ -6,7 +6,7 @@
 #    By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/01/04 17:14:24 by pbourrie          #+#    #+#              #
-#    Updated: 2015/11/13 22:17:42 by pbourrie         ###   ########.fr        #
+#    Updated: 2016/01/07 19:44:25 by pbourrie         ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -36,6 +36,7 @@ SRCS =		main.c \
 			builtin_env_tools.c \
 			builtin_setenv.c \
 			builtin_exit.c \
+			builtin_history.c \
 			get_bin_path.c \
 			home.c \
 			get_cmd.c \
@@ -47,11 +48,12 @@ SRCS =		main.c \
 			execute.c \
 			pipe.c \
 			term.c \
-			free_cmd.c \
 			prompt.c \
 			error.c \
 			jobs.c \
-			signal.c
+			signal.c \
+			free_env.c \
+			free_cmd.c 
 SRC = $(sort $(SRCS))
 SRC_PATH = src/
 OBJ_PATH = obj/

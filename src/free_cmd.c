@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2015/10/09 21:27:14 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/07 22:34:17 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ void	free_cmd(t_env *e)
 	}
 	free(e->cmd);
 	e->cmd = NULL;
+	e->nb_cmd = 0;
 }
 
 void	free_cmd_redirec(t_env *e, int i)

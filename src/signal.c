@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/13 19:14:16 by pbourrie          #+#    #+#             */
-/*   Updated: 2015/11/13 20:37:19 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/08 02:13:41 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,24 +61,13 @@ void	sig_handler(t_env *e, int signum)
 
 	if (!se && e)
 		se = e;
-	if (signum == SIGINT)
-	{
-//		print_prompt(se);
-	}
-	else if (signum == SIGSEGV || signum == SIGABRT
+	if (signum == SIGSEGV || signum == SIGABRT
 			 || signum == SIGILL || signum == SIGFPE || signum == SIGBUS)
 	{
 		put_sig_error(signum, "\nEXIT", 2);
 //		ft_printf("SIGNAL %ld\nEXIT\n", signum);
 		term_restore_backup(NULL);
-		while (1)
-			exit(1);
-	}
-	else if (signum == SIGTSTP)
-	{		
-//		ft_printf("STOP %ld\n", se->jobs->pid);
-//		if (se->jobs && se->jobs->pid)
-//			kill(se->jobs->pid, SIGTSTP);
+		exit(1);
 	}
 	else if (signum == SIGTTIN)
 	{
