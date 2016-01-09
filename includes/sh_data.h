@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/07 19:56:33 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/09 00:34:13 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,24 @@ typedef struct	s_job
 	int				pgid;
 	struct s_job	*next;
 }				t_job;
+
+typedef struct	s_ti
+{
+	char			mi;
+	char			eo;
+	char			xn;
+	char			kr[9];
+	char			kl[9];
+	char			ku[9];
+	char			kd[9];
+	char			kh[9];
+	char			ke[9];
+	char			kr_s[9];
+	char			kl_s[9];
+	char			kh_s[9];
+	char			ke_s[9];
+	char			ksup[9];
+}				t_ti;
 
 typedef struct	s_histo
 {
@@ -142,6 +160,7 @@ typedef struct	s_env
 	t_histo			*histo_cur;
 	int				histo_size;
 	char			*histo_line;
+	t_ti			t;
 	char			*term_name;
 	struct termios	*term;
 	struct termios	*term_back;

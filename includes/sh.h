@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/08 02:21:42 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/09 00:19:52 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@
 # include "libft.h"
 # include "sh_data.h"
 
-//#include <errno.h>
 
 /*
 **   INI_ENV
@@ -126,7 +125,9 @@ void		get_input_chars(t_env *e, char *buf);
 void		get_input_char(t_env *e, char c);
 void		delete_input_char(t_env *e);
 void		delete_input_nchar(t_env *e, int n);
-void		backdelete_input_char(t_env *e);
+void		backdelete_input_char(t_env *e, char no_mem);
+
+void		move_cursor_back(t_env *e, char delete, int i);
 
 void		cut_input_line(t_env *e);
 void		paste_input_line(t_env *e);
@@ -219,6 +220,8 @@ void		term_backup(t_env *e);
 void		term_restore(t_env *e);
 void		term_restore_back(t_env *e);
 void		term_restore_backup(struct termios *back);
+
+void		term_load(t_env *e);
 
 /*
 **   JOBS
