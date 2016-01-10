@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/09 01:40:34 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/10 00:22:19 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,12 +76,6 @@ void	get_term_line_input(t_env *e)
 	{
 		ft_bzero(buf, 8);
 		ret = read(0, &buf, 7);
-
-//		ft_printf("%d %d %d %d %d %d %d - ", buf[0], buf[1], buf[2],
-//				  buf[3], buf[4], buf[5], buf[6]);
-//		ft_printf("'%c' '%c' '%c' '%c' '%c' '%c' '%c' =%d\n", buf[0], buf[1],
-//				  buf[2], buf[3], buf[4], buf[5], buf[6], ret);
-
 		if (process_all_key(e, ret, buf))
 			(void)e;
 		else if (process_break_key(e, ret, buf))
@@ -89,15 +83,6 @@ void	get_term_line_input(t_env *e)
 		else
 			get_input_chars(e, buf);
 		resize_input_line(e);
-
-//		ft_printf("%s\n", tgetstr("#4", NULL));
-/*		ft_bzero(buf, 8);
-		ft_strcpy(buf, e->t.kl_s);
-		ft_printf("%d %d %d %d %d %d %d - ", buf[0], buf[1], buf[2],
-				  buf[3], buf[4], buf[5], buf[6]);
-		ft_printf("'%c' '%c' '%c' '%c' '%c' '%c' '%c' =%d\n", buf[0], buf[1],
-				  buf[2], buf[3], buf[4], buf[5], buf[6], ret);
-// */
 	}
 	if (e->line != e->line_save)
 		free(e->line_save);
@@ -314,7 +299,7 @@ int		move_cursor_right(t_env *e)
 
 int		move_cursor_left(t_env *e)
 {
-	int i = 0;
+	int i;
 
 	if (e->cur > 0)
 	{
@@ -484,7 +469,7 @@ void	move_cursor_back(t_env *e, char delete, int i)
 			tputs(tgoto(tgetstr("ch", NULL), 0, e->ws_col - 1), 0, ft_outc);
 		}
 		else if (e->t.xn
-				 || (!e->t.xn && !is_end_of_line(e, e->cur + i + 1)))
+				|| (!e->t.xn && !is_end_of_line(e, e->cur + i + 1)))
 			tputs(tgetstr("le", NULL), 0, ft_outc);
 	}
 }

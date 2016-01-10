@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2015/11/12 18:23:20 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/10 00:56:21 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,19 +17,26 @@ void	parse_var_expansion(t_env *e, t_parse *p)
 	int		i;
 	char	*arg;
 	char	*new;
-	char	*name;
 
 	i = 0;
 	while (ft_isalnum(e->line[++p->i]) || e->line[p->i] == '_'
-		   || e->line[p->i] == '?')
+			|| e->line[p->i] == '?')
 		i++;
 	arg = ft_strsub(&e->line[p->i - i], 0, i);
 	p->i--;
 	new = NULL;
 	if (ft_strequ("?", arg))
 		new = ft_itoa(e->status);
-	i = 0;
-	while (e->var[i])
+	parse_var_expansion(e, p, arg, new);
+}
+
+void	parse_var_expansion2(t_env *e, t_parse *p, char *arg, char *new)
+{
+	char	*name;
+	int		i;
+
+	i = -1;
+	while (e->var[++i])
 	{
 		name = get_env_name(e, i);
 		if (ft_strequ(name, arg))
@@ -39,7 +46,6 @@ void	parse_var_expansion(t_env *e, t_parse *p)
 			break ;
 		}
 		free(name);
-		i++;
 	}
 	free(arg);
 	if (new)

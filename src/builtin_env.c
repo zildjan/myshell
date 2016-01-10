@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/12 19:40:34 by pbourrie          #+#    #+#             */
-/*   Updated: 2015/11/13 19:04:36 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/10 00:42:36 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,12 @@ void	builtin_env(t_env *e)
 		return ;
 	}
 	i = 0;
-	if (!builtin_env_getopt(e, &i, &opt_i))
+	if (!builtin_env_getopt(e, &i, &opt_i, e->cmd[e->cid].fd_err))
 		return ;
 	builtin_env_setenvtab(e, opt_i, i);
 }
 
-int		builtin_env_getopt(t_env *e, int *i, int *opt_i)
+int		builtin_env_getopt(t_env *e, int *i, int *opt_i, int fd)
 {
 	int	i2;
 
@@ -46,10 +46,10 @@ int		builtin_env_getopt(t_env *e, int *i, int *opt_i)
 				return (++*i);
 			else if (e->carg[*i][i2] && e->carg[*i][i2] != 'i')
 			{
-				ft_putstr_fd("env: illegal option -- ", e->cmd[e->cid].fd_err);
-				ft_putchar_fd(e->carg[*i][i2], e->cmd[e->cid].fd_err);
-				ft_putstr_fd("\nusage: env [-i] [name=value ...] ", e->cmd[e->cid].fd_err);
-				ft_putendl_fd("[utility [argument ...]]", e->cmd[e->cid].fd_err);
+				ft_putstr_fd("env: illegal option -- ", fd);
+				ft_putchar_fd(e->carg[*i][i2], fd);
+				ft_putstr_fd("\nusage: env [-i] [name=value ...] ", fd);
+				ft_putendl_fd("[utility [argument ...]]", fd);
 				e->status = 1;
 				return (0);
 			}

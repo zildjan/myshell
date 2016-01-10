@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/09 00:19:52 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/10 00:54:57 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ char		*builtin_cd_oldpwd(t_env *e);
 **   BUILTIN_ENV
 */
 void		builtin_env(t_env *e);
-int			builtin_env_getopt(t_env *e, int *i, int *opt_i);
+int			builtin_env_getopt(t_env *e, int *i, int *opt_i, int fd);
 void		builtin_env_setenvtab(t_env *e, int opt_i, int i);
 void		builtin_env_insertnewent(t_env *e, char **env, int *id, int i);
 char		**builtin_env_malloctab(t_env *e, int opt_i);
@@ -171,6 +171,7 @@ char		*dup_arg(char *buf);
 **   PARSE_CMD_VAR
 */
 void		parse_var_expansion(t_env *e, t_parse *p);
+void		parse_var_expansion2(t_env *e, t_parse *p);
 void		parse_tilde_expansion(t_env *e, t_parse *p);
 
 /*
@@ -221,7 +222,14 @@ void		term_restore(t_env *e);
 void		term_restore_back(t_env *e);
 void		term_restore_backup(struct termios *back);
 
-void		term_load(t_env *e);
+/*
+**   TERM KEY
+*/
+void		term_load_info(t_env *e);
+void		term_load_key_default(t_env *e);
+void		term_load_key_default2(t_env *e);
+void		term_load_key(t_env *e);
+void		term_load_key2(t_env *e);
 
 /*
 **   JOBS

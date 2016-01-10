@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/10 18:58:17 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/07 22:48:19 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/10 01:04:18 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,9 @@ void	process_cmd(t_env *e)
 		{
 			if (!process_builtin(e))
 				process_bin(e, e->var);
-				if (e->cmd[e->cid].status)
-					redirec_close(e, e->cid);
-				process_wait_list(e);
+			if (e->cmd[e->cid].status)
+				redirec_close(e, e->cid);
+			process_wait_list(e);
 		}
 		e->cid++;
 	}
@@ -121,8 +121,7 @@ void	process_fork(t_env *e, char *cmd_path, char **env)
 {
 	int		child;
 
-	if ((child = fork()) == -1)
-		return ;
+	child = fork();
 	if (child > 0)
 	{
 		e->cmd[e->cid].pid = child;
@@ -137,7 +136,7 @@ void	process_fork(t_env *e, char *cmd_path, char **env)
 		redirec_assign(e);
 		if (execve(cmd_path, e->cmd[e->cid].arg, env) == -1)
 		{
-			if (ft_get_file_mode(cmd_path) % 2 == 0 
+			if (ft_get_file_mode(cmd_path) % 2 == 0
 				|| ft_get_file_type(cmd_path) != '-')
 				put_error(ERRACCES, NULL, e->carg[0], e->cmd[e->cid].fd_err);
 			else
@@ -169,4 +168,3 @@ int		process_builtin(t_env *e)
 		return (0);
 	return (1);
 }
-

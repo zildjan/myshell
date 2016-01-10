@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/07 19:21:51 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/07 19:32:38 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/10 00:43:41 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ void	history_print(t_env *e)
 	while (cur)
 	{
 		ft_putnchar_fd((ft_nbrlen(e->histo_size) - ft_nbrlen(i)) + 1, ' ', fd);
-
 		ft_putnbr_fd(i, fd);
 		ft_putstr_fd("  ", fd);
 		ft_putendl_fd(cur->line, fd);
