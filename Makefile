@@ -6,7 +6,7 @@
 #    By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/01/04 17:14:24 by pbourrie          #+#    #+#              #
-#    Updated: 2016/01/10 00:35:11 by pbourrie         ###   ########.fr        #
+#    Updated: 2016/01/10 16:07:45 by pbourrie         ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -46,6 +46,7 @@ SRCS =		main.c \
 			redirection.c \
 			heredoc.c \
 			execute.c \
+			wait.c \
 			pipe.c \
 			term.c \
 			term_load_info.c \

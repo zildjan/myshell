@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/10 00:22:19 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/11 01:38:32 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	get_cmd(t_env *e)
 {
-	get_input_line(e);
+	get_input_line(e, 1);
 	if (e->line == NULL)
 		return ;
 	parse_cmd(e);
@@ -22,8 +22,10 @@ void	get_cmd(t_env *e)
 	e->line = NULL;
 }
 
-void	get_cmd_end(t_env *e, char type)
+int		get_cmd_end(t_env *e, char type)
 {
+	int		ret;
+
 	if (e->line)
 		free(e->line);
 	e->line = NULL;
@@ -39,29 +41,38 @@ void	get_cmd_end(t_env *e, char type)
 		ft_putstr("dquote> ");
 	else
 		ft_putstr("> ");
-	get_input_line(e);
+	ret = get_input_line(e, 0);
+	if (ret == -1 && type)
+		return (EP_EOF);
+	if (ret == -2)
+		return (100);
+	return (0);
 }
 
-void	get_input_line(t_env *e)
+int		get_input_line(t_env *e, int eof_exit)
 {
 	int		ret;
 
 	if (e->term)
-		get_term_line_input(e);
+		ret = get_term_line_input(e, eof_exit);
 	else
 	{
 		ret = get_next_line(0, &e->line);
-		if (ret == 0)
+		if (ret == 0 && eof_exit)
 		{
 			ft_printf("exit\n");
 			builtin_exit(e);
 		}
+		else if (ret == 0)
+			ret = -1;
+		if (!e->line)
+			e->line = ft_strdup("");
 	}
-	if (!e->line)
-		e->line = ft_strdup("");
+//	ft_printf("ret=%d\n", ret);
+	return (ret);
 }
 
-void	get_term_line_input(t_env *e)
+int		get_term_line_input(t_env *e, int eof_exit)
 {
 	char	buf[8];
 	int		ret;
@@ -76,40 +87,65 @@ void	get_term_line_input(t_env *e)
 	{
 		ft_bzero(buf, 8);
 		ret = read(0, &buf, 7);
-		if (process_all_key(e, ret, buf))
-			(void)e;
-		else if (process_break_key(e, ret, buf))
-			break ;
-		else
+		if (!(ret = process_all_key(e, ret, buf, eof_exit)))
 			get_input_chars(e, buf);
+		if (ret == -1)
+			break ;
 		resize_input_line(e);
 	}
 	if (e->line != e->line_save)
 		free(e->line_save);
 	close_line_edition(e);
+	return (e->line_len);
 }
 
-int		process_all_key(t_env *e, int ret, char *buf)
+int		process_all_key(t_env *e, int ret, char *buf, int eof_exit)
 {
 	if (buf[1] == 91)
 		buf[1] = 79;
-	if (!process_cursor_key(e, ret, buf))
-		return (0);
+	return (process_option_key(e, ret, buf, eof_exit));
+}
+
+int		process_option_key(t_env *e, int ret, char *buf, int eof_exit)
+{
+	if (ret == 1 && buf[0] == 4)
+	{
+		if (!e->line_len && eof_exit)
+		{
+			ft_putendl("exit");
+			builtin_exit(e);
+		}
+		else if (!eof_exit)
+		{
+			ft_putchar('\n');
+			ft_bzero(e->line, e->line_len);
+			e->line_len = -1;
+			return (-1);
+		}
+		else
+			ft_putchar(7);
+	}
+	else
+		return (process_break_key(e, ret, buf));
 	return (1);
 }
 
 int		process_break_key(t_env *e, int ret, char *buf)
 {
 	if (ret == 1 && buf[0] == 10)
+	{
 		ft_putchar('\n');
+		return (-1);
+	}
 	else if (ret == 1 && buf[0] == 3)
 	{
 		ft_putchar('\n');
 		ft_bzero(e->line, e->line_len);
+		e->line_len = -2;
+		return (-1);
 	}
 	else
-		return (0);
-	return (1);
+		return (process_cursor_key(e, ret, buf));
 }
 
 int		process_cursor_key(t_env *e, int ret, char *buf)
@@ -217,11 +253,11 @@ int		process_edition_key(t_env *e, int ret, char *buf)
 	else if (ret == 1 && buf[0] == 25)
 		paste_input_line(e);
 	else
-		return (process_histo_up_key(e, ret, buf));
+		return (process_histo_up_key(e, buf));
 	return (1);
 }
 
-int		process_histo_up_key(t_env *e, int ret, char *buf)
+int		process_histo_up_key(t_env *e, char *buf)
 {
 	if (ft_strequ(buf, e->t.ku))
 	{
@@ -239,11 +275,11 @@ int		process_histo_up_key(t_env *e, int ret, char *buf)
 			ft_putchar(7);
 	}
 	else
-		return (process_histo_down_key(e, ret, buf));
+		return (process_histo_down_key(e, buf));
 	return (1);
 }
 
-int		process_histo_down_key(t_env *e, int ret, char *buf)
+int		process_histo_down_key(t_env *e, char *buf)
 {
 	if (ft_strequ(buf, e->t.kd))
 	{
@@ -251,23 +287,6 @@ int		process_histo_down_key(t_env *e, int ret, char *buf)
 		{
 			e->histo_cur = e->histo_cur->down;
 			switch_to_histo(e);
-		}
-		else
-			ft_putchar(7);
-	}
-	else
-		return (process_option_key(e, ret, buf));
-	return (1);
-}
-
-int		process_option_key(t_env *e, int ret, char *buf)
-{
-	if (ret == 1 && buf[0] == 4)
-	{
-		if (!e->line_len)
-		{
-			ft_putendl("exit");
-			builtin_exit(e);
 		}
 		else
 			ft_putchar(7);

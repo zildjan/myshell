@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/10 00:34:27 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/11 01:07:50 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,10 +51,16 @@ void	term_backup(t_env *e)
 
 void	term_restore(t_env *e)
 {
+	int		try;
+
 	if (e->term)
 	{
 		if (e->term_status == 1)
-			tcsetattr(0, TCSADRAIN, e->term);
+		{
+			try = 0;
+			while (tcsetattr(0, TCSADRAIN, e->term) == -1 && try < 20)
+				try++;
+		}
 		if (e->term_status > 0)
 			e->term_status--;
 	}
@@ -65,13 +71,16 @@ void	term_restore_back(t_env *e)
 	if (!e->term)
 		return ;
 	if (e->term_status == 0)
+	{
 		term_restore_backup(NULL);
+	}
 	e->term_status++;
 }
 
 void	term_restore_backup(struct termios *back)
 {
-	static struct termios *backup;
+	static struct termios	*backup;
+	int						try;
 
 	if (back)
 		backup = back;
@@ -79,7 +88,9 @@ void	term_restore_backup(struct termios *back)
 	{
 		if (backup)
 		{
-			tcsetattr(0, TCSADRAIN, backup);
+			try = 0;
+			while (tcsetattr(0, TCSADRAIN, backup) == -1 && try < 20)
+				try++;
 		}
 	}
 }

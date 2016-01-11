@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/09 00:34:13 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/11 00:01:51 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@
 # define EP_MISS_REDIREC 4
 # define EP_BAD_FD 5
 # define EP_SYNTAX 6
+# define EP_EOF 7
 
 # define SEP_PIPE 1
 # define SEP_AND 2

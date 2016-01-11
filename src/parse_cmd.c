@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/07 22:44:49 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/11 01:31:19 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,26 +58,26 @@ void	parse_cmd(t_env *e)
 			if (p.ib && !p.quo && !p.escape)
 				parse_add_arg(e, &p);
 			if (p.quo == SIMP)
-				get_cmd_end(e, '\'');
+				p.error = get_cmd_end(e, '\'');
 			else if (p.quo == DOUB)
-				get_cmd_end(e, '"');
+				p.error = get_cmd_end(e, '"');
 			else if (p.escape)
-				get_cmd_end(e, 0);
+				p.error = get_cmd_end(e, 0);
 			else if (!p.a_id && p.separ)
-				get_cmd_end(e, p.separ);
+				p.error = get_cmd_end(e, p.separ);
 			else
 				break ;
 			if (p.quo && !p.escape)
 				p.buf[p.ib++] = '\n';
 
+//			ft_printf("quo=%d esc=%d buf='%s'\n", p.quo, p.escape, p.buf);
+
+			parse_cmd_cleanline(e);
+			p.line_len = ft_strlen(e->line);
+			if (p.line_len > MAX_LEN_LINE || (!p.line_len && p.escape))
+				break ;
 			p.i = 0;
 			p.escape = 0;
-			parse_cmd_cleanline(e);
-
-			p.line_len = ft_strlen(e->line);
-			if (p.line_len > MAX_LEN_LINE)
-				break ;
-
 		}
 
 		if (e->line[p.i] == '\'' && (!p.quo || p.quo == SIMP)
@@ -105,7 +105,7 @@ void	parse_cmd(t_env *e)
 			if (p.a_id == 0)
 			{
 				p.error = EP_NULL_CMD;
-				break ;
+//				break ;
 			}
 			parse_add_cmd(e, &p, SEP_AND);
 		}
@@ -118,7 +118,7 @@ void	parse_cmd(t_env *e)
 			if (p.a_id == 0)
 			{
 				p.error = EP_NULL_CMD;
-				break ;
+//				break ;
 			}
 			parse_add_cmd(e, &p, SEP_OR);
 		}
@@ -130,7 +130,7 @@ void	parse_cmd(t_env *e)
 			if (p.a_id == 0)
 			{
 				p.error = EP_NULL_CMD;
-				break ;
+//				break ;
 			}
 			parse_add_cmd(e, &p, SEP_PIPE);
 		}
@@ -139,8 +139,12 @@ void	parse_cmd(t_env *e)
 		{
 			if (p.ib > 0)
 				parse_add_arg(e, &p);
-			if (p.a_id)
-				parse_add_cmd(e, &p, NONE);
+			if (p.a_id == 0)
+			{
+				p.error = EP_NULL_CMD;
+//				break ;
+			}
+			parse_add_cmd(e, &p, NONE);
 		}
 		else if (e->line[p.i] == '$' && p.quo !=SIMP
 				&& !p.escape)
@@ -181,14 +185,13 @@ void	parse_cmd(t_env *e)
 		{
 			if (p.ib + 10 >= p.buf_len)
 				realloc_buffer(&p, 10);
-			p.buf[p.ib++] = e->line[p.i];
+			if (e->line[p.i])
+				p.buf[p.ib++] = e->line[p.i];
 
 		}
 
 		if (p.escape)
 			p.escape--;
-
-//		ft_printf("END i=%ld c='%c'\n", p.i, e->line[p.i]);
 	}
 
 //	p.error = 1;
@@ -223,6 +226,8 @@ void	parse_cmd(t_env *e)
 			ft_putendl_fd("Bad file descriptor.", 2);
 		else if (p.error == EP_SYNTAX)
 			ft_putendl_fd("Syntax error.", 2);
+		else if (p.error == EP_EOF)
+			ft_putendl_fd("Syntax error: unexpected end of file", 2);
 	}
 
 	free(p.buf);

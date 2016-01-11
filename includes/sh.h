@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/10 00:54:57 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/10 23:08:18 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@
 
 # include "libft.h"
 # include "sh_data.h"
-
 
 /*
 **   INI_ENV
@@ -65,16 +64,20 @@ void		builtin_env(t_env *e);
 int			builtin_env_getopt(t_env *e, int *i, int *opt_i, int fd);
 void		builtin_env_setenvtab(t_env *e, int opt_i, int i);
 void		builtin_env_insertnewent(t_env *e, char **env, int *id, int i);
+void		builtin_env_exec(t_env *e, char **env, int i);
+
+/*
+**   BUILTIN_ENV_TOOLS
+*/
 char		**builtin_env_malloctab(t_env *e, int opt_i);
 int			builtin_env_filltab(t_env *e, char **env, int opt_i);
-void		builtin_env_exec(t_env *e, char **env, int i);
 
 /*
 **   BUILTIN_SETENV
 */
 void		builtin_setenv(t_env *e);
 void		builtin_unsetenv(t_env *e);
-int			builtin_setenv_check(char *str, int egual);
+int			builtin_setenv_check(char *str, int egual, int identifier);
 
 /*
 **   BUILTIN_EXIT
@@ -102,11 +105,14 @@ void		set_home_path(t_env *e);
 **   GET_CMD
 */
 void		get_cmd(t_env *e);
-void		get_cmd_end(t_env *e, char type);
-void		get_input_line(t_env *e);
+int			get_cmd_end(t_env *e, char type);
+int			get_input_line(t_env *e, int eof_exit);
 void		resize_input_line(t_env *e);
 
-int			process_all_key(t_env *e, int ret, char *buf);
+int			process_all_key(t_env *e, int ret, char *buf, int eof_exit);
+
+int			process_option_key(t_env *e, int ret, char *buf, int eof_exit);
+int			process_break_key(t_env *e, int ret, char *buf);
 
 int			process_cursor_key(t_env *e, int ret, char *buf);
 int			process_cursor2_key(t_env *e, int ret, char *buf);
@@ -115,12 +121,10 @@ int			process_prev_word_key(t_env *e, int ret, char *buf);
 int			process_next_word_key(t_env *e, int ret, char *buf);
 
 int			process_edition_key(t_env *e, int ret, char *buf);
-int			process_histo_up_key(t_env *e, int ret, char *buf);
-int			process_histo_down_key(t_env *e, int ret, char *buf);
-int			process_break_key(t_env *e, int ret, char *buf);
-int			process_option_key(t_env *e, int ret, char *buf);
+int			process_histo_up_key(t_env *e, char *buf);
+int			process_histo_down_key(t_env *e, char *buf);
 
-void		get_term_line_input(t_env *e);
+int			get_term_line_input(t_env *e, int eof_exit);
 void		get_input_chars(t_env *e, char *buf);
 void		get_input_char(t_env *e, char c);
 void		delete_input_char(t_env *e);
@@ -171,7 +175,7 @@ char		*dup_arg(char *buf);
 **   PARSE_CMD_VAR
 */
 void		parse_var_expansion(t_env *e, t_parse *p);
-void		parse_var_expansion2(t_env *e, t_parse *p);
+void		parse_var_expansion2(t_env *e, t_parse *p, char *arg, char *new);
 void		parse_tilde_expansion(t_env *e, t_parse *p);
 
 /*
@@ -181,8 +185,12 @@ int			process_builtin(t_env *e);
 void		process_cmd(t_env *e);
 void		process_bin(t_env *e, char **env);
 void		process_fork(t_env *e, char *cmd_path, char **env);
-void		process_wait(t_env *e, int pid, int job);
 
+/*
+**   WAIT
+*/
+void		process_wait(t_env *e, int pid, int job);
+void		process_wait_error(t_env *e, int ret, int job);
 void		process_wait_list(t_env *e);
 
 /*
@@ -191,7 +199,8 @@ void		process_wait_list(t_env *e);
 int			read_heredoc(t_env *e, t_redir *redir);
 void		heredoc_assign(t_env *e, t_redir *redir);
 void		get_heredoc(t_env *e, char *eof);
-void		free_heredoc(t_env *e, int cid);
+void		get_heredoc_p2(t_env *e, char *eof);
+void		get_heredoc_p3(t_env *e, int *ret, t_hdoc *hdoc);
 
 /*
 **   REDIRECTIONS
@@ -259,6 +268,7 @@ void		free_path_and_env(t_env *e);
 */
 void		free_cmd(t_env *e);
 void		free_cmd_redirec(t_env *e, int i);
+void		free_heredoc(t_env *e, int cid);
 
 /*
 **   ERROR

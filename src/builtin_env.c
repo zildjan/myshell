@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/12 19:40:34 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/10 00:42:36 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/10 16:28:03 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,9 +69,9 @@ void	builtin_env_setenvtab(t_env *e, int opt_i, int i)
 	id = builtin_env_filltab(e, env, opt_i);
 	while (e->carg[i] && ft_strchr(e->carg[i], '='))
 	{
-		if (builtin_setenv_check(e->carg[i], 1))
+		if (builtin_setenv_check(e->carg[i], 1, 0))
 		{
-			ft_putendl_fd("env: Non alnum character.", e->cmd[e->cid].fd_err);
+			ft_putendl_fd("env: Bad character.", e->cmd[e->cid].fd_err);
 			error = 1;
 			e->status = 1;
 			break ;

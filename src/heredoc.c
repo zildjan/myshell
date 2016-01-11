@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2015/12/17 21:48:35 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/10 20:08:09 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,18 @@ void	heredoc_assign(t_env *e, t_redir *redir)
 
 void	get_heredoc(t_env *e, char *eof)
 {
-	char	*line;
+	char	*line_save;
+
+	line_save = e->line;
+	e->line = NULL;
+	get_heredoc_p2(e, eof);
+	if (e->line)
+		free(e->line);
+	e->line = line_save;
+}
+
+void	get_heredoc_p2(t_env *e, char *eof)
+{
 	t_hdoc	*hdoc;
 	t_hdoc	*prev;
 	int		ret;
@@ -55,43 +66,27 @@ void	get_heredoc(t_env *e, char *eof)
 	prev = NULL;
 	free_heredoc(e, e->cid);
 	ft_putstr("heredoc> ");
-	ret = get_next_line(0, &line);
-	while (!ft_strequ(line, eof) && ret != 0)
+	ret = get_input_line(e, 0);
+	while (!ft_strequ(e->line, eof) && ret != -1)
 	{
-		total_len += ft_strlen(line);
+		total_len += ft_strlen(e->line);
 		if (total_len > MAX_LEN_HDOC)
 			break ;
 		hdoc = (t_hdoc*)ft_memalloc(sizeof(t_hdoc));
-		hdoc->content = ft_strdup(line);
+		hdoc->content = ft_strdup(e->line);
 		if (prev)
 			prev->next = hdoc;
 		prev = hdoc;
-		if (!e->cmd[e->cid].hdoc)
-			e->cmd[e->cid].hdoc = hdoc;
-		free(line);
-		line = NULL;
-		ft_putstr("heredoc> ");
-		ret = get_next_line(0, &line);
+		get_heredoc_p3(e, &ret, hdoc);
 	}
-	if (line)
-		free(line);
 }
 
-void	free_heredoc(t_env *e, int cid)
+void	get_heredoc_p3(t_env *e, int *ret, t_hdoc *hdoc)
 {
-	t_hdoc	*hdoc;
-	t_hdoc	*tmp;
-
-	hdoc = e->cmd[cid].hdoc;
-	if (!hdoc)
-		return ;
-	while (hdoc)
-	{
-		tmp = hdoc;
-		hdoc = hdoc->next;
-		if (tmp->content)
-			free(tmp->content);
-		free(tmp);
-	}
-	e->cmd[cid].hdoc = NULL;
+	if (!e->cmd[e->cid].hdoc)
+		e->cmd[e->cid].hdoc = hdoc;
+	free(e->line);
+	e->line = NULL;
+	ft_putstr("heredoc> ");
+	*ret = get_input_line(e, 0);
 }

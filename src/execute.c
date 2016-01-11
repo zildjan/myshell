@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/10 18:58:17 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/10 01:04:18 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/11 01:10:27 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,58 +38,6 @@ void	process_cmd(t_env *e)
 		e->cid++;
 	}
 	e->carg = NULL;
-}
-
-void	process_wait_list(t_env *e)
-{
-	if (e->nb_cmd > e->cid + 1)
-	{
-		if (e->cmd[e->cid + 1].condi == SEP_PIPE)
-		{
-			return ;
-		}
-	}
-	while (e->wait_cid <= e->cid)
-	{
-		if (e->cmd[e->wait_cid].status)
-			process_wait(e, e->cmd[e->wait_cid].pid, 0);
-		else if (e->cmd[e->wait_cid + 1].condi != SEP_PIPE)
-			tcsetpgrp(0, getpid());
-		if (!e->cmd[e->wait_cid].status || !e->cmd[e->wait_cid].piped)
-		{
-			e->cmd[e->wait_cid].piped = 1;
-			redirec_close(e, e->wait_cid);
-		}
-		e->wait_cid++;
-	}
-}
-
-void	process_wait(t_env *e, int pid, int job)
-{
-	int		ret;
-
-	ret = 0;
-	waitpid(pid, &ret, WUNTRACED);
-	if (e->wait_cid == e->cid || job)
-		tcsetpgrp(0, getpid());
-	term_restore(e);
-	if (WIFSIGNALED(ret))
-	{
-		if (ret != SIGINT)
-			put_sig_error(ret, e->cmd[e->wait_cid].arg[0], e->cmd[e->cid].fd_err);
-		e->status = (WTERMSIG(ret)) + 128;
-	}
-	else if (WIFSTOPPED(ret))
-	{
-		if (WSTOPSIG(ret) == SIGTSTP)
-		{
-			jobs_add(e, pid);
-		}
-	}
-	else
-		e->status = WEXITSTATUS(ret);
-	if (!WIFSTOPPED(ret) && job)
-		jobs_remove(e, pid);
 }
 
 void	process_bin(t_env *e, char **env)

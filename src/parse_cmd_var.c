@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/10 00:56:21 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/10 16:08:12 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	parse_var_expansion(t_env *e, t_parse *p)
 	new = NULL;
 	if (ft_strequ("?", arg))
 		new = ft_itoa(e->status);
-	parse_var_expansion(e, p, arg, new);
+	parse_var_expansion2(e, p, arg, new);
 }
 
 void	parse_var_expansion2(t_env *e, t_parse *p, char *arg, char *new)

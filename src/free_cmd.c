@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/07 22:34:17 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/10 16:36:48 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,4 +54,23 @@ void	free_cmd_redirec(t_env *e, int i)
 			free(tmp->file);
 		free(tmp);
 	}
+}
+
+void	free_heredoc(t_env *e, int cid)
+{
+	t_hdoc	*hdoc;
+	t_hdoc	*tmp;
+
+	hdoc = e->cmd[cid].hdoc;
+	if (!hdoc)
+		return ;
+	while (hdoc)
+	{
+		tmp = hdoc;
+		hdoc = hdoc->next;
+		if (tmp->content)
+			free(tmp->content);
+		free(tmp);
+	}
+	e->cmd[cid].hdoc = NULL;
 }

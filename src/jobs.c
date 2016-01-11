@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/13 22:16:21 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/07 19:39:03 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/10 15:59:38 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,6 @@ void	jobs_continue(t_env *e)
 		return ;
 	}
 	ft_printf("[%ld]  - %ld continued  %s\n", e->job->id, e->job->pgid, e->job->name);
-//	ft_putendl("ICI");
-//	ft_printf("pg=%ld\n", e->job->pgid);
 	term_restore_back(e);
 	tcsetpgrp(0, e->job->pgid);
 	killpg(e->job->pgid, SIGCONT);
@@ -74,7 +72,6 @@ void	jobs_remove(t_env *e, int pid)
 	if (!job)
 		return ;
 	killpg(job->pgid, SIGINT);
-//	ft_printf("removed -> %s\n", job->name);
 	if (pre_job)
 		pre_job->next = job->next;
 	else
