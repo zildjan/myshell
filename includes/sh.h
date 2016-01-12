@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/10 23:08:18 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/12 01:39:37 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,18 +158,34 @@ void		history_add_to_mem(t_env *e, char *line);
 **   PARSE_CMD
 */
 void		parse_cmd(t_env *e);
+void		parse_cmd_init(t_env *e, t_parse *p);
+int			parse_cmd_check_eol(t_env *e, t_parse *p);
+int			parse_cmd_get_eol(t_env *e, t_parse *p);
+void		parse_cmd_loop_end(t_env *e, t_parse *p);
+
+int			parse_cmd_quotes(t_env *e, t_parse *p);
+int			parse_cmd_operator(t_env *e, t_parse *p);
+int			parse_cmd_pipe_comma(t_env *e, t_parse *p);
+int			parse_cmd_expansion(t_env *e, t_parse *p);
+int			parse_cmd_redirection(t_env *e, t_parse *p);
+
+int			parse_cmd_space_backslash(t_env *e, t_parse *p);
+int			parse_cmd_add_to_buf(t_env *e, t_parse *p);
 
 void		parse_add_arg(t_env *e, t_parse *p);
 void		parse_add_cmd(t_env *e, t_parse *p, char sep);
+void		parse_add_cmd_sep(t_env *e, t_parse *p, char sep);
+
 int			parse_add_redirec(t_env *e, t_parse *p);
+void		parse_add_redirec_p2(t_parse *p);
 void		parse_get_redirec_type(t_env *e, t_parse *p);
 void		new_redirec(t_env *e, char *file, int type, int fd);
 
-void		check_arg_buf_size(t_parse *p);
 int			is_aspace(char c);
 void		parse_cmd_cleanline(t_env *e);
-void		realloc_buffer(t_parse *p, int add);
+void		realloc_parse_buffer(t_parse *p, int add);
 char		*dup_arg(char *buf);
+void		parse_cmd_put_error(t_parse *p);
 
 /*
 **   PARSE_CMD_VAR

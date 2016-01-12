@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/10 16:08:12 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/12 01:34:45 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void	parse_var_expansion2(t_env *e, t_parse *p, char *arg, char *new)
 		i = ft_strlen(new);
 		p->ib += i;
 		p->line_len += i;
-		realloc_buffer(p, i);
+		realloc_parse_buffer(p, i);
 		ft_strcat(p->buf, new);
 		free(new);
 	}
@@ -76,6 +76,6 @@ void	parse_tilde_expansion(t_env *e, t_parse *p)
 	len = ft_strlen(new);
 	p->line_len += len;
 	p->ib += len;
-	realloc_buffer(p, len);
+	realloc_parse_buffer(p, len);
 	ft_strcat(p->buf, new);
 }
