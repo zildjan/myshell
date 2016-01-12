@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/12 01:39:37 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/12 17:29:14 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,42 +107,59 @@ void		set_home_path(t_env *e);
 void		get_cmd(t_env *e);
 int			get_cmd_end(t_env *e, char type);
 int			get_input_line(t_env *e, int eof_exit);
-void		resize_input_line(t_env *e);
 
+/*
+**   EDITOR
+*/
+int			get_term_line_input(t_env *e, int eof_exit);
 int			process_all_key(t_env *e, int ret, char *buf, int eof_exit);
+void		get_input_chars(t_env *e, char *buf);
+void		get_input_char(t_env *e, char c);
 
-int			process_option_key(t_env *e, int ret, char *buf, int eof_exit);
+/*
+**   EDITOR CONTROL KEY
+*/
+int			process_control_key(t_env *e, int ret, char *buf, int eof_exit);
 int			process_break_key(t_env *e, int ret, char *buf);
 
+/*
+**   EDITOR CURSOR KEY
+*/
 int			process_cursor_key(t_env *e, int ret, char *buf);
 int			process_cursor2_key(t_env *e, int ret, char *buf);
 int			process_home_end_key(t_env *e, int ret, char *buf);
 int			process_prev_word_key(t_env *e, int ret, char *buf);
 int			process_next_word_key(t_env *e, int ret, char *buf);
 
+/*
+**   EDITOR EDITION KEY
+*/
 int			process_edition_key(t_env *e, int ret, char *buf);
 int			process_histo_up_key(t_env *e, char *buf);
 int			process_histo_down_key(t_env *e, char *buf);
 
-int			get_term_line_input(t_env *e, int eof_exit);
-void		get_input_chars(t_env *e, char *buf);
-void		get_input_char(t_env *e, char c);
-void		delete_input_char(t_env *e);
+/*
+**   EDITOR EDITION
+*/
 void		delete_input_nchar(t_env *e, int n);
 void		backdelete_input_char(t_env *e, char no_mem);
-
-void		move_cursor_back(t_env *e, char delete, int i);
-
 void		cut_input_line(t_env *e);
 void		paste_input_line(t_env *e);
-
 void		switch_to_histo(t_env *e);
 
+/*
+**   EDITOR CURSOR
+*/
 int			move_cursor_right(t_env *e);
 int			move_cursor_left(t_env *e);
+void		move_cursor_back(t_env *e, char delete, int i);
+
+/*
+**   EDITOR TOOLS
+*/
+void		realloc_input_line(t_env *e);
 int			is_end_of_line(t_env *e, int cur);
 int			ft_outc(int c);
-
 void		close_line_edition(t_env *e);
 
 /*
@@ -163,24 +180,39 @@ int			parse_cmd_check_eol(t_env *e, t_parse *p);
 int			parse_cmd_get_eol(t_env *e, t_parse *p);
 void		parse_cmd_loop_end(t_env *e, t_parse *p);
 
+/*
+**   PARSE_CMD_ELEMENT_P1
+*/
 int			parse_cmd_quotes(t_env *e, t_parse *p);
 int			parse_cmd_operator(t_env *e, t_parse *p);
 int			parse_cmd_pipe_comma(t_env *e, t_parse *p);
 int			parse_cmd_expansion(t_env *e, t_parse *p);
 int			parse_cmd_redirection(t_env *e, t_parse *p);
 
+/*
+**   PARSE_CMD_ELEMENT_P2
+*/
 int			parse_cmd_space_backslash(t_env *e, t_parse *p);
 int			parse_cmd_add_to_buf(t_env *e, t_parse *p);
 
-void		parse_add_arg(t_env *e, t_parse *p);
+/*
+**   PARSE_CMD_ADD_ELEMENT
+*/
 void		parse_add_cmd(t_env *e, t_parse *p, char sep);
+void		parse_add_arg(t_env *e, t_parse *p);
 void		parse_add_cmd_sep(t_env *e, t_parse *p, char sep);
 
+/*
+**   PARSE_CMD_ADD_REDIRECTION
+*/
 int			parse_add_redirec(t_env *e, t_parse *p);
 void		parse_add_redirec_p2(t_parse *p);
 void		parse_get_redirec_type(t_env *e, t_parse *p);
 void		new_redirec(t_env *e, char *file, int type, int fd);
 
+/*
+**   PARSE_CMD_TOOLS
+*/
 int			is_aspace(char c);
 void		parse_cmd_cleanline(t_env *e);
 void		realloc_parse_buffer(t_parse *p, int add);
@@ -188,7 +220,7 @@ char		*dup_arg(char *buf);
 void		parse_cmd_put_error(t_parse *p);
 
 /*
-**   PARSE_CMD_VAR
+**   PARSE_CMD_EXPANSION
 */
 void		parse_var_expansion(t_env *e, t_parse *p);
 void		parse_var_expansion2(t_env *e, t_parse *p, char *arg, char *new);
@@ -221,11 +253,16 @@ void		get_heredoc_p3(t_env *e, int *ret, t_hdoc *hdoc);
 /*
 **   REDIRECTIONS
 */
-int			redirec_open(t_env *e);
+int			redirec_open_all(t_env *e);
+int			redirec_open_p1(t_env *e, t_redir *redir);
+int			redirec_open_p2(t_env *e, t_redir *redir);
 void		redirec_assign(t_env *e);
 void		redirec_close(t_env *e, int cid);
-int			redirec_open_files(t_redir *redir);
 
+/*
+**   REDIRECTIONS_TOOLS
+*/
+int			redirec_open_files(t_redir *redir);
 int			redirec_open_dupfd(t_redir *redir);
 void		redirec_assign_dupfd(t_redir *redir);
 int			getcurstdfd(t_env *e, int fd);
@@ -248,7 +285,7 @@ void		term_restore_back(t_env *e);
 void		term_restore_backup(struct termios *back);
 
 /*
-**   TERM KEY
+**   TERM LOAD INFO
 */
 void		term_load_info(t_env *e);
 void		term_load_key_default(t_env *e);

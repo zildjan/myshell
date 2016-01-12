@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/13 22:16:21 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/10 15:59:38 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/12 17:31:21 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,8 @@ void	jobs_add(t_env *e, int pid)
 
 void	jobs_continue(t_env *e)
 {
+	char	*name;
+
 	e->job = e->jobs_lst;
 	while (e->job && e->job->next)
 		e->job = e->job->next;
@@ -50,7 +52,8 @@ void	jobs_continue(t_env *e)
 		ft_putendl_fd("fg: no current job", 2);
 		return ;
 	}
-	ft_printf("[%ld]  - %ld continued  %s\n", e->job->id, e->job->pgid, e->job->name);
+	name = e->job->name;
+	ft_printf("[%ld]  - %ld continued  %s\n", e->job->id, e->job->pgid, name);
 	term_restore_back(e);
 	tcsetpgrp(0, e->job->pgid);
 	killpg(e->job->pgid, SIGCONT);

@@ -6,7 +6,7 @@
 #    By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/01/04 17:14:24 by pbourrie          #+#    #+#              #
-#    Updated: 2016/01/10 16:07:45 by pbourrie         ###   ########.fr        #
+#    Updated: 2016/01/12 17:28:08 by pbourrie         ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -40,10 +40,23 @@ SRCS =		main.c \
 			get_bin_path.c \
 			home.c \
 			get_cmd.c \
+			editor.c \
+			editor_control_key.c \
+			editor_cursor_key.c \
+			editor_edition_key.c \
+			editor_edition.c \
+			editor_cursor.c \
+			editor_tools.c \
 			history.c \
 			parse_cmd.c \
-			parse_cmd_var.c \
+			parse_cmd_element_p1.c \
+			parse_cmd_element_p2.c \
+			parse_cmd_add_element.c \
+			parse_cmd_add_redirection.c \
+			parse_cmd_tools.c \
+			parse_cmd_expansion.c \
 			redirection.c \
+			redirection_tools.c \
 			heredoc.c \
 			execute.c \
 			wait.c \

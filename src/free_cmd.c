@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/10 16:36:48 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/12 17:30:12 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	free_cmd(t_env *e)
 	i2 = 0;
 	while (e->nb_cmd > i)
 	{
-		while (e->cmd[i].arg &&e->cmd[i].arg[i2])
+		while (e->cmd[i].arg && e->cmd[i].arg[i2])
 		{
 			free(e->cmd[i].arg[i2]);
 			e->cmd[i].arg[i2] = NULL;

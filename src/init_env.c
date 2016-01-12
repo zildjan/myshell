@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/07 22:48:02 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/12 16:51:28 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,4 +65,14 @@ void	init_shlvl(t_env *e)
 	set_env_var(e, "SHLVL", new_shlvl);
 	free(shlvl);
 	free(new_shlvl);
+}
+
+void	refresh_nb_col(t_env *e)
+{
+	struct winsize win;
+
+	if (ioctl(1, TIOCGWINSZ, &win) == 0)
+		e->ws_col = win.ws_col;
+	else
+		e->ws_col = 80;
 }

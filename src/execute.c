@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/10 18:58:17 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/11 01:10:27 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/12 17:18:06 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	process_cmd(t_env *e)
 		condi = e->cmd[e->cid].condi;
 		if (condi != SEP_PIPE)
 			e->cmd_pgid = 0;
-		if (redirec_open(e)
+		if (redirec_open_all(e)
 			&& ((condi != SEP_AND && condi != SEP_OR)
 				|| (condi == SEP_AND && !e->status)
 				|| (condi == SEP_OR && e->status)))

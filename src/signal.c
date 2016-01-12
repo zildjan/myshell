@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/13 19:14:16 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/11 00:49:44 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/12 17:33:41 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ void	sig_print(int signum)
 
 void	catch_signal(void)
 {
-
 	signal(SIGINT, sig_mediator);
 	signal(SIGQUIT, sig_mediator);
 	signal(SIGTSTP, sig_mediator);
@@ -43,16 +42,6 @@ void	catch_signal(void)
 	signal(SIGFPE, sig_mediator);
 	signal(SIGBUS, sig_mediator);
 	signal(SIGWINCH, sig_mediator);
-//	signal(SIGABRT, sig_mediator);
-//	signal(SIGIOT, sig_mediator);
-
-// */
-/*
-	int	i;
-	i = 0;
-	while (i < 31)
-		signal(i++, sig_print);
-// */
 }
 
 void	sig_handler(t_env *e, int signum)
@@ -62,35 +51,24 @@ void	sig_handler(t_env *e, int signum)
 	if (!se && e)
 		se = e;
 	if (signum == SIGSEGV || signum == SIGABRT
-			 || signum == SIGILL || signum == SIGFPE || signum == SIGBUS)
+			|| signum == SIGILL || signum == SIGFPE || signum == SIGBUS)
 	{
 		put_sig_error(signum, "\nEXIT", 2);
-//		ft_printf("SIGNAL %ld\nEXIT\n", signum);
 		term_restore_backup(NULL);
 		exit(1);
 	}
 	else if (signum == SIGTTIN)
 	{
 		tcsetpgrp(1, getpid());
-//		ft_printf("TCSET 1\n");
 	}
 	else if (signum == SIGTTOU)
 	{
 		tcsetpgrp(0, getpid());
-//		ft_printf("TCSET 2\n");
 	}
 	else if (signum == SIGWINCH)
 	{
 		refresh_nb_col(se);
 	}
-//	else if (signum == SIGIOT)
-//	{
-//		ft_printf("OU YEAH\n");
-//		exit(6);
-//	}
-//	else
-//		ft_printf("signum = %ld\n", signum);
-//		ft_printf("signum = %ld\n", signum);
 }
 
 void	sig_mediator(int signum)
