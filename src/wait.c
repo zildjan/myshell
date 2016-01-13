@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/10 15:54:41 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/10 16:09:49 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/13 18:37:30 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ void	process_wait_list(t_env *e)
 			return ;
 		}
 	}
+	else
+		e->cid = e->nb_cmd - 1;
 	while (e->wait_cid <= e->cid)
 	{
 		if (e->cmd[e->wait_cid].status)

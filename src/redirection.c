@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/10 18:58:17 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/12 17:27:50 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/13 18:42:15 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,9 @@ int		redirec_open_all(t_env *e)
 	while (redir)
 	{
 		if (!redirec_open_p1(e, redir))
+		{
 			return (0);
+		}
 		redir = redir->next;
 	}
 	return (1);
@@ -103,16 +105,19 @@ void	redirec_close(t_env *e, int cid)
 	{
 		if (redir->type == R_OUT || redir->type == R_OUTA
 			|| redir->type == R_IN)
+		{
 			if (redir->fd_to > -1)
+			{
 				close(redir->fd_to);
+				redir->fd_to = -1;
+			}
+		}
 		if (redir->type == R_PIPEIN && e->cmd[cid].piped)
 			pipe_close(e, cid);
 		else if (redir->type == R_HDOC)
 		{
 			if (redir->fd_to > 2)
-			{
 				close(redir->fd_to);
-			}
 			redir->fd_to = -1;
 		}
 		redir = redir->next;

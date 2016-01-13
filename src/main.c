@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 12:18:49 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/12 17:31:41 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/12 18:20:49 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@ int		main(int argc, char **argv, char **environ)
 	catch_signal();
 	while (1)
 	{
-		print_prompt(e);
+		if (isatty(0))
+			print_prompt(e);
 		get_cmd(e);
 	}
 	return (0);

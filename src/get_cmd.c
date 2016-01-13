@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/12 16:51:36 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/12 18:21:41 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,8 @@ int		get_input_line(t_env *e, int eof_exit)
 		ret = get_next_line(0, &e->line);
 		if (ret == 0 && eof_exit)
 		{
-			ft_printf("exit\n");
+			if (isatty(0))
+				ft_printf("exit\n");
 			builtin_exit(e);
 		}
 		else if (ret == 0)

@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 17:26:46 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/12 17:27:53 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/13 18:33:50 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,9 @@ void	open_file_error(char *path, int type)
 
 	ftype = ft_get_file_type(path);
 	mode = (ft_get_file_mode(path) / 100);
-	if (ftype == 'd')
+	if (ftype == -1)
+		put_error(ERRNOENT, NULL, path, 2);
+	else if (ftype == 'd')
 		put_error(ERRISDIR, NULL, path, 2);
 	else if ((type == R_OUT || type == R_OUTA) && mode != 2 && mode != 3
 			&& mode != 6 && mode != 7)

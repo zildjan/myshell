@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/10 18:58:17 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/12 17:18:06 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/13 18:37:33 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ void	process_cmd(t_env *e)
 		}
 		e->cid++;
 	}
+	process_wait_list(e);
 	e->carg = NULL;
 }
 
