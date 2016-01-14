@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/10 18:58:17 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/13 18:42:15 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/14 00:03:32 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ int		redirec_open_all(t_env *e)
 	{
 		if (!redirec_open_p1(e, redir))
 		{
+			e->status = 1;
 			return (0);
 		}
 		redir = redir->next;
