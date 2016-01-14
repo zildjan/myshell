@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/12 16:51:28 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/14 18:10:13 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ t_env	*init_env(int argc, char **argv, char **environ)
 	e->home = NULL;
 	set_home_path(e);
 	e->pwd = getcwd(NULL, 0);
+	if (!e->pwd)
+		e->pwd = ft_strdup("/");
 	e->status = 0;
 	e->clipboard = NULL;
 	refresh_nb_col(e);

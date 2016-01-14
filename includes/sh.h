@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/12 17:29:14 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/14 18:01:22 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ void		refresh_sh_var(t_env *e, char *name);
 **   BUILTIN_CD
 */
 void		builtin_cd(t_env *e);
+void		builtin_cd_setenv(t_env *e);
 void		builtin_cd_error(t_env *e, char *path);
 char		*builtin_cd_oldpwd(t_env *e);
 

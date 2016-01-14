@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:26:19 by pbourrie          #+#    #+#             */
-/*   Updated: 2015/11/13 21:47:47 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/14 18:02:26 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,14 +30,22 @@ void	builtin_cd(t_env *e)
 	if (chdir(new_pwd) == -1)
 		builtin_cd_error(e, new_pwd);
 	else
-	{
-		e->status = 0;
-		set_env_var(e, "OLDPWD", e->pwd);
-		free(e->pwd);
-		e->pwd = getcwd(NULL, 0);
-		set_env_var(e, "PWD", e->pwd);
-	}
+		builtin_cd_setenv(e);
 	free(new_pwd);
+}
+
+void	builtin_cd_setenv(t_env *e)
+{
+	char	*tmp;
+
+	e->status = 0;
+	set_env_var(e, "OLDPWD", e->pwd);
+	tmp = getcwd(NULL, 0);
+	if (!tmp)
+		tmp = ft_strdup(e->pwd);
+	free(e->pwd);
+	e->pwd = tmp;
+	set_env_var(e, "PWD", e->pwd);
 }
 
 char	*builtin_cd_oldpwd(t_env *e)
