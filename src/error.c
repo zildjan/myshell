@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2015/11/13 19:51:42 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/20 23:31:47 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	put_error(int err, char *cmd, char *path, int fd)
 {
 	if (!cmd)
-		cmd = ft_strdup("minishell");
+		cmd = ft_strdup("21sh");
 	ft_putstr_fd(cmd, fd);
 	ft_putstr_fd(": ", fd);
 	free(cmd);
@@ -39,11 +39,11 @@ void	put_error(int err, char *cmd, char *path, int fd)
 void	put_sig_error(int ret, char *path, int fd)
 {
 	if (ret == SIGSEGV)
-		ft_putstr_fd(" segmentation fault : ", fd);
+		ft_putstr_fd(" Segmentation fault : ", fd);
 	else if (ret == SIGBUS)
-		ft_putstr_fd(" bus error : ", fd);
+		ft_putstr_fd(" Bus error : ", fd);
 	else if (ret == SIGPIPE)
-		ft_putstr_fd(" broken pipe : ", fd);
+		ft_putstr_fd(" Broken pipe : ", fd);
 	else if (ret == SIGIOT)
 		ft_putstr_fd(" I/O error : ", fd);
 	else if (ret == SIGFPE)
@@ -51,14 +51,32 @@ void	put_sig_error(int ret, char *path, int fd)
 	else if (ret == SIGILL)
 		ft_putstr_fd(" Illegal instruction : ", fd);
 	else if (ret == SIGABRT)
-		ft_putstr_fd(" aborted : ", fd);
+		ft_putstr_fd(" Aborted : ", fd);
 	else if (ret == SIGKILL)
-		ft_putstr_fd(" killed : ", fd);
+		ft_putstr_fd(" Killed : ", fd);
 	else if (ret == SIGQUIT)
-		ft_putstr_fd(" quit : ", fd);
+		ft_putstr_fd(" Quit : ", fd);
 	else
 		ft_putstr_fd(" error: ", fd);
 	ft_putnbr_fd(ret, fd);
 	ft_putstr_fd("  ", fd);
 	ft_putendl_fd(path, fd);
+}
+
+void	put_cmd_opt_error(char *cmd, char opt, int fd, char *usage)
+{
+	ft_putstr_fd("21sh: ", fd);
+	ft_putstr_fd(cmd, fd);
+	ft_putstr_fd(": -", fd);
+	ft_putchar_fd(opt, fd);
+	ft_putstr_fd(": invalid option\n", fd);
+	if (usage)
+	{
+		ft_putstr_fd(cmd, fd);
+		ft_putstr_fd(": usage: ", fd);
+		ft_putstr_fd(cmd, fd);
+		ft_putstr_fd(" ", fd);
+		ft_putstr_fd(usage, fd);
+		ft_putstr_fd("\n", fd);
+	}
 }

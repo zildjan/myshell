@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/14 18:01:22 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/21 01:33:07 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,9 +54,10 @@ void		refresh_sh_var(t_env *e, char *name);
 **   BUILTIN_CD
 */
 void		builtin_cd(t_env *e);
-void		builtin_cd_setenv(t_env *e);
-void		builtin_cd_error(t_env *e, char *path);
-char		*builtin_cd_oldpwd(t_env *e);
+int			builtin_cd_get_opt(t_env *e, char *opt_p);
+void		builtin_cd_setenv(t_env *e, char *new_pwd);
+void		builtin_cd_clean_path(char *new_pwd);
+void		builtin_cd_error(t_env *e, char *path, char opt);
 
 /*
 **   BUILTIN_ENV
@@ -329,6 +330,7 @@ void		free_heredoc(t_env *e, int cid);
 */
 void		put_error(int err, char *cmd, char *path, int fd);
 void		put_sig_error(int ret, char *path, int fd);
+void		put_cmd_opt_error(char *cmd, char opt, int fd, char *usage);
 
 /*
 **   SIGNAL

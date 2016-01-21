@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 12:18:49 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/14 17:51:35 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/21 01:05:38 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,5 +40,7 @@ char	*ft_get_up_dir(char *path, int level)
 		len++;
 		i--;
 	}
+	if (i == 0)
+		i--;
 	return (ft_strsub(path, i + 1, len));
 }

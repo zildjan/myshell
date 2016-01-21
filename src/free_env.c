@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/07 19:30:05 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/07 23:06:30 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/15 23:07:26 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ void	kill_jobs(t_env *e)
 	while (job)
 	{
 		i++;
-		kill(job->pgid, SIGHUP);
+		kill(job->pgid, SIGKILL);
 		waitpid(job->pgid, &ret, WUNTRACED);
 		tmp = job;
 		job = job->next;

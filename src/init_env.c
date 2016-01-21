@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/14 18:10:13 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/21 01:17:17 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,17 @@ t_env	*init_env(int argc, char **argv, char **environ)
 	set_bin_path(e);
 	e->home = NULL;
 	set_home_path(e);
-	e->pwd = getcwd(NULL, 0);
+
+	e->pwd = get_env_val(e, "PWD");
+	if (ft_get_file_type(e->pwd) != 'd')
+	{
+		if (e->pwd)
+			free(e->pwd);
+		e->pwd = getcwd(NULL, 0);
+	}
 	if (!e->pwd)
 		e->pwd = ft_strdup("/");
+
 	e->status = 0;
 	e->clipboard = NULL;
 	refresh_nb_col(e);
