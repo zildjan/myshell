@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:26:19 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/22 01:53:40 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/22 01:56:33 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,9 @@ void	builtin_cd(t_env *e)
 		new_pwd = tmp;
 	}
 
-	ft_printf("'%s'\n", new_pwd);
+//	ft_printf("'%s'\n", new_pwd);
 	builtin_cd_clean_path(new_pwd);
-	ft_printf("'%s'\n", new_pwd);
+//	ft_printf("'%s'\n", new_pwd);
 
 	if (chdir(new_pwd) == -1)
 	{
@@ -72,7 +72,7 @@ void	builtin_cd_setenv(t_env *e, char *new_pwd)
 	e->pwd = tmp;
 	set_env_var(e, "PWD", e->pwd);
 
-	ft_printf("->'%s'\n", e->pwd);
+//	ft_printf("->'%s'\n", e->pwd);
 }
 
 void	builtin_cd_clean_path(char *new_pwd)
@@ -93,14 +93,14 @@ void	builtin_cd_clean_path(char *new_pwd)
 			i++;
 	}
 
-	ft_printf("'%s'  . \n", new_pwd);
+//	ft_printf("'%s'  . \n", new_pwd);
 
 	i = -1;
 	while (new_pwd[++i])
 		while (new_pwd[i] == '/' && new_pwd[i + 1] == '/')
 			ft_strcpy(new_pwd + i, new_pwd + i + 1);
 
-	ft_printf("'%s'   //\n", new_pwd);
+//	ft_printf("'%s'   //\n", new_pwd);
 
 	int		last_slash;
 	int		len;
@@ -122,7 +122,7 @@ void	builtin_cd_clean_path(char *new_pwd)
 
 				ft_strcpy(new_pwd + last_slash, new_pwd + i);
 
-				ft_printf("'%s' <- '%s'   new\n", new_pwd + last_slash, new_pwd + i);
+//				ft_printf("'%s' <- '%s'   new\n", new_pwd + last_slash, new_pwd + i);
 
 				i = ft_strlen(new_pwd);
 					while (new_pwd[++i])
@@ -137,7 +137,7 @@ void	builtin_cd_clean_path(char *new_pwd)
 	}
 
 
-	ft_printf("'%s' %d  END\n", new_pwd, i);
+//	ft_printf("'%s' %d  END\n", new_pwd, i);
 	if (i < 0)
 		i = 0;
 
