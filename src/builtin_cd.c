@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:26:19 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/21 01:55:19 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/22 01:53:40 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ void	builtin_cd(t_env *e)
 	{
 		tmp = ft_strjoin(e->pwd, "/");
 		tmp = ft_strdupcat(tmp, new_pwd);
+		tmp = ft_strdupcat(tmp, "/");
 		free(new_pwd);
 		new_pwd = tmp;
 	}
@@ -70,26 +71,83 @@ void	builtin_cd_setenv(t_env *e, char *new_pwd)
 	free(e->pwd);
 	e->pwd = tmp;
 	set_env_var(e, "PWD", e->pwd);
+
+	ft_printf("->'%s'\n", e->pwd);
 }
 
 void	builtin_cd_clean_path(char *new_pwd)
 {
 	int		i;
 
-	i = -1;
-	while (new_pwd[++i])
-		while (new_pwd[i] == '.' && new_pwd[i + 1] != '/')
-			ft_strcpy(new_pwd + i, new_pwd + i + 1);
+	i = 0;
+	while (new_pwd[i])
+	{
+		if (new_pwd[i] == '.' && new_pwd[i + 1] == '/')
+		{
+			ft_strcpy(new_pwd + i, new_pwd + i + 2);
+//			i++;
+		}
+		else if (new_pwd[i] == '.' && new_pwd[i + 1] == '.')
+			i += 2;
+		else
+			i++;
+	}
+
+	ft_printf("'%s'  . \n", new_pwd);
+
 	i = -1;
 	while (new_pwd[++i])
 		while (new_pwd[i] == '/' && new_pwd[i + 1] == '/')
 			ft_strcpy(new_pwd + i, new_pwd + i + 1);
 
+	ft_printf("'%s'   //\n", new_pwd);
+
+	int		last_slash;
+	int		len;
+
+	last_slash = 0;
+	len = 0;
+	i = -1;
+	while (new_pwd[++i])
+	{
+		if (new_pwd[i] == '/')
+		{
+			if (len == 2 && new_pwd[i - 2] == '.' && new_pwd[i - 1] == '.')
+			{
+				last_slash = i - 4;
+				if (last_slash < 0)
+					last_slash = 0;
+				while (new_pwd[last_slash] && new_pwd[last_slash] != '/')
+					last_slash--;
+
+				ft_strcpy(new_pwd + last_slash, new_pwd + i);
+
+				ft_printf("'%s' <- '%s'   new\n", new_pwd + last_slash, new_pwd + i);
+
+				i = ft_strlen(new_pwd);
+					while (new_pwd[++i])
+						new_pwd[i] = 0;
+
+				i = last_slash;
+			}
+			len = 0;
+		}
+		else
+			len++;
+	}
 
 
-//	if (new_pwd[i - 1] == '/')
-//		new_pwd[i - 1] = 0;
+	ft_printf("'%s' %d  END\n", new_pwd, i);
+	if (i < 0)
+		i = 0;
 
+	if (new_pwd[i - 1] == '/' && i > 1)
+		new_pwd[i - 1] = 0;
+	else if (i == 0)
+	{
+		new_pwd[0] = '/';
+		new_pwd[1] = 0;
+	}
 }
 
 int		builtin_cd_get_opt(t_env *e, char *opt_p)
