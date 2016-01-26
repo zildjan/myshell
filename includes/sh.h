@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/21 01:33:07 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/26 18:50:52 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,9 +55,14 @@ void		refresh_sh_var(t_env *e, char *name);
 */
 void		builtin_cd(t_env *e);
 int			builtin_cd_get_opt(t_env *e, char *opt_p);
-void		builtin_cd_setenv(t_env *e, char *new_pwd);
-void		builtin_cd_clean_path(char *new_pwd);
+void		builtin_cd_setenv(t_env *e, char opt_p, char *new_pwd);
 void		builtin_cd_error(t_env *e, char *path, char opt);
+
+/*
+**   BUILTIN_CD_TOOLS
+*/
+void		builtin_cd_clean_path(char *new_pwd, int i);
+void		builtin_cd_parse_dotdot(char *new_pwd, int *i, int last, int len);
 
 /*
 **   BUILTIN_ENV
@@ -308,7 +313,7 @@ int			jobs_count(t_env *e, int pid);
 **   PROMPT
 */
 void		print_prompt(t_env *e);
-char		*ft_get_up_dir(char *path, int level);
+char		*ft_get_dir_up(char *path, int level);
 
 /*
 **   FREE_ENV

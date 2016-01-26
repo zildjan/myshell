@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:26:19 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/22 01:56:33 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/26 18:49:58 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,20 +17,18 @@ void	builtin_cd(t_env *e)
 	char	opt_p;
 	int		i;
 	char	*new_pwd;
+	char	*tmp;
 
 	if ((i = builtin_cd_get_opt(e, &opt_p)) == -1)
 		return ;
-//	ft_printf("opt_P=%d i=%d arg=%s '%p'\n", opt_p, i, e->carg[i], e->carg[i]);
-
 	if (!e->carg[i])
 		new_pwd = ft_strdup(e->home);
 	else if (e->carg[i][0] == '-' && !e->carg[i][1])
 		new_pwd = get_env_val(e, "OLDPWD");
 	else
 		new_pwd = ft_strdup(e->carg[i]);
-
-	char	*tmp;
-
+	if (!new_pwd)
+		new_pwd = ft_strdup("");
 	if (new_pwd[0] != '/')
 	{
 		tmp = ft_strjoin(e->pwd, "/");
@@ -39,115 +37,31 @@ void	builtin_cd(t_env *e)
 		free(new_pwd);
 		new_pwd = tmp;
 	}
+	builtin_cd_clean_path(new_pwd, 0);
+	builtin_cd_setenv(e, opt_p, new_pwd);
+}
 
-//	ft_printf("'%s'\n", new_pwd);
-	builtin_cd_clean_path(new_pwd);
-//	ft_printf("'%s'\n", new_pwd);
+void	builtin_cd_setenv(t_env *e, char opt_p, char *new_pwd)
+{
+	char	*tmp;
 
 	if (chdir(new_pwd) == -1)
 	{
 		builtin_cd_error(e, new_pwd, 0);
+		free(new_pwd);
 		return ;
 	}
-
 	if (opt_p)
 	{
 		free(new_pwd);
 		new_pwd = getcwd(NULL, 0);
 	}
-
-
-	builtin_cd_setenv(e, new_pwd);
-//	free(new_pwd);
-}
-
-void	builtin_cd_setenv(t_env *e, char *new_pwd)
-{
-	char	*tmp;
-
 	e->status = 0;
 	set_env_var(e, "OLDPWD", e->pwd);
 	tmp = new_pwd;
 	free(e->pwd);
 	e->pwd = tmp;
 	set_env_var(e, "PWD", e->pwd);
-
-//	ft_printf("->'%s'\n", e->pwd);
-}
-
-void	builtin_cd_clean_path(char *new_pwd)
-{
-	int		i;
-
-	i = 0;
-	while (new_pwd[i])
-	{
-		if (new_pwd[i] == '.' && new_pwd[i + 1] == '/')
-		{
-			ft_strcpy(new_pwd + i, new_pwd + i + 2);
-//			i++;
-		}
-		else if (new_pwd[i] == '.' && new_pwd[i + 1] == '.')
-			i += 2;
-		else
-			i++;
-	}
-
-//	ft_printf("'%s'  . \n", new_pwd);
-
-	i = -1;
-	while (new_pwd[++i])
-		while (new_pwd[i] == '/' && new_pwd[i + 1] == '/')
-			ft_strcpy(new_pwd + i, new_pwd + i + 1);
-
-//	ft_printf("'%s'   //\n", new_pwd);
-
-	int		last_slash;
-	int		len;
-
-	last_slash = 0;
-	len = 0;
-	i = -1;
-	while (new_pwd[++i])
-	{
-		if (new_pwd[i] == '/')
-		{
-			if (len == 2 && new_pwd[i - 2] == '.' && new_pwd[i - 1] == '.')
-			{
-				last_slash = i - 4;
-				if (last_slash < 0)
-					last_slash = 0;
-				while (new_pwd[last_slash] && new_pwd[last_slash] != '/')
-					last_slash--;
-
-				ft_strcpy(new_pwd + last_slash, new_pwd + i);
-
-//				ft_printf("'%s' <- '%s'   new\n", new_pwd + last_slash, new_pwd + i);
-
-				i = ft_strlen(new_pwd);
-					while (new_pwd[++i])
-						new_pwd[i] = 0;
-
-				i = last_slash;
-			}
-			len = 0;
-		}
-		else
-			len++;
-	}
-
-
-//	ft_printf("'%s' %d  END\n", new_pwd, i);
-	if (i < 0)
-		i = 0;
-
-	if (new_pwd[i - 1] == '/' && i > 1)
-		new_pwd[i - 1] = 0;
-	else if (i == 0)
-	{
-		new_pwd[0] = '/';
-		new_pwd[1] = 0;
-	}
 }
 
 int		builtin_cd_get_opt(t_env *e, char *opt_p)
@@ -173,7 +87,7 @@ int		builtin_cd_get_opt(t_env *e, char *opt_p)
 					return (-1);
 				}
 			}
-		if (i2 == 0)
+		if (i2 <= 1)
 			break ;
 	}
 	return (i);
@@ -183,6 +97,7 @@ void	builtin_cd_error(t_env *e, char *path, char opt)
 {
 	char	type;
 	int		mode;
+	char	*file;
 
 	e->status = 1;
 	if (opt)
@@ -192,12 +107,15 @@ void	builtin_cd_error(t_env *e, char *path, char opt)
 	}
 	type = ft_get_file_type(path);
 	mode = ft_get_file_mode(path);
+	file = ft_get_dir_up(path, 0);
 	if (type == -1)
-		put_error(ERRNOENT, ft_strdup("cd"), path, e->cmd[e->cid].fd_err);
+		put_error(ERRNOENT, ft_strdup("cd"), file, e->cmd[e->cid].fd_err);
 	else if (type == '-')
-		put_error(ERRNOTDIR, ft_strdup("cd"), path, e->cmd[e->cid].fd_err);
+		put_error(ERRNOTDIR, ft_strdup("cd"), file, e->cmd[e->cid].fd_err);
 	else if ((mode / 100) % 2 == 0)
-		put_error(ERRACCES, ft_strdup("cd"), path, e->cmd[e->cid].fd_err);
+		put_error(ERRACCES, ft_strdup("cd"), file, e->cmd[e->cid].fd_err);
 	else
-		put_error(0, ft_strdup("cd"), path, e->cmd[e->cid].fd_err);
+		put_error(0, ft_strdup("cd"), file, e->cmd[e->cid].fd_err);
+	if (file)
+		free(file);
 }

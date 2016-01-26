@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 12:18:49 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/21 01:05:38 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/25 17:42:40 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,13 @@ void	print_prompt(t_env *e)
 {
 	char *spwd;
 
-	spwd = ft_get_up_dir(e->pwd, 1);
+	spwd = ft_get_dir_up(e->pwd, 1);
 	ft_printf("{bold}%s > {rt}", spwd);
 	e->prompt_len = ft_strlen(spwd) + 3;
 	free(spwd);
 }
 
-char	*ft_get_up_dir(char *path, int level)
+char	*ft_get_dir_up(char *path, int level)
 {
 	int	i;
 	int	len;
