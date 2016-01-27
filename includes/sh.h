@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/26 18:50:52 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/27 01:17:53 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 # include <termios.h>
 # include <termcap.h>
 # include <sys/ioctl.h>
+
+# include <dirent.h>
 
 # include <signal.h>
 # include <sys/mount.h>
@@ -102,6 +104,17 @@ void		history_print(t_env *e);
 */
 void		set_bin_path(t_env *e);
 char		*get_cmd_path(t_env *e, char *cmd);
+
+/*
+**   HASH_TABLE
+*/
+int			hash1(char *name, int size);
+void		hash_table_print(t_env *e);
+char		*hash_find(t_env *e, char *key);
+char		*hash_add_cmd(t_env *e, char *cmd);
+char		*hash_add(t_env *e, char *key, char *val);
+void		hash_table_resize(t_env *e);
+void		hash_fill(t_env *e);
 
 /*
 **   HOME

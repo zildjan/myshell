@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2015/11/13 18:17:52 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/27 00:49:25 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,23 +36,13 @@ void	set_bin_path(t_env *e)
 
 char	*get_cmd_path(t_env *e, char *cmd)
 {
-	int		i;
-	char	cmd_path[MAXPATHLEN + 1];
-	char	type;
+	char	*cmd_path;
 
 	if (!e->path)
 		return (NULL);
-	i = 0;
-	while (e->path[i])
-	{
-		ft_bzero(cmd_path, MAXPATHLEN + 1);
-		ft_strcpy(cmd_path, e->path[i]);
-		ft_strcat(cmd_path, "/");
-		ft_strcat(cmd_path, cmd);
-		type = ft_get_file_type(cmd_path);
-		if (type == '-' || type == 'l')
-			return (ft_strdup(cmd_path));
-		i++;
-	}
+	if ((cmd_path = hash_find(e, cmd)))
+		return (ft_strdup(cmd_path));
+	else if ((cmd_path = hash_add_cmd(e, cmd)))
+		return (ft_strdup(cmd_path));
 	return (NULL);
 }

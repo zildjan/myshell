@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/11 00:01:51 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/27 00:47:07 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,13 @@ typedef struct	s_job
 	int				pgid;
 	struct s_job	*next;
 }				t_job;
+
+typedef struct	s_hash_bucket
+{
+	char					*key;
+	char					*val;
+	struct s_hash_bucket	*next;
+}				t_hash_bucket;
 
 typedef struct	s_ti
 {
@@ -139,6 +146,9 @@ typedef struct	s_env
 	char			**var;
 	int				tab_size;
 	char			**path;
+	t_hash_bucket	**hash_t;
+	int				hash_size;
+	int				hash_total;
 	char			*home;
 	char			*home_dir;
 	char			*pwd;
