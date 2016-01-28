@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/10 18:58:17 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/14 00:03:32 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/27 17:00:36 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,12 @@ int		redirec_open_all(t_env *e)
 			e->status = 1;
 			return (0);
 		}
+		if (redir->fd == 0)
+			e->cmd[e->cid].fd_in = getcurstdfd(e, redir->fd_to);
+		else if (redir->fd == 1)
+			e->cmd[e->cid].fd_out = getcurstdfd(e, redir->fd_to);
+		else if (redir->fd == 2)
+			e->cmd[e->cid].fd_err = getcurstdfd(e, redir->fd_to);
 		redir = redir->next;
 	}
 	return (1);
@@ -68,12 +74,6 @@ int		redirec_open_p2(t_env *e, t_redir *redir)
 			return (0);
 		e->cmd[e->cid].piped = 0;
 	}
-	if (redir->fd == 0)
-		e->cmd[e->cid].fd_in = getcurstdfd(e, redir->fd_to);
-	else if (redir->fd == 1)
-		e->cmd[e->cid].fd_out = getcurstdfd(e, redir->fd_to);
-	else if (redir->fd == 2)
-		e->cmd[e->cid].fd_err = getcurstdfd(e, redir->fd_to);
 	return (1);
 }
 

@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/27 01:17:53 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/28 01:19:41 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,15 @@ void		builtin_exit_all(t_env *e, int status);
 void		history_print(t_env *e);
 
 /*
+**   BUILTIN_HASH
+*/
+void		builtin_hash(t_env *e);
+void		builtin_hash_print(t_env *e, char opt_s);
+t_hash_stat	*builtin_hash_load(t_env *e);
+void		builtin_hash_print_stats(t_env *e, t_hash_stat *stats);
+int			builtin_hash_get_opt(t_env *e, char *opt_r, char *opt_s);
+
+/*
 **   GET_BIN_PATH
 */
 void		set_bin_path(t_env *e);
@@ -109,12 +118,17 @@ char		*get_cmd_path(t_env *e, char *cmd);
 **   HASH_TABLE
 */
 int			hash1(char *name, int size);
-void		hash_table_print(t_env *e);
 char		*hash_find(t_env *e, char *key);
 char		*hash_add_cmd(t_env *e, char *cmd);
 char		*hash_add(t_env *e, char *key, char *val);
 void		hash_table_resize(t_env *e);
-void		hash_fill(t_env *e);
+void		hash_table_rebuilt(t_env *e, t_hash_b **old_table, int old_total);
+void		hash_autofill(t_env *e);
+
+/*
+**   SORT
+*/
+void	    myqsort(char **stab, int beg, int end);
 
 /*
 **   HOME
@@ -335,6 +349,7 @@ void		free_env(t_env *e);
 void		free_history(t_env *e);
 void		kill_jobs(t_env *e);
 void		free_path_and_env(t_env *e);
+void		free_hash_table(t_env *e);
 
 /*
 **   FREE_CMD

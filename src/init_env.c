@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/27 01:02:47 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/28 02:09:19 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,8 @@ t_env	*init_env(int argc, char **argv, char **environ)
 	set_bin_path(e);
 
 	e->hash_total = 3;
-	e->hash_t = (t_hash_bucket**)ft_memalloc(sizeof(t_hash_bucket*) * e->hash_total);
+	e->hash_t = (t_hash_b**)ft_memalloc(sizeof(t_hash_b*) * e->hash_total);
+	hash_autofill(e);
 
 	e->home = NULL;
 	set_home_path(e);
@@ -64,6 +65,7 @@ void	init_env_var(t_env *e, char **environ)
 		e->var[i] = ft_strdup(environ[i]);
 		i++;
 	}
+	ft_putchartab(e->var);
 }
 
 void	init_shlvl(t_env *e)

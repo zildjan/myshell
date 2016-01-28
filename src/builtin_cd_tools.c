@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/26 18:47:14 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/26 18:52:26 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/28 01:48:28 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,13 @@
 
 void	builtin_cd_clean_path(char *new_pwd, int i)
 {
+//	ft_printf("'%s'\n", new_pwd);
 	i = 0;
 	while (new_pwd[i])
 	{
 		if (new_pwd[i] == '.' && new_pwd[i + 1] == '/')
 			ft_strcpy(new_pwd + i, new_pwd + i + 2);
-		else if (new_pwd[i] == '.' && new_pwd[i + 1] == '.')
+		else if (new_pwd[i] == '.' && new_pwd[i + 1] == '.')// && new_pwd[i + 2] != '.')
 			i += 2;
 		else
 			i++;

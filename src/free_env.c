@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/07 19:30:05 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/15 23:07:26 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/27 17:14:54 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ void	free_env(t_env *e)
 	free_history(e);
 	free_cmd(e);
 	free_path_and_env(e);
+	free_hash_table(e);
 	if (e->line)
 		free(e->line);
 	if (e->home)
@@ -96,4 +97,26 @@ void	kill_jobs(t_env *e)
 	}
 	e->jobs_lst = NULL;
 	e->job = NULL;
+}
+
+void	free_hash_table(t_env *e)
+{
+	int				i;
+	t_hash_b	*cur;
+	t_hash_b	*tmp;
+
+	i = -1;
+	while (++i < e->hash_total)
+	{
+		cur = e->hash_t[i];
+		while (cur)
+		{
+			tmp = cur;
+			cur = cur->next;
+			free(tmp->key);
+			free(tmp->val);
+			free(tmp);
+		}
+	}
+	free(e->hash_t);
 }

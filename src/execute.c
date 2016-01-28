@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/10 18:58:17 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/27 01:28:23 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/01/28 01:20:00 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ void	process_fork(t_env *e, char *cmd_path, char **env)
 		redirec_assign(e);
 		if (execve(cmd_path, e->cmd[e->cid].arg, env) == -1)
 		{
-			if (ft_get_file_mode(cmd_path) % 2 == 0)
+			if (access(cmd_path, X_OK))
 				put_error(ERRACCES, NULL, e->carg[0], e->cmd[e->cid].fd_err);
 			else
 				put_error(ERREXEFORM, NULL, e->carg[0], e->cmd[e->cid].fd_err);
@@ -113,9 +113,7 @@ int		process_builtin(t_env *e)
 	else if (ft_strequ(e->cmd[e->cid].arg[0], "history"))
 		history_print(e);
 	else if (ft_strequ(e->cmd[e->cid].arg[0], "hash"))
-		hash_table_print(e);
-	else if (ft_strequ(e->cmd[e->cid].arg[0], "hashf"))
-		hash_fill(e);
+		builtin_hash(e);
 	else
 		return (0);
 	return (1);
