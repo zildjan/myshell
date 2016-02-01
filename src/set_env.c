@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/28 02:14:23 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/02/01 00:53:09 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ int		unset_env_var(t_env *e, char *name)
 {
 	int		i;
 
-	ft_printf("DEBUT UNSET\n");
 	i = get_env_id(e, name);
 	if (i == -1)
 		return (0);
@@ -63,7 +62,6 @@ int		unset_env_var(t_env *e, char *name)
 	e->var[i - 1] = NULL;
 	refresh_sh_var(e, name);
 	resize_env_tab(e, -1);
-	ft_printf("FIN UNSET\n");
 	return (1);
 }
 
@@ -73,7 +71,6 @@ void	resize_env_tab(t_env *e, int new)
 	int		new_size;
 	int		i;
 
-	ft_printf("ICI1  %d\n", e->tab_size);
 	i = 0;
 	while (e->var[i])
 		i++;
@@ -81,10 +78,8 @@ void	resize_env_tab(t_env *e, int new)
 		return ;
 	old_size = sizeof(char*) * e->tab_size;
 	new_size = sizeof(char*) * (e->tab_size + new);
-	ft_printf("old=%d, new=%d\n", old_size, new_size);
 	e->var = (char**)ft_memrealloc(e->var, old_size, new_size);
 	e->tab_size += new;
-	ft_printf("ICI2\n");
 }
 
 void	refresh_sh_var(t_env *e, char *name)

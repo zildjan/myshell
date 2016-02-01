@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/07 19:30:05 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/27 17:14:54 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/02/01 01:04:38 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ void	kill_jobs(t_env *e)
 
 void	free_hash_table(t_env *e)
 {
-	int				i;
+	int			i;
 	t_hash_b	*cur;
 	t_hash_b	*tmp;
 

@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/28 01:19:41 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/02/01 01:36:10 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,10 +103,16 @@ void		history_print(t_env *e);
 **   BUILTIN_HASH
 */
 void		builtin_hash(t_env *e);
-void		builtin_hash_print(t_env *e, char opt_s);
 t_hash_stat	*builtin_hash_load(t_env *e);
-void		builtin_hash_print_stats(t_env *e, t_hash_stat *stats);
+void		builtin_hash_load2(t_env *e, t_hash_stat *stats, t_hash_b *tmp);
 int			builtin_hash_get_opt(t_env *e, char *opt_r, char *opt_s);
+
+/*
+**   BUILTIN_HASH_PRINT
+*/
+void		builtin_hash_print(t_env *e, char opt_s);
+void		builtin_hash_print_stats(t_env *e, t_hash_stat *stats);
+void		builtin_hash_print_colstats(t_env *e, t_hash_stat *stats);
 
 /*
 **   GET_BIN_PATH
@@ -128,7 +134,7 @@ void		hash_autofill(t_env *e);
 /*
 **   SORT
 */
-void	    myqsort(char **stab, int beg, int end);
+void		myqsort(char **stab, int beg, int end);
 
 /*
 **   HOME

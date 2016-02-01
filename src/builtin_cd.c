@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:26:19 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/28 02:09:53 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/02/01 00:50:09 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,10 +57,8 @@ void	builtin_cd_setenv(t_env *e, char opt_p, char *new_pwd)
 		new_pwd = getcwd(NULL, 0);
 	}
 	e->status = 0;
-//	ft_putchartab(e->var);
 	set_env_var(e, "OLDPWD", e->pwd);
 	tmp = new_pwd;
-	ft_printf("!!!\n");
 	free(e->pwd);
 	e->pwd = tmp;
 	set_env_var(e, "PWD", e->pwd);

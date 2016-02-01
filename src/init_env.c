@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/28 02:09:19 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/02/01 00:48:31 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,6 @@ void	init_env_var(t_env *e, char **environ)
 		e->var[i] = ft_strdup(environ[i]);
 		i++;
 	}
-	ft_putchartab(e->var);
 }
 
 void	init_shlvl(t_env *e)

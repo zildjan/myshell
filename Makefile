@@ -6,7 +6,7 @@
 #    By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/01/04 17:14:24 by pbourrie          #+#    #+#              #
-#    Updated: 2016/01/27 17:35:53 by pbourrie         ###   ########.fr        #
+#    Updated: 2016/02/01 01:37:40 by pbourrie         ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -39,6 +39,7 @@ SRCS =		main.c \
 			builtin_exit.c \
 			builtin_history.c \
 			builtin_hash.c \
+			builtin_hash_print.c \
 			get_bin_path.c \
 			hash_table.c \
 			sort.c \

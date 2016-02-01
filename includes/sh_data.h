@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/27 23:22:37 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/02/01 01:28:56 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,8 @@ typedef struct	s_hash_stat
 	char			**stab;
 	int				col_max;
 	int				*col;
+	int				i;
+	int				i2;
 }				t_hash_stat;
 
 typedef struct	s_ti
