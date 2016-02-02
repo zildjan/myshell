@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/26 19:54:39 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/28 01:19:30 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/02/01 21:57:56 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int		hash1(char *name, int size)
 
 char	*hash_find(t_env *e, char *key)
 {
-	int				hash;
+	int			hash;
 	t_hash_b	*bucket;
 
 	hash = hash1(key, e->hash_total);
@@ -95,44 +95,6 @@ char	*hash_add(t_env *e, char *key, char *val)
 	return (new->val);
 }
 
-void	hash_table_resize(t_env *e)
-{
-	t_hash_b	**old_table;
-	int			old_total;
-
-	if (e->hash_size * 2 < e->hash_total)
-		return ;
-	old_total = e->hash_total;
-	e->hash_total = (e->hash_size * 2) + 263;
-	old_table = e->hash_t;
-	e->hash_size = 0;
-	e->hash_t = (t_hash_b**)ft_memalloc(sizeof(t_hash_b*) * e->hash_total);
-	hash_table_rebuilt(e, old_table, old_total);
-}
-
-void	hash_table_rebuilt(t_env *e, t_hash_b **old_table, int old_total)
-{
-	int				i;
-	t_hash_b	*cur;
-	t_hash_b	*tmp;
-
-	i = -1;
-	while (++i < old_total)
-	{
-		cur = old_table[i];
-		while (cur)
-		{
-			hash_add(e, cur->key, cur->val);
-			tmp = cur;
-			cur = cur->next;
-			free(tmp->key);
-			free(tmp->val);
-			free(tmp);
-		}
-	}
-	free(old_table);
-}
-
 void	hash_autofill(t_env *e)
 {
 	int				i;
@@ -149,13 +111,13 @@ void	hash_autofill(t_env *e)
 		{
 			while ((dir_ent = readdir(dirp)) != NULL)
 			{
-					ft_bzero(buf, MAXPATHLEN + 1);
-					ft_strcpy(buf, e->path[i]);
-					ft_strcat(buf, "/");
-					ft_strcat(buf, dir_ent->d_name);
-					if (!access(buf, X_OK) && (ft_get_file_type(buf) == '-'
-						|| ft_get_file_type(buf) == 'l'))
-						hash_add(e, dir_ent->d_name, buf);
+				ft_bzero(buf, MAXPATHLEN + 1);
+				ft_strcpy(buf, e->path[i]);
+				ft_strcat(buf, "/");
+				ft_strcat(buf, dir_ent->d_name);
+				if (!access(buf, X_OK) && (ft_get_file_type(buf) == '-'
+								|| ft_get_file_type(buf) == 'l'))
+					hash_add(e, dir_ent->d_name, buf);
 			}
 			(void)closedir(dirp);
 		}

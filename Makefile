@@ -6,7 +6,7 @@
 #    By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/01/04 17:14:24 by pbourrie          #+#    #+#              #
-#    Updated: 2016/02/01 01:37:40 by pbourrie         ###   ########.fr        #
+#    Updated: 2016/02/02 00:42:49 by pbourrie         ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -42,6 +42,7 @@ SRCS =		main.c \
 			builtin_hash_print.c \
 			get_bin_path.c \
 			hash_table.c \
+			hash_table_tools.c \
 			sort.c \
 			home.c \
 			get_cmd.c \
@@ -52,6 +53,8 @@ SRCS =		main.c \
 			editor_edition.c \
 			editor_cursor.c \
 			editor_tools.c \
+			editor_completion.c \
+			completion.c \
 			history.c \
 			parse_cmd.c \
 			parse_cmd_element_p1.c \

@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/07 19:30:05 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/02/01 01:04:38 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/02/01 22:15:13 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,4 +119,5 @@ void	free_hash_table(t_env *e)
 		}
 	}
 	free(e->hash_t);
+	e->hash_size = 0;
 }

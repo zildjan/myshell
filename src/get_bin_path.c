@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/27 00:49:25 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/02/01 22:14:24 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,11 @@ void	set_bin_path(t_env *e)
 	}
 	else
 		e->path = NULL;
+	if (e->hash_total)
+		free_hash_table(e);
+	e->hash_total = 3;
+	e->hash_t = (t_hash_b**)ft_memalloc(sizeof(t_hash_b*) * e->hash_total);
+	hash_autofill(e);
 }
 
 char	*get_cmd_path(t_env *e, char *cmd)

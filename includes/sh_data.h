@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/02/01 01:28:56 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/02/02 01:00:10 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,12 @@ typedef struct	s_histo
 	struct s_histo	*up;
 	struct s_histo	*down;
 }				t_histo;
+
+typedef struct	s_poss
+{
+	char			*str;
+	struct s_poss	*next;
+}				t_poss;
 
 typedef struct	s_redir
 {

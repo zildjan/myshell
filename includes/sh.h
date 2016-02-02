@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/02/01 01:36:10 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/02/02 01:14:17 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@
 t_env		*init_env(int argc, char **argv, char **environ);
 void		init_env_var(t_env *e, char **environ);
 void		init_shlvl(t_env *e);
+void		init_pwd(t_env *e);
 void		refresh_nb_col(t_env *e);
 
 /*
@@ -127,9 +128,13 @@ int			hash1(char *name, int size);
 char		*hash_find(t_env *e, char *key);
 char		*hash_add_cmd(t_env *e, char *cmd);
 char		*hash_add(t_env *e, char *key, char *val);
+void		hash_autofill(t_env *e);
+
+/*
+**   HASH_TABLE_TOOLS
+*/
 void		hash_table_resize(t_env *e);
 void		hash_table_rebuilt(t_env *e, t_hash_b **old_table, int old_total);
-void		hash_autofill(t_env *e);
 
 /*
 **   SORT
@@ -161,6 +166,7 @@ void		get_input_char(t_env *e, char c);
 */
 int			process_control_key(t_env *e, int ret, char *buf, int eof_exit);
 int			process_break_key(t_env *e, int ret, char *buf);
+int			process_completion_key(t_env *e, int ret, char *buf);
 
 /*
 **   EDITOR CURSOR KEY
@@ -201,6 +207,20 @@ void		realloc_input_line(t_env *e);
 int			is_end_of_line(t_env *e, int cur);
 int			ft_outc(int c);
 void		close_line_edition(t_env *e);
+
+/*
+**   EDITOR_COMPLETION
+*/
+void		editor_completion(t_env *e);
+int			editor_completion_gettype(t_env *e);
+
+/*
+**   COMPLETION
+*/
+t_poss		*completion_get_poss(t_env *e, int type);
+char		*completion_get_start(t_env *e);
+t_poss		*completion_find_poss(t_env *e, int type, char *start);
+void		completion_addtoposs(t_poss **poss, char *str);
 
 /*
 **   HISTORY
