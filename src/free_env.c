@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/07 19:30:05 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/02/01 22:15:13 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/02/02 20:23:06 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ void	free_env(t_env *e)
 	free_cmd(e);
 	free_path_and_env(e);
 	free_hash_table(e);
+	completion_free(e);
 	if (e->line)
 		free(e->line);
 	if (e->home)

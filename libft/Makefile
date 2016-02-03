@@ -6,7 +6,7 @@
 #    By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/01/04 17:14:24 by pbourrie          #+#    #+#              #
-#    Updated: 2015/11/06 20:47:03 by pbourrie         ###   ########.fr        #
+#    Updated: 2016/02/03 01:50:33 by pbourrie         ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -56,6 +56,7 @@ SRCS =		ft_bzero.c \
 			ft_strcmp.c \
 			ft_strncmp.c \
 			ft_strcheck.c \
+			ft_escape_chars.c \
 			ft_atoi.c \
 			ft_btoi.c \
 			ft_pow.c \

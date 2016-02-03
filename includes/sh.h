@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/02/02 01:14:17 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/02/03 00:56:50 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,15 +212,20 @@ void		close_line_edition(t_env *e);
 **   EDITOR_COMPLETION
 */
 void		editor_completion(t_env *e);
-int			editor_completion_gettype(t_env *e);
 
 /*
 **   COMPLETION
 */
-t_poss		*completion_get_poss(t_env *e, int type);
+void		completion_update(t_env *e);
 char		*completion_get_start(t_env *e);
-t_poss		*completion_find_poss(t_env *e, int type, char *start);
-void		completion_addtoposs(t_poss **poss, char *str);
+void		completion_get_poss(t_env *e);
+void		completion_addtoposs(t_env *e, char *str);
+void		completion_free(t_env *e);
+
+/*
+**	 LEXER
+*/
+void		lexer(t_env *e, t_lex *lex, int end);
 
 /*
 **   HISTORY

@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/04 19:12:34 by pbourrie          #+#    #+#             */
-/*   Updated: 2015/11/06 20:46:28 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/02/03 01:50:02 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,7 @@ void			ft_putchartab(char **tabstr);
 void			ft_putchartab_fd(char **tabstr, int fd);
 int				ft_strcheck(char const *s, int (*f)(int));
 int				ft_isfullof(char *str, int c);
+char			*ft_escape_chars(char *str, char *c);
 
 /*
 **    CAHARACTER

@@ -1,34 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   editor_completion.c                                :+:      :+:    :+:   */
+/*   ft_escape_chars.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/02/01 23:00:22 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/02/03 02:04:07 by pbourrie         ###   ########.fr       */
+/*   Created: 2016/02/03 01:48:57 by pbourrie          #+#    #+#             */
+/*   Updated: 2016/02/03 01:52:13 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "sh.h"
+#include "libft.h"
 
-void	editor_completion(t_env *e)
+char	*ft_escape_chars(char *str, char *c)
 {
+	char	*new;
+	int		i;
+	int		i2;
 
-	while (e->cur < e->line_len)
-		move_cursor_right(e);
-	ft_putchar('\n');
-
-	completion_update(e);
-
-	int i = -1;
-	while (e->compl->poss[++i])
+	i = -1;
+	i2 = 0;
+	while (str[++i])
+		if (ft_strchr(c, str[i]))
+			i2++;
+	new = ft_strnew(i + i2);
+	i = -1;
+	i2 = 0;
+	while (str[++i])
 	{
-		ft_putstr(e->compl->poss[i]);
-		ft_putstr("  ");
+		if (ft_strchr(c, str[i]))
+			new[i2++] = '\\';
+		new[i2++] = str[i];
 	}
-	ft_putchar('\n');
-
-	print_prompt(e);
-	ft_putstr(e->line);
+	return (new);
 }
