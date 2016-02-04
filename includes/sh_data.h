@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/02/03 00:58:13 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/02/03 22:17:07 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,8 @@
 # define SEP_PIPE 1
 # define SEP_AND 2
 # define SEP_OR 3
+
+typedef struct dirent   t_dirent;
 
 typedef struct	s_job
 {
@@ -116,9 +118,12 @@ typedef struct	s_compl
 {
 	char			**poss;
 	char			*start;
+	char			*path;
+	char			*cstart;
 	int				size;
 	int				total;
 	int				cur;
+	int				len_max;
 	t_lex			lex;
 }				t_compl;
 
@@ -179,6 +184,7 @@ typedef struct	s_env
 	t_hash_b		**hash_t;
 	int				hash_size;
 	int				hash_total;
+	char			**builtin_list;
 	char			*home;
 	char			*home_dir;
 	char			*pwd;

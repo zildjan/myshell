@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/26 19:54:39 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/02/02 23:44:34 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/02/03 20:13:22 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,8 +115,8 @@ void	hash_autofill(t_env *e)
 				ft_strcpy(buf, e->path[i]);
 				ft_strcat(buf, "/");
 				ft_strcat(buf, dir_ent->d_name);
-				if (!access(buf, X_OK) && (ft_get_file_type(buf) == '-'
-								|| ft_get_file_type(buf) == 'l'))
+				if (!access(buf, X_OK) && !ft_strequ(dir_ent->d_name, ".")
+					&& !ft_strequ(dir_ent->d_name, ".."))
 					hash_add(e, dir_ent->d_name, buf);
 			}
 			(void)closedir(dirp);

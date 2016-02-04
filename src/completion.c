@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/01 22:42:57 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/02/03 02:05:50 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/02/04 01:33:35 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,14 @@
 void	completion_update(t_env *e)
 {
 	char	*start;
+	t_lex	lex;
 
-	start = completion_get_start(e);
+	lexer(e, &lex, e->cur);
+//	ft_printf("i=%d\n", lex.i);
+	start = ft_strsub(e->line, e->cur - lex.ib, lex.ib);
 	if (e->compl)
 	{
-		if (ft_strequ(start, e->compl->start) && start[0])
+		if (ft_strequ(start, e->compl->start) && lex.ib && lex.i == e->compl->lex.i)
 		{
 			free(start);
 			return ;
@@ -31,23 +34,11 @@ void	completion_update(t_env *e)
 	e->compl->poss = (char**)ft_memalloc(sizeof(char*) * e->compl->total);
 	e->compl->start = start;
 	e->compl->cur = -1;
-	lexer(e, &e->compl->lex, e->cur);
-	ft_printf("a_id=%d quo=%d esc=%d\n", e->compl->lex.a_id, e->compl->lex.quo, e->compl->lex.escape);
+	e->compl->lex = lex;
+//	ft_printf("\na_id=%d quo=%d esc=%d ", e->compl->lex.a_id, e->compl->lex.quo, e->compl->lex.escape);
+//	ft_printf("ib=%d i=%d \nstart='%s'\n", e->compl->lex.ib, lex.i , start);
 	completion_get_poss(e);
-}
-
-char	*completion_get_start(t_env *e)
-{
-	int		start;
-
-	start = 0;
-	if (e->cur)
-		start = e->cur - 1;
-	while (start && !is_aspace(e->line[start]))
-		start--;
-	if (is_aspace(e->line[start]))
-		start++;
-	return (ft_strsub(e->line, start, e->cur - start));
+	myqsort(e->compl->poss, 0, e->compl->size - 1);
 }
 
 void	completion_get_poss(t_env *e)
@@ -55,33 +46,51 @@ void	completion_get_poss(t_env *e)
 	int		len;
 
 	len = ft_strlen(e->compl->start);
-	if (!e->compl->lex.a_id && !ft_strchr(e->compl->start, '/'))
+	if (len >= 1 && e->compl->start[0] == '$')
 	{
-		int		i;
-		t_hash_b	*tmp;
-
-		i = -1;
-		while (++i < e->hash_total)
-		{
-			tmp = e->hash_t[i];
-			while (tmp)
-			{
-				if (ft_strnequ(e->compl->start, tmp->key, len))
-					completion_addtoposs(e, tmp->key);
-				tmp = tmp->next;
-			}
-		}
+		completion_get_var_poss(e, len);
+	}
+	else if (!e->compl->lex.a_id && !ft_strchr(e->compl->start, '/'))
+	{
+		completion_get_cmd_poss(e, len);
 	}
 	else
 	{
-	char			buf[MAXPATHLEN + 1];
+		completion_get_file_poss(e, len);
+	}
+}
+
+void	completion_get_cmd_poss(t_env *e, int len)
+{
+	int				i;
 	struct dirent	*dir_ent;
 	void			*dirp;
 
-	char	*path;
-	char	*start;
+	e->compl->cstart = ft_strdup(e->compl->start);
+	i = -1;
+	while (e->builtin_list[++i])
+		if (ft_strnequ(e->compl->start, e->builtin_list[i], len))
+			completion_addtoposs(e, e->builtin_list[i]);
+	if (!e->path)
+		return ;
+	i = -1;
+	while (e->path[++i])
+	{
+		if ((dirp = opendir(e->path[i])) != NULL)
+		{
+			while ((dir_ent = readdir(dirp)) != NULL)
+				completion_add_dirent(e, dir_ent, e->path[i]);
+			(void)closedir(dirp);
+		}
+	}
+}
 
-	int		pos;
+void	completion_get_file_poss(t_env *e, int len)
+{
+	t_dirent	*dir_ent;
+	void		*dirp;
+	char		*path;
+	int			pos;
 
 	pos = len;
 	if (ft_strchr(e->compl->start, '/'))
@@ -89,53 +98,79 @@ void	completion_get_poss(t_env *e)
 		while (pos - 1 && e->compl->start[pos - 1] != '/')
 			pos--;
 		path = ft_strsub(e->compl->start, 0, pos);
-		start = ft_strdup(e->compl->start + pos);
+		e->compl->cstart = ft_strdup(e->compl->start + pos);
 	}
 	else
 	{
 		path = ft_strdup("./");
-		start = ft_strdup(e->compl->start);
+		e->compl->cstart = ft_strdup(e->compl->start);
 	}
-	ft_printf("path='%s'  start='%s' pos=%d\n", path, start, pos);
-	len = ft_strlen(start);
-	
-		if ((dirp = opendir(path)) != NULL)
+	if ((dirp = opendir(path)) != NULL)
+	{
+		while ((dir_ent = readdir(dirp)) != NULL)
+			completion_add_dirent(e, dir_ent, path);
+		(void)closedir(dirp);
+	}
+	e->compl->path = path;
+}
+
+void	completion_add_dirent(t_env *e, t_dirent *file, char *path)
+{
+	char	buf[MAXPATHLEN + 1];
+	char	*cstart;
+	int		len;
+
+	cstart = e->compl->cstart;
+	len = ft_strlen(cstart);
+	ft_bzero(buf, MAXPATHLEN + 1);
+	ft_strcpy(buf, path);
+	ft_strcat(buf, "/");
+	ft_strcat(buf, file->d_name);
+	if (ft_strnequ(cstart, file->d_name, len))
+		if ((!ft_strequ(file->d_name, ".")
+			&& !ft_strequ(file->d_name, "..")) || cstart[0] == '.')
+			if (e->compl->lex.a_id
+				|| (!e->compl->lex.a_id && !access(buf, X_OK)))
+				completion_addtoposs(e, file->d_name);
+}
+
+void	completion_get_var_poss(t_env *e, int len)
+{
+	int		i;
+	int		i2;
+	char	*var;
+
+	e->compl->cstart = ft_strdup(e->compl->start);
+	if (!e->var)
+		return ;
+	i = -1;
+	while (e->var[++i])
+		if (ft_strnequ(e->compl->start + 1, e->var[i], len - 1))
 		{
-			while ((dir_ent = readdir(dirp)) != NULL)
-			{
-				ft_bzero(buf, MAXPATHLEN + 1);
-				ft_strcpy(buf, path);
-				ft_strcat(buf, "");
-				ft_strcat(buf, dir_ent->d_name);
-
-//				ft_printf("path='%s'  start='%s'\n", dir_ent->d_name, start);
-				if (ft_strnequ(start, dir_ent->d_name, len))
-					if ((!ft_strequ(dir_ent->d_name, ".")
-						&& !ft_strequ(dir_ent->d_name, "..")
-						&& start[0] != '.') || start[0] == '.')
-					{
-						if ((!e->compl->lex.a_id && !access(buf, X_OK))
-							|| e->compl->lex.a_id)
-							completion_addtoposs(e, dir_ent->d_name);
-
-					}
-			}
-			(void)closedir(dirp);
+			var = ft_strjoin("$", e->var[i]);
+			i2 = 0;
+			while (var[i2] && var[i2] != '=')
+				i2++;
+			var[i2] = 0;
+			completion_addtoposs(e, var);
+			free(var);
 		}
-		free(path);
-		free(start);
-	}
 }
 
 void	completion_addtoposs(t_env *e, char *str)
 {
 	int		old_s;
 	int		new_s;
+	int		i;
 
-	if (ft_get_file_type(str) == 'd')
-		e->compl->poss[e->compl->size++] = ft_strjoin(str, "/");
-	else
-		e->compl->poss[e->compl->size++] = ft_strdup(str);
+	i = -1;
+	while (e->compl->poss[++i])
+		if (ft_strequ(str, e->compl->poss[i]))
+			return ;
+	e->compl->poss[e->compl->size++] = ft_strdup(str);
+	i = ft_strlen(str);
+	if (i > e->compl->len_max)
+		e->compl->len_max = i;
 	if (e->compl->size + 10 > e->compl->total)
 	{
 		old_s = sizeof(char*) * e->compl->total;
@@ -157,6 +192,10 @@ void	completion_free(t_env *e)
 		free(e->compl->poss[i]);
 	free(e->compl->poss);
 	free(e->compl->start);
+	if (e->compl->cstart)
+		free(e->compl->cstart);
+	if (e->compl->path)
+		free(e->compl->path);
 	free(e->compl);
 	e->compl = NULL;
 }

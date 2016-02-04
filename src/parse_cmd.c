@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/13 18:42:35 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/02/03 17:05:32 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	parse_cmd(t_env *e)
 {
 	t_parse	p;
 
-	parse_cmd_cleanline(e);
+//	parse_cmd_cleanline(e);
 	p.line_len = ft_strlen(e->line);
 	if (p.line_len > MAX_LEN_LINE)
 	{

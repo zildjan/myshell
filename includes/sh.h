@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/02/03 00:56:50 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/02/03 23:56:06 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,6 +120,7 @@ void		builtin_hash_print_colstats(t_env *e, t_hash_stat *stats);
 */
 void		set_bin_path(t_env *e);
 char		*get_cmd_path(t_env *e, char *cmd);
+void		load_builtin_list(t_env *e);
 
 /*
 **   HASH_TABLE
@@ -212,13 +213,18 @@ void		close_line_edition(t_env *e);
 **   EDITOR_COMPLETION
 */
 void		editor_completion(t_env *e);
+void		editor_completion_print(t_env *e);
+void		editor_completion_printa(t_env *e, int id);
 
 /*
 **   COMPLETION
 */
 void		completion_update(t_env *e);
-char		*completion_get_start(t_env *e);
 void		completion_get_poss(t_env *e);
+void		completion_get_var_poss(t_env *e, int len);
+void		completion_get_cmd_poss(t_env *e, int len);
+void		completion_get_file_poss(t_env *e, int len);
+void		completion_add_dirent(t_env *e, t_dirent *dir_ent, char *path);
 void		completion_addtoposs(t_env *e, char *str);
 void		completion_free(t_env *e);
 
@@ -226,6 +232,7 @@ void		completion_free(t_env *e);
 **	 LEXER
 */
 void		lexer(t_env *e, t_lex *lex, int end);
+void		lexer_add_arg(t_lex *l);
 
 /*
 **   HISTORY

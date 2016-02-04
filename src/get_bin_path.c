@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/02/01 22:14:24 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/02/03 17:49:44 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ void	set_bin_path(t_env *e)
 	e->hash_total = 3;
 	e->hash_t = (t_hash_b**)ft_memalloc(sizeof(t_hash_b*) * e->hash_total);
 	hash_autofill(e);
+	load_builtin_list(e);
 }
 
 char	*get_cmd_path(t_env *e, char *cmd)
@@ -50,4 +51,18 @@ char	*get_cmd_path(t_env *e, char *cmd)
 	else if ((cmd_path = hash_add_cmd(e, cmd)))
 		return (ft_strdup(cmd_path));
 	return (NULL);
+}
+
+void	load_builtin_list(t_env *e)
+{
+	e->builtin_list = (char **)ft_memalloc(sizeof(char*) * 20);
+	e->builtin_list[0] = ft_strdup("cd");
+	e->builtin_list[1] = ft_strdup("exit");
+	e->builtin_list[2] = ft_strdup("setenv");
+	e->builtin_list[3] = ft_strdup("unsetenv");
+	e->builtin_list[4] = ft_strdup("env");
+	e->builtin_list[5] = ft_strdup("fg");
+	e->builtin_list[6] = ft_strdup("jobs");
+	e->builtin_list[7] = ft_strdup("history");
+	e->builtin_list[8] = ft_strdup("hash");
 }

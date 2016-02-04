@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 16:47:23 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/12 16:48:30 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/02/04 00:44:08 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,4 +54,5 @@ void	close_line_edition(t_env *e)
 	i -= e->cur + 1 + e->prompt_len;
 	i /= e->ws_col;
 	ft_putnchar(i, '\n');
+	completion_free(e);
 }

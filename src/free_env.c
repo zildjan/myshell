@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/07 19:30:05 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/02/02 20:23:06 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/02/03 17:53:08 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,10 @@ void	free_path_and_env(t_env *e)
 			free(e->var[i++]);
 		free(e->var);
 	}
+	i = 0;
+	while (e->builtin_list[++i])
+		free(e->builtin_list[i]);
+	free(e->builtin_list);
 }
 
 void	free_history(t_env *e)
