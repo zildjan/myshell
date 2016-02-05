@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/01 23:00:22 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/02/04 01:46:58 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/02/05 01:44:42 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,54 +16,175 @@ void	editor_completion(t_env *e)
 {
 	completion_update(e);
 
+/*
+	int i;
+	i = e->cur - e->compl->lex.buf_begin;
+	if (e->compl->lex.quo != NONE)
+		i--;
+
+	while (--i)
+		backdelete_input_char(e, 0);
+
+	char	*path;
+	char	*comp;
+
+	comp = e->compl->lex.buf;
+
+	if (e->compl->lex.quo == NONE)
+		path = ft_escape_chars(comp, " ;|\t\n><\\&'\"$!");
+	else if (e->compl->lex.quo == DOUB)
+		path = ft_escape_chars(comp, "\\\"$");
+	else
+	{
+		int		i;
+		int		i2;
+
+		i = -1;
+		i2 = 0;
+		while (comp[++i])
+			if (ft_strchr("'", comp[i]))
+				i2++;
+		path = ft_strnew(i + (i2 * 3));
+		i = -1;
+		i2 = 0;
+		while (comp[++i])
+		{
+			if (ft_strchr("'", comp[i]))
+			{
+				path[i2++] = '\'';
+				path[i2++] = '\\';
+				path[i2++] = '\'';
+			}
+			path[i2++] = comp[i];
+		}
+	}
+	get_input_chars(e, path);
+*/
+
 	if (e->compl->size == 0)
 		ft_putchar(7);
-	else if (e->compl->size == 1)
+	else if (e->compl->mutual[0] != 0)
 	{
+//		ft_printf("'%s'", e->compl->mutual);
 		char	*path;
 		char	*comp;
 
-		comp = e->compl->poss[0] + ft_strlen(e->compl->cstart);
+		comp = e->compl->mutual + ft_strlen(e->compl->cstart);
 
 		if (e->compl->lex.quo == NONE)
-			path = ft_escape_chars(comp, " ;|\t\n><\\&'\"$");
+			path = ft_escape_chars(comp, " ;|\t\n><\\&'\"$!");
 		else if (e->compl->lex.quo == DOUB)
 			path = ft_escape_chars(comp, "\\\"$");
 		else
-			path = ft_strdup(comp);
+		{
+			int		i;
+			int		i2;
+
+			i = -1;
+			i2 = 0;
+			while (comp[++i])
+				if (ft_strchr("'", comp[i]))
+					i2++;
+			path = ft_strnew(i + (i2 * 3));
+			i = -1;
+			i2 = 0;
+			while (comp[++i])
+			{
+				if (ft_strchr("'", comp[i]))
+				{
+					path[i2++] = '\'';
+					path[i2++] = '\\';
+					path[i2++] = '\'';
+				}
+				path[i2++] = comp[i];
+			}
+		}
 		get_input_chars(e, path);
 		free(path);
 
-		if (e->compl->lex.quo == DOUB)
-			get_input_char(e, '"');
-		else if (e->compl->lex.quo == SIMP)
-			get_input_char(e, '\'');
-
-		path = ft_strjoin(e->compl->path, e->compl->poss[0]);
-		if (ft_get_file_type(path) == 'd')
-			get_input_char(e, '/');
-		else if (ft_get_file_type(path) == 'l')
+		if (e->compl->size == 1)
 		{
-			free(path);
-			path = ft_strjoin(e->compl->path, e->compl->cstart);
-			if (ft_get_lfile_type(path) == 'd')
+			e->compl->cur = 0;
+	
+			path = ft_strjoin(e->compl->path, e->compl->poss[0]);
+			if (ft_get_file_type(path) == 'd')
+			{
+				if (e->compl->lex.quo == DOUB)
+					get_input_char(e, '"');
+				else if (e->compl->lex.quo == SIMP)
+					get_input_char(e, '\'');
+
 				get_input_char(e, '/');
+			}
+			else if (ft_get_file_type(path) == 'l')
+			{
+				free(path);
+				path = ft_strjoin(e->compl->path, e->compl->cstart);
+				if (ft_get_lfile_type(path) == 'd')
+					get_input_char(e, '/');
+//				else
+//					get_input_char(e, ' ');
+//				ft_printf("ici '%s' ", path);
+			}
+			else
+			{
+				if (e->compl->lex.quo == DOUB)
+					get_input_char(e, '"');
+				else if (e->compl->lex.quo == SIMP)
+					get_input_char(e, '\'');
+
+				get_input_char(e, ' ');
+			}
+			free(path);
+		}
+	}
+	if (e->compl->size > 1)
+	{
+//		ft_printf("ICI %d", e->compl->cur);
+		if (!e->compl->cur)
+		{
+			int		ok;
+
+			ok = 1;
+			ft_putchar('\n');
+			close_line_edition(e);
+			if (e->compl->size > 200)
+			{
+				int		ret;
+				char	buf;
+
+				ft_printf("Display all %d possibilities? (y or n)", e->compl->size);
+				while (1)
+				{
+					ret = read(0, &buf, 1);
+					if (buf == 'y' || buf == ' ')
+						break ;
+					else if (buf == 'n' || buf == 3 || buf == 127)
+					{
+						ok = 0;
+						break ;
+					}
+					else
+						ft_putchar(7);
+				}
+				ft_putchar('\n');
+			}
+			if (ok)
+				editor_completion_print(e);
+			print_prompt(e);
+			ft_putstr(e->line);
+			int		save;
+			save = e->cur;
+			e->cur = e->line_len;
+			while (e->cur > save)
+				move_cursor_left(e);
 		}
 		else
-			get_input_char(e, ' ');
-		free(path);
-	}
-	else
-	{
-		ft_putchar('\n');
-		editor_completion_print(e);
-		print_prompt(e);
-		ft_putstr(e->line);
-		int		save;
-		save = e->cur;
-		e->cur = e->line_len;
-		while (e->cur > save)
-			move_cursor_left(e);
+		{
+			e->compl->cur++;
+			ft_putchar(7);
+		}
+
 	}
 }
 

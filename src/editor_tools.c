@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 16:47:23 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/02/04 00:44:08 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/02/04 20:37:22 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,13 +46,17 @@ int		ft_outc(int c)
 void	close_line_edition(t_env *e)
 {
 	int		i;
+	int		line_len;
 
-	i = (e->line_len + e->prompt_len) / e->ws_col;
-	if (((e->line_len + e->prompt_len) % e->ws_col))
+	if (e->line_len < 0)
+		line_len = e->line_size + 10;
+	else
+		line_len = e->line_len;
+	i = (line_len + e->prompt_len) / e->ws_col;
+	if (((line_len + e->prompt_len) % e->ws_col))
 		i++;
 	i *= e->ws_col;
 	i -= e->cur + 1 + e->prompt_len;
 	i /= e->ws_col;
 	ft_putnchar(i, '\n');
-	completion_free(e);
 }

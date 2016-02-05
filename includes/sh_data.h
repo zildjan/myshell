@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/02/03 22:17:07 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/02/05 01:04:04 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,16 +103,24 @@ typedef struct	s_histo
 	struct s_histo	*down;
 }				t_histo;
 
-typedef struct	s_lex
+typedef struct	s_parse
 {
 	char	quo;
 	char	escape;
+	char	*buf;
 	int		i;
 	int		ib;
 	int		a_id;
-	int		cid;
+	int		error;
+	int		separ;
+	int		line_len;
+	int		buf_len;
+	int		redirec;
+	int		redirec_fd;
+	char	*last_arg;
 	int		end;
-}				t_lex;
+	int		buf_begin;
+}				t_parse;
 
 typedef struct	s_compl
 {
@@ -120,11 +128,12 @@ typedef struct	s_compl
 	char			*start;
 	char			*path;
 	char			*cstart;
+	char			*mutual;
 	int				size;
 	int				total;
 	int				cur;
 	int				len_max;
-	t_lex			lex;
+	t_parse			lex;
 }				t_compl;
 
 typedef struct	s_redir
@@ -141,23 +150,6 @@ typedef struct	s_hdoc
 	char			*content;
 	struct s_hdoc	*next;
 }				t_hdoc;
-
-typedef struct	s_parse
-{
-	char	quo;
-	char	escape;
-	char	*buf;
-	int		i;
-	int		ib;
-	int		a_id;
-	int		error;
-	int		separ;
-	int		line_len;
-	int		buf_len;
-	int		redirec;
-	int		redirec_fd;
-	char	*last_arg;
-}				t_parse;
 
 typedef struct	s_cmd
 {

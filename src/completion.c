@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/01 22:42:57 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/02/04 01:33:35 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/02/05 00:34:28 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,20 +15,20 @@
 void	completion_update(t_env *e)
 {
 	char	*start;
-	t_lex	lex;
+	t_parse	lex;
 
 	lexer(e, &lex, e->cur);
 //	ft_printf("i=%d\n", lex.i);
-	start = ft_strsub(e->line, e->cur - lex.ib, lex.ib);
 	if (e->compl)
 	{
-		if (ft_strequ(start, e->compl->start) && lex.ib && lex.i == e->compl->lex.i)
+		if (ft_strequ(lex.buf, e->compl->start) && lex.i == e->compl->lex.i)
 		{
-			free(start);
+			free(lex.buf);
 			return ;
 		}
 	}
 	completion_free(e);
+	start = ft_strdup(lex.buf);
 	e->compl = (t_compl*)ft_memalloc(sizeof(t_compl));
 	e->compl->total = 3;
 	e->compl->poss = (char**)ft_memalloc(sizeof(char*) * e->compl->total);
@@ -39,6 +39,7 @@ void	completion_update(t_env *e)
 //	ft_printf("ib=%d i=%d \nstart='%s'\n", e->compl->lex.ib, lex.i , start);
 	completion_get_poss(e);
 	myqsort(e->compl->poss, 0, e->compl->size - 1);
+	completion_check_mutual(e);
 }
 
 void	completion_get_poss(t_env *e)
@@ -67,6 +68,11 @@ void	completion_get_cmd_poss(t_env *e, int len)
 	void			*dirp;
 
 	e->compl->cstart = ft_strdup(e->compl->start);
+	if (ft_strequ(".", e->compl->cstart))
+	{
+		completion_addtoposs(e, ".");
+		return ;
+	}
 	i = -1;
 	while (e->builtin_list[++i])
 		if (ft_strnequ(e->compl->start, e->builtin_list[i], len))
@@ -75,14 +81,12 @@ void	completion_get_cmd_poss(t_env *e, int len)
 		return ;
 	i = -1;
 	while (e->path[++i])
-	{
 		if ((dirp = opendir(e->path[i])) != NULL)
 		{
 			while ((dir_ent = readdir(dirp)) != NULL)
 				completion_add_dirent(e, dir_ent, e->path[i]);
 			(void)closedir(dirp);
 		}
-	}
 }
 
 void	completion_get_file_poss(t_env *e, int len)
@@ -181,6 +185,24 @@ void	completion_addtoposs(t_env *e, char *str)
 	e->compl->poss[e->compl->size] = NULL;
 }
 
+void	completion_check_mutual(t_env *e)
+{
+	int		i;
+	int		i2;
+
+	if (!e->compl->size)
+		return ;
+	e->compl->mutual = ft_strdup(e->compl->poss[0]);
+	i = 0;
+	while (e->compl->poss[++i])
+	{
+		i2 = 0;
+		while (e->compl->poss[i][i2] == e->compl->mutual[i2])
+			i2++;
+		e->compl->mutual[i2] = 0;
+	}
+}
+
 void	completion_free(t_env *e)
 {
 	int		i;
@@ -192,10 +214,13 @@ void	completion_free(t_env *e)
 		free(e->compl->poss[i]);
 	free(e->compl->poss);
 	free(e->compl->start);
-	if (e->compl->cstart)
-		free(e->compl->cstart);
+	free(e->compl->cstart);
+	if (e->compl->mutual)
+		free(e->compl->mutual);
 	if (e->compl->path)
 		free(e->compl->path);
+	if (e->compl->lex.buf)
+		free(e->compl->lex.buf);
 	free(e->compl);
 	e->compl = NULL;
 }
