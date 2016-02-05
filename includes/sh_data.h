@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/02/05 01:04:04 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/02/06 00:50:04 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@
 # define SEP_AND 2
 # define SEP_OR 3
 
-typedef struct dirent   t_dirent;
+typedef struct dirent	t_dirent;
 
 typedef struct	s_job
 {
@@ -119,7 +119,6 @@ typedef struct	s_parse
 	int		redirec_fd;
 	char	*last_arg;
 	int		end;
-	int		buf_begin;
 }				t_parse;
 
 typedef struct	s_compl

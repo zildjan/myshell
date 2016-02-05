@@ -6,7 +6,7 @@
 #    By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/01/04 17:14:24 by pbourrie          #+#    #+#              #
-#    Updated: 2016/02/03 01:00:18 by pbourrie         ###   ########.fr        #
+#    Updated: 2016/02/06 00:44:49 by pbourrie         ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -54,8 +54,11 @@ SRCS =		main.c \
 			editor_cursor.c \
 			editor_tools.c \
 			editor_completion.c \
+			editor_completion_print.c \
 			lexer.c \
+			lexer_element.c \
 			completion.c \
+			completion_get_poss.c \
 			history.c \
 			parse_cmd.c \
 			parse_cmd_element_p1.c \

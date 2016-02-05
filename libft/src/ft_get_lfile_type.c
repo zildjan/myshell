@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/03/25 20:23:06 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/02/03 23:52:33 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/02/06 00:49:03 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ char	ft_get_lfile_type(char *path)
 	struct stat	buf;
 
 	if (stat(path, &buf))
-			return (-1);
+		return (-1);
 	if (S_ISREG(buf.st_mode))
 		return ('-');
 	else if (S_ISDIR(buf.st_mode))

@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/02/05 01:22:55 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/02/06 00:46:36 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -213,27 +213,50 @@ void		close_line_edition(t_env *e);
 **   EDITOR_COMPLETION
 */
 void		editor_completion(t_env *e);
+void		editor_completion_complete(t_env *e);
+void		editor_completion_complete_end(t_env *e);
+void		editor_completion_complete_end_link(t_env *e);
+char		*escape_simple_quotes(char *str);
+
+/*
+**   EDITOR_COMPLETION_PRINT
+*/
 void		editor_completion_print(t_env *e);
-void		editor_completion_printa(t_env *e, int id);
+int			editor_completion_print_ask(t_env *e);
+void		editor_completion_print_col(t_env *e);
+void		editor_completion_print_one(t_env *e, int id);
 
 /*
 **   COMPLETION
 */
 void		completion_update(t_env *e);
+void		completion_addtoposs(t_env *e, char *str);
+void		completion_check_mutual(t_env *e);
+void		completion_free(t_env *e);
+
+/*
+**   COMPLETION_GET_POSS
+*/
 void		completion_get_poss(t_env *e);
 void		completion_get_var_poss(t_env *e, int len);
 void		completion_get_cmd_poss(t_env *e, int len);
 void		completion_get_file_poss(t_env *e, int len);
 void		completion_add_dirent(t_env *e, t_dirent *dir_ent, char *path);
-void		completion_addtoposs(t_env *e, char *str);
-void		completion_check_mutual(t_env *e);
-void		completion_free(t_env *e);
 
 /*
 **	 LEXER
 */
 void		lexer(t_env *e, t_parse *lex, int end);
 void		lexer_add_arg(t_parse *l);
+int			lexer_add_to_buf(t_env *e, t_parse *l);
+
+/*
+**   LEXER ELEMENT
+*/
+int			lexer_quotes(t_env *e, t_parse *l);
+int			lexer_operator_delim(t_env *e, t_parse *l);
+int			lexer_exp_redir(t_env *e, t_parse *l);
+int			lexer_space_escape(t_env *e, t_parse *l);
 
 /*
 **   HISTORY
