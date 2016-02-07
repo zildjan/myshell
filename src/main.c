@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 12:18:49 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/12 18:20:49 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/02/06 20:29:40 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,10 @@ int		main(int argc, char **argv, char **environ)
 	while (1)
 	{
 		if (isatty(0))
+		{
+			gen_prompt(e, NULL);
 			print_prompt(e);
+		}
 		get_cmd(e);
 	}
 	return (0);

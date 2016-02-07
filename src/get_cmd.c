@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/12 18:21:41 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/02/06 20:28:47 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,17 +30,18 @@ int		get_cmd_end(t_env *e, char type)
 		free(e->line);
 	e->line = NULL;
 	if (type == SEP_PIPE)
-		ft_putstr("pipe> ");
+		gen_prompt(e, "pipe> ");
 	else if (type == SEP_AND)
-		ft_putstr("cmdand> ");
+		gen_prompt(e, "cmdand> ");
 	else if (type == SEP_OR)
-		ft_putstr("or> ");
+		gen_prompt(e, "or> ");
 	else if (type == '\'')
-		ft_putstr("quote> ");
+		gen_prompt(e, "quote> ");
 	else if (type == '"')
-		ft_putstr("dquote> ");
+		gen_prompt(e, "dquote> ");
 	else
-		ft_putstr("> ");
+		gen_prompt(e, "> ");
+	print_prompt(e);
 	ret = get_input_line(e, 0);
 	if (ret == -1 && type)
 		return (EP_EOF);

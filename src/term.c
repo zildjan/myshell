@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/12 18:58:09 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/02/07 01:45:27 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ void	term_restore(t_env *e)
 	{
 		if (e->term_status == 1)
 		{
+			refresh_nb_col(e);
 			try = 0;
 			while (tcsetattr(0, TCSADRAIN, e->term) == -1 && try < 20)
 				try++;

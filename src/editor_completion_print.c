@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/06 00:43:31 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/02/06 00:44:33 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/02/07 00:52:24 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ void	editor_completion_print_col(t_env *e)
 	int		i;
 	int		line;
 
-	nb_col = e->ws_col / (e->compl->len_max + 2);
+	nb_col = (e->ws_col - 1) / (e->compl->len_max + 2);
 	col_h = (e->compl->size / nb_col);
 	if (e->compl->size % nb_col)
 		col_h++;

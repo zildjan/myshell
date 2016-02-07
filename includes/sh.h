@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/02/06 00:46:36 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/02/06 20:27:37 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -402,6 +402,7 @@ int			jobs_count(t_env *e, int pid);
 **   PROMPT
 */
 void		print_prompt(t_env *e);
+void		gen_prompt(t_env *e, char *str);
 char		*ft_get_dir_up(char *path, int level);
 
 /*

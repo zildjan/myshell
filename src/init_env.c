@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/02/01 22:09:39 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/02/07 01:25:09 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ void	refresh_nb_col(t_env *e)
 {
 	struct winsize win;
 
+	completion_free(e);
 	if (ioctl(1, TIOCGWINSZ, &win) == 0)
 		e->ws_col = win.ws_col;
 	else

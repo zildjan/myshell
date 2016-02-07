@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/07 19:30:05 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/02/03 17:53:08 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/02/06 23:10:19 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ void	free_env(t_env *e)
 		free(e->term);
 	if (e->term_back)
 		free(e->term_back);
+	if (e->prompt)
+		free(e->prompt);
 	free(e);
 }
 
