@@ -6,7 +6,7 @@
 #    By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/01/04 17:14:24 by pbourrie          #+#    #+#              #
-#    Updated: 2016/02/06 00:44:49 by pbourrie         ###   ########.fr        #
+#    Updated: 2016/02/07 23:35:38 by pbourrie         ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -33,6 +33,7 @@ SRCS =		main.c \
 			set_env.c \
 			builtin_cd.c \
 			builtin_cd_tools.c \
+			builtin_echo.c \
 			builtin_env.c \
 			builtin_env_tools.c \
 			builtin_setenv.c \

@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/02/06 20:27:37 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/02/07 23:29:27 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,11 @@ void		builtin_cd_error(t_env *e, char *path, char opt);
 */
 void		builtin_cd_clean_path(char *new_pwd, int i);
 void		builtin_cd_parse_dotdot(char *new_pwd, int *i, int last, int len);
+
+/*
+**   BUILTIN_ECHO
+*/
+void		builtin_echo(t_env *e);
 
 /*
 **   BUILTIN_ENV
