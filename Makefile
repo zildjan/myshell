@@ -6,7 +6,7 @@
 #    By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/01/04 17:14:24 by pbourrie          #+#    #+#              #
-#    Updated: 2016/02/07 23:35:38 by pbourrie         ###   ########.fr        #
+#    Updated: 2016/02/10 01:27:40 by pbourrie         ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -81,6 +81,7 @@ SRCS =		main.c \
 			jobs.c \
 			signal.c \
 			free_env.c \
+			free_sub_env.c \
 			free_cmd.c 
 SRC = $(sort $(SRCS))
 SRC_PATH = src/

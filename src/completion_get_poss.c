@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/06 00:40:33 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/02/06 00:42:28 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/02/10 01:13:20 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,19 +15,28 @@
 void	completion_get_poss(t_env *e)
 {
 	int		len;
+	char	*path;
 
 	len = ft_strlen(e->compl->start);
 	if (len >= 1 && e->compl->start[0] == '$')
-	{
 		completion_get_var_poss(e, len);
-	}
 	else if (!e->compl->lex.a_id && !ft_strchr(e->compl->start, '/'))
-	{
 		completion_get_cmd_poss(e, len);
-	}
 	else
 	{
-		completion_get_file_poss(e, len);
+		if (ft_strchr(e->compl->start, '/'))
+		{
+			while (len - 1 && e->compl->start[len - 1] != '/')
+				len--;
+			path = ft_strsub(e->compl->start, 0, len);
+			e->compl->cstart = ft_strdup(e->compl->start + len);
+		}
+		else
+		{
+			path = ft_strdup("./");
+			e->compl->cstart = ft_strdup(e->compl->start);
+		}
+		completion_get_file_poss(e, path);
 	}
 }
 
@@ -82,26 +91,21 @@ void	completion_get_cmd_poss(t_env *e, int len)
 		}
 }
 
-void	completion_get_file_poss(t_env *e, int len)
+void	completion_get_file_poss(t_env *e, char *path)
 {
 	t_dirent	*dir_ent;
 	void		*dirp;
-	char		*path;
-	int			pos;
+	char		*tmp;
 
-	pos = len;
-	if (ft_strchr(e->compl->start, '/'))
+	if (path[0] != '/')
 	{
-		while (pos - 1 && e->compl->start[pos - 1] != '/')
-			pos--;
-		path = ft_strsub(e->compl->start, 0, pos);
-		e->compl->cstart = ft_strdup(e->compl->start + pos);
+		tmp = ft_strjoin(e->pwd, "/");
+		tmp = ft_strdupcat(tmp, path);
+		free(path);
+		path = tmp;
 	}
-	else
-	{
-		path = ft_strdup("./");
-		e->compl->cstart = ft_strdup(e->compl->start);
-	}
+	path = ft_strdupcat(path, "/");
+	builtin_cd_clean_path(path, 0);
 	if ((dirp = opendir(path)) != NULL)
 	{
 		while ((dir_ent = readdir(dirp)) != NULL)

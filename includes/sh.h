@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/02/07 23:29:27 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/02/10 01:25:02 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -245,7 +245,7 @@ void		completion_free(t_env *e);
 void		completion_get_poss(t_env *e);
 void		completion_get_var_poss(t_env *e, int len);
 void		completion_get_cmd_poss(t_env *e, int len);
-void		completion_get_file_poss(t_env *e, int len);
+void		completion_get_file_poss(t_env *e, char *path);
 void		completion_add_dirent(t_env *e, t_dirent *dir_ent, char *path);
 
 /*
@@ -414,6 +414,11 @@ char		*ft_get_dir_up(char *path, int level);
 **   FREE_ENV
 */
 void		free_env(t_env *e);
+void		free_env_var(t_env *e);
+
+/*
+**   FREE_SUB_ENV
+*/
 void		free_history(t_env *e);
 void		kill_jobs(t_env *e);
 void		free_path_and_env(t_env *e);

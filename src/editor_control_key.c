@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 16:42:30 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/02/04 20:29:31 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/02/10 00:56:04 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ int		process_control_key(t_env *e, int ret, char *buf, int eof_exit)
 		else if (!eof_exit)
 		{
 			ft_putchar('\n');
+			close_line_edition(e);
 			ft_bzero(e->line, e->line_len);
 			e->line_len = -1;
 			return (-1);
@@ -46,6 +47,7 @@ int		process_break_key(t_env *e, int ret, char *buf)
 	else if (ret == 1 && buf[0] == 3)
 	{
 		ft_putchar('\n');
+		close_line_edition(e);
 		ft_bzero(e->line, e->line_len);
 		e->line_len = -2;
 		return (-1);

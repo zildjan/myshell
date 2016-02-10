@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 16:47:23 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/02/04 20:37:22 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/02/10 00:55:21 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,9 @@ void	close_line_edition(t_env *e)
 	int		i;
 	int		line_len;
 
-	if (e->line_len < 0)
-		line_len = e->line_size + 10;
-	else
-		line_len = e->line_len;
+	if (e->line_len <= 0)
+		return ;
+	line_len = e->line_len;
 	i = (line_len + e->prompt_len) / e->ws_col;
 	if (((line_len + e->prompt_len) % e->ws_col))
 		i++;
