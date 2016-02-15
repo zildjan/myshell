@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/06 00:40:33 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/02/10 01:13:20 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/02/14 21:54:43 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,8 +104,8 @@ void	completion_get_file_poss(t_env *e, char *path)
 		free(path);
 		path = tmp;
 	}
-	path = ft_strdupcat(path, "/");
 	builtin_cd_clean_path(path, 0);
+	path = ft_strdupcat(path, "/");
 	if ((dirp = opendir(path)) != NULL)
 	{
 		while ((dir_ent = readdir(dirp)) != NULL)

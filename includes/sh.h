@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/02/10 01:25:02 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/02/15 01:42:09 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -232,6 +232,11 @@ void		editor_completion_print_col(t_env *e);
 void		editor_completion_print_one(t_env *e, int id);
 
 /*
+**   EDITOR_SEARCH
+*/
+char		*editor_search(t_env *e);
+
+/*
 **   COMPLETION
 */
 void		completion_update(t_env *e);
@@ -271,6 +276,11 @@ void		history_load(t_env *e);
 void		history_add(t_env *e, char escape);
 void		history_save_ent(t_env *e);
 void		history_add_to_mem(t_env *e, char *line);
+
+/*
+**   HISTORY_FIND
+*/
+char		*history_find(t_env *e, char *str, int num);
 
 /*
 **   PARSE_CMD
