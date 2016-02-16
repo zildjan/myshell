@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/02/15 01:42:09 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/02/16 03:16:09 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -235,6 +235,16 @@ void		editor_completion_print_one(t_env *e, int id);
 **   EDITOR_SEARCH
 */
 char		*editor_search(t_env *e);
+void		editor_search_refresh(t_env *e, char *search, int num);
+int			editor_search_key(char *buf, char **search, int *num);
+void		editor_search_exit(t_env *e, char *buf, char *search);
+
+/*
+**   EDITOR_SEARCH_PRINT
+*/
+void		editor_search_print(t_env *e, char *line, char *search, int prompt);
+void		editor_search_print_prompt(t_env *e, char *search, int prompt);
+void		editor_search_position_cursor(t_env *e, char *search);
 
 /*
 **   COMPLETION

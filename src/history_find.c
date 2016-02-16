@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/15 00:43:21 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/02/15 01:42:19 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/02/16 02:17:22 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,19 @@
 
 char	*history_find(t_env *e, char *str, int num)
 {
-	t_histo	*cur;
-	int		i;
+	char	*find;
 
-	i = 1;
-	cur = e->histo;
-	while (cur)
+	if (num == 1)
+		e->histo_cur = e->histo;
+	while (e->histo_cur)
 	{
-		if (ft_strstr(cur->line, str))
+		if (ft_strstr(e->histo_cur->line, str))
 		{
-			if (i == num)
-				return (ft_strdup(cur->line));
-			else
-				i++;
+			find = (ft_strdup(e->histo_cur->line));
+			e->histo_cur = e->histo_cur->up;
+			return (find);
 		}
-		cur = cur->up;
+		e->histo_cur = e->histo_cur->up;
 	}
 	return (NULL);
 }
