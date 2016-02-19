@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/02/06 00:07:55 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/02/19 01:35:50 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,9 @@ void	parse_cmd(t_env *e)
 	parse_cmd_put_error(&p);
 	if (!p.error)
 		process_cmd(e);
+
 	free_cmd(e);
+
 }
 
 void	parse_cmd_init(t_env *e, t_parse *p)

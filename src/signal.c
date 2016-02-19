@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/13 19:14:16 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/12 17:33:41 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/02/19 01:51:19 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ void	sig_handler(t_env *e, int signum)
 
 	if (!se && e)
 		se = e;
+//	ft_printf("\nsig=%d\n", signum);
 	if (signum == SIGSEGV || signum == SIGABRT
 			|| signum == SIGILL || signum == SIGFPE || signum == SIGBUS)
 	{

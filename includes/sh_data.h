@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/02/06 00:50:04 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/02/19 01:18:14 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@
 # define NONE 0
 # define SIMP 1
 # define DOUB 2
+# define BACK 3
 
 # define NONE 0
 # define R_IN 1
@@ -169,6 +170,7 @@ typedef struct	s_cmd
 
 typedef struct	s_env
 {
+	char			sub;
 	char			**var;
 	int				tab_size;
 	char			**path;
