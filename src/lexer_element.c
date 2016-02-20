@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/06 00:29:40 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/02/06 00:35:43 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/02/20 01:34:01 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,16 @@ int		lexer_quotes(t_env *e, t_parse *l)
 			l->quo = NONE;
 		else
 			l->quo = DOUB;
+	}
+	else if (e->line[l->i] == '`' && l->quo != SIMP	&& !l->escape)
+	{
+		if (l->bquo)
+			l->bquo = NONE;
+		else
+		{
+			l->bquo = 1;
+			l->a_id = 0;
+		}
 	}
 	else
 		return (lexer_operator_delim(e, l));
