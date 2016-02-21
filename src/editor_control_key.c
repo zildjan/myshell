@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 16:42:30 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/02/15 02:31:52 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/02/20 23:45:07 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,16 @@ int		process_break_key(t_env *e, int ret, char *buf)
 {
 	if (ret == 1 && buf[0] == 10)
 	{
+//		t_parse	*l;
+
+//	if (p->quo && !p->escape)
+//		p->buf[p->ib++] = '\n';
+
+//		p->error = get_cmd_end(e, p->separ);
+
 		ft_putchar('\n');
+
+//		if ()
 		return (-1);
 	}
 	else if (ret == 1 && buf[0] == 3)

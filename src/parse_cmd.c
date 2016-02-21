@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/02/19 01:35:50 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/02/23 01:14:39 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,7 @@ void	parse_cmd(t_env *e)
 	parse_cmd_put_error(&p);
 	if (!p.error)
 		process_cmd(e);
-
 	free_cmd(e);
-
 }
 
 void	parse_cmd_init(t_env *e, t_parse *p)
@@ -48,6 +46,7 @@ void	parse_cmd_init(t_env *e, t_parse *p)
 	p->a_id = 0;
 	e->nb_cmd = 1;
 	p->quo = NONE;
+	p->bquo = NONE;
 	p->escape = 0;
 	p->separ = 0;
 	p->last_arg = NULL;
@@ -71,35 +70,13 @@ int		parse_cmd_check_eol(t_env *e, t_parse *p)
 	if (p->error)
 		return (1);
 	if (!e->line[++p->i])
-		if (parse_cmd_get_eol(e, p))
-			return (1);
-	return (0);
-}
-
-int		parse_cmd_get_eol(t_env *e, t_parse *p)
-{
-	if (e->term)
-		history_add(e, p->escape);
-	if (p->ib && !p->quo && !p->escape)
-		parse_add_arg(e, p);
-	if (p->quo == SIMP)
-		p->error = get_cmd_end(e, '\'');
-	else if (p->quo == DOUB)
-		p->error = get_cmd_end(e, '"');
-	else if (p->escape)
-		p->error = get_cmd_end(e, 0);
-	else if (!p->a_id && p->separ)
-		p->error = get_cmd_end(e, p->separ);
-	else
+	{
+		if (p->ib && !p->quo && !p->escape)
+			parse_add_arg(e, p);
+		if (parse_cmd_is_end(p))
+			p->error = EP_EOF;
 		return (1);
-	if (p->quo && !p->escape)
-		p->buf[p->ib++] = '\n';
-	parse_cmd_cleanline(e);
-	p->line_len = ft_strlen(e->line);
-	if (p->line_len > MAX_LEN_LINE || (!p->line_len && p->escape))
-		return (1);
-	p->i = 0;
-	p->escape = 0;
+	}
 	return (0);
 }
 
@@ -123,5 +100,20 @@ void	parse_cmd_loop_end(t_env *e, t_parse *p)
 		p->error = EP_MISS_REDIREC;
 	free(p->buf);
 	e->cid = 0;
-	history_save_ent(e);
+}
+
+int		parse_cmd_is_end(t_parse *p)
+{
+	if (p->quo == SIMP)
+		return ('\'');
+	else if (p->quo == DOUB)
+		return ('"');
+	else if (p->bquo)
+		return ('`');
+	else if (p->escape)
+		return ('\\');
+	else if (!p->a_id && p->separ)
+		return (p->separ);
+	else
+		return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/02/19 01:04:08 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/02/21 00:52:48 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -283,8 +283,7 @@ int			lexer_space_escape(t_env *e, t_parse *l);
 */
 void		history_init(t_env *e);
 void		history_load(t_env *e);
-void		history_add(t_env *e, char escape);
-void		history_save_ent(t_env *e);
+void		history_save_ent(t_env *e, char *ent);
 void		history_add_to_mem(t_env *e, char *line);
 
 /*
@@ -298,8 +297,8 @@ char		*history_find(t_env *e, char *str, int num);
 void		parse_cmd(t_env *e);
 void		parse_cmd_init(t_env *e, t_parse *p);
 int			parse_cmd_check_eol(t_env *e, t_parse *p);
-int			parse_cmd_get_eol(t_env *e, t_parse *p);
 void		parse_cmd_loop_end(t_env *e, t_parse *p);
+int			parse_cmd_is_end(t_parse *p);
 
 /*
 **   PARSE_CMD_ELEMENT_P1
@@ -351,7 +350,7 @@ void		parse_tilde_expansion(t_env *e, t_parse *p);
 **   PARSE_CMD_SUBSTITUTION
 */
 void		parse_cmd_substitution(t_env *e, t_parse *p);
-void		parse_cmd_substitution_parse(t_env *e, t_parse *p);
+int			parse_cmd_substitution_gotoend(t_env *e, t_parse *p);
 
 /*
 **   EXECUTE

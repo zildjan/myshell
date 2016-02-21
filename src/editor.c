@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 16:40:20 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/02/15 02:32:13 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/02/21 00:19:11 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,9 @@ int		get_term_line_input(t_env *e, int eof_exit)
 		free(e->line_save);
 	close_line_edition(e);
 	completion_free(e);
+
+	history_save_ent(e, e->line);
+
 	return (e->line_len);
 }
 

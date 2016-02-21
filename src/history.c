@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/07 19:24:51 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/02/21 00:22:19 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ void	history_load(t_env *e)
 	int		fd;
 
 	e->histo_size = 0;
-	e->histo_line = NULL;
 	if ((fd = open(e->histo_file, O_RDONLY, 0444)) == -1)
 		return ;
 	while ((ret = get_next_line(fd, &line)))
@@ -46,43 +45,22 @@ void	history_init(t_env *e)
 	history_load(e);
 }
 
-void	history_add(t_env *e, char escape)
-{
-	int		len;
-
-	e->histo_line = ft_strdupcat(e->histo_line, e->line);
-	if (e->histo_line && escape)
-	{
-		len = ft_strlen(e->histo_line);
-		if (e->histo_line[len - 1] == '\\')
-			e->histo_line[len - 1] = 0;
-	}
-}
-
-void	history_save_ent(t_env *e)
+void	history_save_ent(t_env *e, char *ent)
 {
 	int		fd;
 
-	if (!e->histo_line)
+	if (!ent)
 		return ;
 	if (e->histo)
-		if (ft_strequ(e->histo->line, e->histo_line))
-		{
-			if (e->histo_line)
-				free(e->histo_line);
-			e->histo_line = NULL;
+		if (ft_strequ(e->histo->line, ent))
 			return ;
-		}
 	fd = open(e->histo_file, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (fd != -1)
 	{
-		ft_putendl_fd(e->histo_line, fd);
+		ft_putendl_fd(ent, fd);
 		close(fd);
 	}
-	history_add_to_mem(e, e->histo_line);
-	if (e->histo_line)
-		free(e->histo_line);
-	e->histo_line = NULL;
+	history_add_to_mem(e, ent);
 }
 
 void	history_add_to_mem(t_env *e, char *line)

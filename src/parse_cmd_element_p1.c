@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 17:04:22 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/02/19 00:44:29 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/02/21 00:58:56 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,8 @@ int		parse_cmd_quotes(t_env *e, t_parse *p)
 		else
 			p->quo = DOUB;
 	}
-	else if (e->line[p->i] == '`' && (!p->quo || p->quo == DOUB)
-			&& !p->escape)
-	{
+	else if (e->line[p->i] == '`' && p->quo != SIMP	&& !p->escape)
 		parse_cmd_substitution(e, p);
-	}
 	else
 		return (parse_cmd_operator(e, p));
 	return (1);

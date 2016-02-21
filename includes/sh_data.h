@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/02/20 01:08:38 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/02/21 00:51:52 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,7 +200,6 @@ typedef struct	s_env
 	t_histo			*histo;
 	t_histo			*histo_cur;
 	int				histo_size;
-	char			*histo_line;
 	t_ti			t;
 	char			*term_name;
 	struct termios	*term;
