@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 16:40:20 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/02/21 00:19:11 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/03/25 18:16:33 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,9 @@ int		get_term_line_input(t_env *e, int eof_exit)
 	{
 		ft_bzero(buf, 8);
 		ret = read(0, &buf, 7);
+
+//		ft_printf("'%d' '%d' ret=%d\n", buf[0], buf[1], ret);
+
 		if (!(ret = process_all_key(e, ret, buf, eof_exit)))
 			get_input_chars(e, buf);
 		if (ret == -1)
@@ -61,10 +64,11 @@ int		process_all_key(t_env *e, int ret, char *buf, int eof_exit)
 
 void	get_input_chars(t_env *e, char *buf)
 {
-	while (ft_isprint(*buf))
+	while (ft_isprint(*buf) || is_aspace(*buf))
 	{
-		if (*buf == '\t')
-			*buf = ' ';
+//		if (*buf == '\t')
+//			*buf = ' ';
+//		ft_printf("'%d' '%d'\n", buf[0], buf[1]);
 		get_input_char(e, *buf++);
 	}
 }
@@ -88,6 +92,7 @@ void	get_input_char(t_env *e, char c)
 	tputs(tgetstr("im", NULL), 0, ft_outc);
 	if (!e->t.eo)
 		tputs(tgetstr("ic", NULL), 0, ft_outc);
+//ft_printf("'%d'\n", c);
 	ft_putchar(c);
 	if (e->t.xn && is_end_of_line(e, e->cur))
 		ft_putchar('\n');

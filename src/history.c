@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/02/21 00:22:19 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/03/14 18:41:21 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,11 @@ void	history_save_ent(t_env *e, char *ent)
 	int		fd;
 
 	if (!ent)
+		return ;
+	fd = 0;
+	while (ent[fd] && is_aspace(ent[fd]))
+		fd++;
+	if (fd == (int)ft_strlen(ent))
 		return ;
 	if (e->histo)
 		if (ft_strequ(e->histo->line, ent))

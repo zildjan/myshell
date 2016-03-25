@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/10 00:23:28 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/10 00:36:55 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/03/25 18:45:59 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ void	term_load_info(t_env *e)
 	e->t.mi = tgetflag("mi");
 	e->t.eo = tgetflag("eo");
 	e->t.xn = tgetflag("xn");
+	e->t.tab_len = 8;
+	e->t.tab_len = tgetnum("it");
 	term_load_key_default(e);
 	term_load_key(e);
 }

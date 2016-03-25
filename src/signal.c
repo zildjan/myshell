@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/13 19:14:16 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/02/19 01:51:19 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/03/25 17:44:29 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ void	sig_print(int signum)
 
 void	catch_signal(void)
 {
+
 	signal(SIGINT, sig_mediator);
 	signal(SIGQUIT, sig_mediator);
 	signal(SIGTSTP, sig_mediator);
@@ -42,6 +43,12 @@ void	catch_signal(void)
 	signal(SIGFPE, sig_mediator);
 	signal(SIGBUS, sig_mediator);
 	signal(SIGWINCH, sig_mediator);
+// */
+/*
+	int		i = 1;
+	while (i <= 31)
+		signal(i++, sig_mediator);
+*/
 }
 
 void	sig_handler(t_env *e, int signum)
