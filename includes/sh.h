@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/02/21 00:52:48 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/02 20:25:29 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -213,6 +213,7 @@ void		realloc_input_line(t_env *e);
 int			is_end_of_line(t_env *e, int cur);
 int			ft_outc(int c);
 void		close_line_edition(t_env *e);
+int			get_cur_pos(t_env *e, int cur);
 
 /*
 **   EDITOR_COMPLETION

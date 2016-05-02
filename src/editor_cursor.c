@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 16:46:21 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/02/04 00:40:41 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/02 22:56:23 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,19 @@ int		move_cursor_right(t_env *e)
 				tputs(tgetstr("nw", NULL), 0, ft_outc);
 		}
 		else
-			tputs(tgetstr("nd", NULL), 0, ft_outc);
+		{
+			int		nb;
+
+			nb = 1;
+			if (e->line[e->cur - 1] == '\t')
+			{
+				nb = (get_cur_pos(e, e->cur - 1) % e->ws_col);
+				nb %= e->t.tab_len;
+				nb = e->t.tab_len - nb;
+			}
+			while (nb--)
+				tputs(tgetstr("nd", NULL), 0, ft_outc);
+		}
 		return (1);
 	}
 	else
@@ -52,7 +64,19 @@ int		move_cursor_left(t_env *e)
 			}
 		}
 		else
-			tputs(tgetstr("le", NULL), 0, ft_outc);
+		{
+			int		nb;
+
+			nb = 1;
+			if (e->line[e->cur] == '\t')
+			{
+				nb = (get_cur_pos(e, e->cur - 1) % e->ws_col);
+				nb %= e->t.tab_len;
+				nb = e->t.tab_len - nb;
+			}
+			while (nb--)
+				tputs(tgetstr("le", NULL), 0, ft_outc);
+		}
 		return (1);
 	}
 	else
