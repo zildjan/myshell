@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 16:46:21 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/02 22:56:23 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/13 23:29:13 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,10 @@ int		move_cursor_right(t_env *e)
 			nb = 1;
 			if (e->line[e->cur - 1] == '\t')
 			{
-				nb = (get_cur_pos(e, e->cur - 1) % e->ws_col);
+				nb = (get_cur_pos(e, e->cur - 2) % e->ws_col);
 				nb %= e->t.tab_len;
 				nb = e->t.tab_len - nb;
+//				ft_printf("\n~->%ld get=%ld ->%ld\n", e->prompt_len, get_cur_pos(e, e->cur -2), nb);
 			}
 			while (nb--)
 				tputs(tgetstr("nd", NULL), 0, ft_outc);

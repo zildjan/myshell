@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 16:47:23 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/02 22:46:28 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/13 23:02:18 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,25 @@ int		get_cur_pos(t_env *e, int cur)
 		}
 		else
 			pos++;
-	}	
+	}
+
+//	ft_printf("\npos=%ld\n", pos);
+
+/*
+	int save;
+
+		ft_putchar('\n');
+		close_line_edition(e);
+		if (editor_completion_print_ask(e))
+			editor_completion_print_col(e);
+		print_prompt(e);
+		ft_putstr(e->line);
+		save = e->cur;
+		e->cur = e->line_len;
+		while (e->cur > save)
+			move_cursor_left(e);
+// */
+
 	return (pos);
 }
 
