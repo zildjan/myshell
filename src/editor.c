@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 16:40:20 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/03/25 18:16:33 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/16 20:35:53 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ void	get_input_char(t_env *e, char c)
 		tputs(tgetstr("ic", NULL), 0, ft_outc);
 //ft_printf("'%d'\n", c);
 	ft_putchar(c);
-	if (e->t.xn && is_end_of_line(e, e->cur))
+	if (e->t.xn && is_end_of_line(e, e->cur) && e->line[e->cur - 1] != '\t')
 		ft_putchar('\n');
 	tputs(tgetstr("ip", NULL), 0, ft_outc);
 	tputs(tgetstr("ei", NULL), 0, ft_outc);

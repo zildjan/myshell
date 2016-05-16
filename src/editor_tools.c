@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 16:47:23 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/16 00:48:31 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/16 22:50:22 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	realloc_input_line(t_env *e)
 
 int		is_end_of_line(t_env *e, int cur)
 {
-	if (!(get_cur_pos(e, cur) % e->ws_col))
+	if (!((get_cur_pos(e, cur)) % e->ws_col))
 	{
 		return (1);
 	}
@@ -50,29 +50,26 @@ int		get_cur_pos(t_env *e, int cur)
 		if (e->line[i] == '\t')
 		{
 			tmp = pos % e->ws_col;
-			tmp = tmp % e->t.tab_len;
-			pos += e->t.tab_len - tmp;
+			if ((tmp + e->t.tab_len > e->ws_col) && (e->ws_col % e->t.tab_len != 0))
+			{
+				pos += e->ws_col - tmp;
+			}
+			else
+			{
+				tmp = tmp % e->t.tab_len;
+				pos += e->t.tab_len - tmp;
+			}
 		}
 		else
 			pos++;
 	}
 
+//	if (e->line[i - 1] == '\t' && (pos % e->ws_col) < e->t.tab_len
+//		&& (pos % e->ws_col) > 0)
+//		pos -= e->t.tab_len - (e->ws_col % e->t.tab_len);
+
+
 //	ft_printf("\npos=%ld\n", pos);
-
-/*
-	int save;
-
-		ft_putchar('\n');
-		close_line_edition(e);
-		if (editor_completion_print_ask(e))
-			editor_completion_print_col(e);
-		print_prompt(e);
-		ft_putstr(e->line);
-		save = e->cur;
-		e->cur = e->line_len;
-		while (e->cur > save)
-			move_cursor_left(e);
-// */
 
 	return (pos);
 }

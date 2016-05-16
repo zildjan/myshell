@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 16:44:00 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/12 16:44:23 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/16 19:11:30 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,10 +71,10 @@ int		process_prev_word_key(t_env *e, int ret, char *buf)
 	if (ft_strequ(buf, e->t.kl_s))
 	{
 		if (e->cur > 0)
-			while (e->cur > 0 && e->line[e->cur - 1] == ' ')
+			while (e->cur > 0 && is_aspace(e->line[e->cur - 1]))
 				move_cursor_left(e);
 		if (e->cur > 0)
-			while (e->cur > 0 && e->line[e->cur - 1] != ' ')
+			while (e->cur > 0 && !is_aspace(e->line[e->cur - 1]))
 				move_cursor_left(e);
 	}
 	else
@@ -86,9 +86,9 @@ int		process_next_word_key(t_env *e, int ret, char *buf)
 {
 	if (ft_strequ(buf, e->t.kr_s))
 	{
-		while (e->cur < e->line_len && e->line[e->cur] == ' ')
+		while (e->cur < e->line_len && is_aspace(e->line[e->cur]))
 			move_cursor_right(e);
-		while (e->cur < e->line_len && e->line[e->cur] != ' ')
+		while (e->cur < e->line_len && !is_aspace(e->line[e->cur]))
 			move_cursor_right(e);
 	}
 	else
