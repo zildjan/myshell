@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 16:46:21 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/13 23:29:13 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/16 02:02:40 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,27 +17,28 @@ int		move_cursor_right(t_env *e)
 	if (e->cur < e->line_len)
 	{
 		e->cur++;
-		if (is_end_of_line(e, e->cur))
+		int		nb;
+		
+		nb = 1;
+		if (e->line[e->cur - 1] == '\t')
 		{
-			if (e->t.xn)
-				tputs(tgetstr("do", NULL), 0, ft_outc);
-			else
-				tputs(tgetstr("nw", NULL), 0, ft_outc);
+			nb = (get_cur_pos(e, e->cur - 1) % e->ws_col);
+			nb %= e->t.tab_len;
+			nb = e->t.tab_len - nb;
 		}
-		else
+		while (nb--)
 		{
-			int		nb;
-
-			nb = 1;
-			if (e->line[e->cur - 1] == '\t')
+			if (!((get_cur_pos(e, e->cur) + nb) % e->ws_col))
 			{
-				nb = (get_cur_pos(e, e->cur - 2) % e->ws_col);
-				nb %= e->t.tab_len;
-				nb = e->t.tab_len - nb;
-//				ft_printf("\n~->%ld get=%ld ->%ld\n", e->prompt_len, get_cur_pos(e, e->cur -2), nb);
+				if (e->t.xn)
+					tputs(tgetstr("do", NULL), 0, ft_outc);
+				else
+					tputs(tgetstr("nw", NULL), 0, ft_outc);
 			}
-			while (nb--)
+			else
+			{
 				tputs(tgetstr("nd", NULL), 0, ft_outc);
+			}
 		}
 		return (1);
 	}
@@ -71,7 +72,7 @@ int		move_cursor_left(t_env *e)
 			nb = 1;
 			if (e->line[e->cur] == '\t')
 			{
-				nb = (get_cur_pos(e, e->cur - 1) % e->ws_col);
+				nb = (get_cur_pos(e, e->cur) % e->ws_col);
 				nb %= e->t.tab_len;
 				nb = e->t.tab_len - nb;
 			}

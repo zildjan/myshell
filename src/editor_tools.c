@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 16:47:23 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/13 23:02:18 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/16 00:48:31 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	realloc_input_line(t_env *e)
 
 int		is_end_of_line(t_env *e, int cur)
 {
-	if (!((cur + e->prompt_len) % e->ws_col))
+	if (!(get_cur_pos(e, cur) % e->ws_col))
 	{
 		return (1);
 	}
@@ -45,7 +45,7 @@ int		get_cur_pos(t_env *e, int cur)
 
 	pos = e->prompt_len;
 	i = -1;
-	while (++i <= cur && i <= e->line_len)
+	while (++i < cur && i < e->line_len)
 	{
 		if (e->line[i] == '\t')
 		{
