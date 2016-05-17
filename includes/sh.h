@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/02 20:25:29 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/17 20:26:17 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -204,6 +204,7 @@ void		switch_to_histo(t_env *e);
 */
 int			move_cursor_right(t_env *e);
 int			move_cursor_left(t_env *e);
+void		refresh_eol(t_env *e);
 void		move_cursor_back(t_env *e, char delete, int i);
 
 /*

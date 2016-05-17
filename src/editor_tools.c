@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 16:47:23 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/16 22:50:22 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/17 20:14:41 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,11 +63,6 @@ int		get_cur_pos(t_env *e, int cur)
 		else
 			pos++;
 	}
-
-//	if (e->line[i - 1] == '\t' && (pos % e->ws_col) < e->t.tab_len
-//		&& (pos % e->ws_col) > 0)
-//		pos -= e->t.tab_len - (e->ws_col % e->t.tab_len);
-
 
 //	ft_printf("\npos=%ld\n", pos);
 

@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 16:46:21 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/16 22:50:45 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/17 20:44:13 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,12 @@
 
 int		move_cursor_right(t_env *e)
 {
+	int		nb;
+
 	if (e->cur < e->line_len)
 	{
 		e->cur++;
-		int		nb;
-		
+
 		nb = 1;
 		if (e->line[e->cur - 1] == '\t')
 		{
@@ -26,13 +27,8 @@ int		move_cursor_right(t_env *e)
 			nb %= e->t.tab_len;
 			nb = e->t.tab_len - nb;
 		}
-//		while (nb--)
-//		{
-//			if (!((get_cur_pos(e, e->cur) + nb) % e->ws_col))
-
 		if (is_end_of_line(e, e->cur))
 		{
-			//		ft_printf("\nYEAH");
 			if (e->t.xn)
 				tputs(tgetstr("do", NULL), 0, ft_outc);
 			else
@@ -41,9 +37,7 @@ int		move_cursor_right(t_env *e)
 		else
 		{
 			while (nb-- > 0)
-			{
 				tputs(tgetstr("nd", NULL), 0, ft_outc);
-			}
 		}
 		return (1);
 	}
@@ -53,29 +47,20 @@ int		move_cursor_right(t_env *e)
 
 int		move_cursor_left(t_env *e)
 {
-	int i;
+	int		i;
 	int		nb;
 
-//	ft_printf("\ncur=%d w=%d\n", get_cur_pos(e, e->cur), e->ws_col);
 
 	if (e->cur > 0)
 	{
 		e->cur--;
-
-
-		nb = 1;
-
-		
+		nb = 1;	
 		if (is_end_of_line(e, e->cur + 1))
-//			if (!((get_cur_pos(e, e->cur) + nb) % e->ws_col))
 		{
-//			ft_printf("\nYEAH -->\n");
 			tputs(tgetstr("up", NULL), 0, ft_outc);
 
 			if (e->t.mi)
-			{
 				tputs(tgoto(tgetstr("ch", NULL), 0, e->ws_col - 1), 0, ft_outc);
-			}
 			else
 			{
 				i = e->ws_col;
@@ -93,27 +78,39 @@ int		move_cursor_left(t_env *e)
 
 			if (is_end_of_line(e, e->cur + 1))
 				nb = e->ws_col - (get_cur_pos(e, e->cur) % e->ws_col) - 1;
-
-//			if (is_end_of_line(e, e->cur + 1))
-//				nb = (e->ws_col % e->t.tab_len) - 1;
 		}
-//		if (nb < 0)
-//			nb = e->t.tab_len - 1;
 
-//		ft_printf("\ncur=%ld w=%ld\n", get_cur_pos(e, e->cur), e->ws_col);
 //		ft_printf("\nnb=%ld cur=%ld w=%ld\n", nb, (get_cur_pos(e, e->cur) % e->ws_col), e->ws_col);
-
 //		ft_printf("\nYEAH --> nb=%d\n", nb);
 
 		while (nb-- > 0)
-		{
 				tputs(tgetstr("le", NULL), 0, ft_outc);
-		}
 
 		return (1);
 	}
 	else
 		return (0);
+}
+
+void	refresh_eol(t_env *e)
+{
+	int		cur_save;
+
+	ft_putstr(e->line + e->cur);
+	cur_save = e->cur;
+	e->cur = e->line_len;
+
+//	ft_printf("\nYEAH --> cur=%d save=%d\n", e->cur, cur_save);
+
+	if (is_end_of_line(e, e->line_len))
+		e->cur--;
+
+	while (cur_save < e->cur)
+		move_cursor_left(e);
+
+//	ft_putnchar(n, ' ');
+
+//	move_cursor_back(e, 1, 0);
 }
 
 void	move_cursor_back(t_env *e, char delete, int i)

@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 16:40:20 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/16 20:35:53 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/17 20:41:14 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,12 +63,13 @@ int		process_all_key(t_env *e, int ret, char *buf, int eof_exit)
 }
 
 void	get_input_chars(t_env *e, char *buf)
-{
-	while (ft_isprint(*buf) || is_aspace(*buf))
+{		
+	while (ft_isprint(*buf) || is_aspace(*buf) || *buf == -115 || *buf == -119)
 	{
-//		if (*buf == '\t')
-//			*buf = ' ';
-//		ft_printf("'%d' '%d'\n", buf[0], buf[1]);
+		if (*buf == -115)
+			*buf = '\n';
+		else if (*buf == -119)
+			*buf = '\t';
 		get_input_char(e, *buf++);
 	}
 }
@@ -89,16 +90,24 @@ void	get_input_char(t_env *e, char c)
 	}
 	e->line[e->cur++] = c;
 	e->line_len++;
+
+	tputs(tgetstr("dm", NULL), 0, ft_outc);
+	tputs(tgetstr("cd", NULL), 0, ft_outc);
+	tputs(tgetstr("ed", NULL), 0, ft_outc);
+
 	tputs(tgetstr("im", NULL), 0, ft_outc);
 	if (!e->t.eo)
 		tputs(tgetstr("ic", NULL), 0, ft_outc);
 //ft_printf("'%d'\n", c);
 	ft_putchar(c);
-	if (e->t.xn && is_end_of_line(e, e->cur) && e->line[e->cur - 1] != '\t')
-		ft_putchar('\n');
+//	if (e->t.xn && is_end_of_line(e, e->cur) && e->line[e->cur - 1] != '\t')
+//		ft_putchar('\n');
+
 	tputs(tgetstr("ip", NULL), 0, ft_outc);
 	tputs(tgetstr("ei", NULL), 0, ft_outc);
-	ft_putstr(e->line + e->cur);
-	move_cursor_back(e, 0, 0);
+
+	refresh_eol(e);
+//	ft_putstr(e->line + e->cur);
+//	move_cursor_back(e, 0, 0);
 	realloc_input_line(e);
 }

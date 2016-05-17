@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 16:42:30 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/03/25 17:35:57 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/17 16:53:55 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,11 +67,11 @@ int		process_break_key(t_env *e, int ret, char *buf)
 
 int		process_completion_key(t_env *e, int ret, char *buf)
 {
-//	if (ret == 1 && buf[0] == 9)
-//	{
-//		editor_completion(e);
-//	}
-//	else
+	if (ret == 1 && buf[0] == 9)
+	{
+		editor_completion(e);
+	}
+	else
 		return (process_cursor_key(e, ret, buf));
-//	return (1);
+	return (1);
 }
