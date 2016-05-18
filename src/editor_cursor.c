@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 16:46:21 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/17 20:44:13 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/18 18:07:11 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,11 +50,12 @@ int		move_cursor_left(t_env *e)
 	int		i;
 	int		nb;
 
+//	ft_printf("\nYEAH --> cur=%d\n", get_cur_pos(e, e->cur));
 
 	if (e->cur > 0)
 	{
 		e->cur--;
-		nb = 1;	
+		nb = 1;
 		if (is_end_of_line(e, e->cur + 1))
 		{
 			tputs(tgetstr("up", NULL), 0, ft_outc);
@@ -69,7 +70,7 @@ int		move_cursor_left(t_env *e)
 			}
 			nb = 0;
 		}
-
+//*/
 		if (e->line[e->cur] == '\t')
 		{
 			nb = (get_cur_pos(e, e->cur) % e->ws_col);
@@ -102,7 +103,7 @@ void	refresh_eol(t_env *e)
 
 //	ft_printf("\nYEAH --> cur=%d save=%d\n", e->cur, cur_save);
 
-	if (is_end_of_line(e, e->line_len))
+	if (is_end_of_line(e, e->line_len) && cur_save != e->line_len)
 		e->cur--;
 
 	while (cur_save < e->cur)

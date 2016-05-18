@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 16:40:20 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/17 20:41:14 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/18 22:55:40 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ void	get_input_char(t_env *e, char c)
 	tputs(tgetstr("ed", NULL), 0, ft_outc);
 
 	tputs(tgetstr("im", NULL), 0, ft_outc);
-	if (!e->t.eo)
+8	if (!e->t.eo)
 		tputs(tgetstr("ic", NULL), 0, ft_outc);
 //ft_printf("'%d'\n", c);
 	ft_putchar(c);
