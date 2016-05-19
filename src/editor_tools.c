@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 16:47:23 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/17 20:14:41 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/19 21:24:56 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,12 @@ int		get_cur_pos(t_env *e, int cur)
 	{
 		if (e->line[i] == '\t')
 		{
+//			ft_printf("\nYEAH cur=%d --\n", pos);
+//			print_prompt(e);
+//			ft_putstr(e->line);
 			tmp = pos % e->ws_col;
-			if ((tmp + e->t.tab_len > e->ws_col) && (e->ws_col % e->t.tab_len != 0))
+			if ((tmp + (e->ws_col % e->t.tab_len) >= e->ws_col)
+				&& (e->ws_col % e->t.tab_len != 0))
 			{
 				pos += e->ws_col - tmp;
 			}

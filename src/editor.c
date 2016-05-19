@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 16:40:20 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/18 22:55:40 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/19 19:33:49 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,12 +96,18 @@ void	get_input_char(t_env *e, char c)
 	tputs(tgetstr("ed", NULL), 0, ft_outc);
 
 	tputs(tgetstr("im", NULL), 0, ft_outc);
-8	if (!e->t.eo)
+	if (!e->t.eo)
 		tputs(tgetstr("ic", NULL), 0, ft_outc);
 //ft_printf("'%d'\n", c);
 	ft_putchar(c);
-//	if (e->t.xn && is_end_of_line(e, e->cur) && e->line[e->cur - 1] != '\t')
+	if (e->t.xn && is_end_of_line(e, e->cur) && e->line[e->cur - 1] != '\t')
+	{
+		if (e->t.xn)
+			tputs(tgetstr("do", NULL), 0, ft_outc);
+		else
+			tputs(tgetstr("nw", NULL), 0, ft_outc);
 //		ft_putchar('\n');
+	}
 
 	tputs(tgetstr("ip", NULL), 0, ft_outc);
 	tputs(tgetstr("ei", NULL), 0, ft_outc);

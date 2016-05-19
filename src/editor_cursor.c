@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 16:46:21 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/18 18:07:11 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/19 21:25:28 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ int		move_cursor_left(t_env *e)
 		nb = 1;
 		if (is_end_of_line(e, e->cur + 1))
 		{
+//		ft_printf("\nYEAH --> nb=%d\n", nb);			
 			tputs(tgetstr("up", NULL), 0, ft_outc);
 
 			if (e->t.mi)
@@ -68,9 +69,10 @@ int		move_cursor_left(t_env *e)
 				while (i--)
 					tputs(tgetstr("nd", NULL), 0, ft_outc);
 			}
+
 			nb = 0;
 		}
-//*/
+
 		if (e->line[e->cur] == '\t')
 		{
 			nb = (get_cur_pos(e, e->cur) % e->ws_col);
@@ -97,18 +99,46 @@ void	refresh_eol(t_env *e)
 {
 	int		cur_save;
 
-	ft_putstr(e->line + e->cur);
+//	sleep(1);
+
+//	ft_putstr(e->line + e->cur);
+//	usleep(10);
+
+	cur_save = e->cur;
+	while (e->line[cur_save] && cur_save <= e->line_len)
+	{
+		ft_putchar(e->line[cur_save]);
+		if (e->t.xn && is_end_of_line(e, cur_save + 1) && e->line[cur_save] != '\t')
+		{
+			if (e->t.xn)
+				tputs(tgetstr("do", NULL), 0, ft_outc);
+			else
+				tputs(tgetstr("nw", NULL), 0, ft_outc);
+		}
+
+
+//		if (e->t.xn && is_end_of_line(e, cur_save) && e->line[cur_save - 1] != '\t')
+//			ft_putchar('\n');
+		cur_save++;
+	}
+
+//*/
+
 	cur_save = e->cur;
 	e->cur = e->line_len;
 
 //	ft_printf("\nYEAH --> cur=%d save=%d\n", e->cur, cur_save);
 
-	if (is_end_of_line(e, e->line_len) && cur_save != e->line_len)
-		e->cur--;
+//	if (is_end_of_line(e, e->line_len) && cur_save != e->line_len)
+//		e->cur--;
+
 
 	while (cur_save < e->cur)
+	{
+//		usleep(950000);
 		move_cursor_left(e);
-
+	}
+//	sleep(1);
 //	ft_putnchar(n, ' ');
 
 //	move_cursor_back(e, 1, 0);

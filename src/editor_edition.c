@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 16:49:14 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/17 20:30:25 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/19 22:30:25 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,7 @@ void	delete_input_nchar(t_env *e, int n)
 	}
 	tputs(tgetstr("dm", NULL), 0, ft_outc);
 	tputs(tgetstr("cd", NULL), 0, ft_outc);
-//	i = n;
-//	while (i--)
-//		tputs(tgetstr("dc", NULL), 0, ft_outc);
 	tputs(tgetstr("ed", NULL), 0, ft_outc);
-
-
 
 	e->line_len -= n;
 
@@ -48,8 +43,8 @@ void	backdelete_input_char(t_env *e, char no_mem)
 	int		i;
 
 	i = e->cur - 1;
-
 	move_cursor_left(e);
+
 	tputs(tgetstr("dm", NULL), 0, ft_outc);
 	tputs(tgetstr("cd", NULL), 0, ft_outc);
 	tputs(tgetstr("ed", NULL), 0, ft_outc);
@@ -60,10 +55,6 @@ void	backdelete_input_char(t_env *e, char no_mem)
 		i++;
 	}
 
-//	if (!no_mem)
-//		ft_putstr(e->line + e->cur);
-//	ft_putchar(' ');
-//	move_cursor_back(e, 1, 0);
 	e->line_len--;
 
 	if (!no_mem)
