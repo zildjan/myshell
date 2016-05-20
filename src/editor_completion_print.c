@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/06 00:43:31 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/02/07 00:52:24 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/20 19:54:25 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	editor_completion_print(t_env *e)
 		if (editor_completion_print_ask(e))
 			editor_completion_print_col(e);
 		print_prompt(e);
-		ft_putstr(e->line);
+		put_line(e, 0);
 		save = e->cur;
 		e->cur = e->line_len;
 		while (e->cur > save)

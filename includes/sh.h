@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/17 20:26:17 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/20 19:39:13 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,7 +194,7 @@ int			process_histo_down_key(t_env *e, char *buf);
 **   EDITOR EDITION
 */
 void		delete_input_nchar(t_env *e, int n);
-void		backdelete_input_char(t_env *e, char no_mem);
+void		backdelete_input_char(t_env *e);
 void		cut_input_line(t_env *e);
 void		paste_input_line(t_env *e);
 void		switch_to_histo(t_env *e);
@@ -205,6 +205,8 @@ void		switch_to_histo(t_env *e);
 int			move_cursor_right(t_env *e);
 int			move_cursor_left(t_env *e);
 void		refresh_eol(t_env *e);
+void		put_line_char(t_env *e, int cur);
+void		put_line(t_env *e, int start);
 void		move_cursor_back(t_env *e, char delete, int i);
 
 /*

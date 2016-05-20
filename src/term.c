@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/02/07 01:45:27 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/20 19:47:50 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	term_init(t_env *e)
 	e->term_status = 0;
 	if (tgetent(NULL, e->term_name) != 1)
 		return ;
-	if (isatty(0))
+	if (isatty(0) && isatty(1) && isatty(2))
 	{
 		e->term = ft_memalloc(sizeof(struct termios));
 		if (tcgetattr(0, e->term) == -1)

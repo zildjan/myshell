@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/16 03:16:30 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/02/16 03:18:51 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/20 19:42:30 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,26 +16,26 @@ void	editor_search_print(t_env *e, char *line, char *search, int prompt)
 {
 	int		len;
 
-	while (e->cur < e->line_len)
-		move_cursor_right(e);
-	while (e->cur)
-		backdelete_input_char(e, 1);
+	while (e->cur > 0)
+		move_cursor_left(e);
 	len = e->prompt_len;
 	while (len)
 	{
 		e->cur++;
-		e->line_len++;
-		backdelete_input_char(e, 1);
+		move_cursor_left(e);
 		len--;
 	}
+	tputs(tgetstr("dm", NULL), 0, ft_outc);
+	tputs(tgetstr("cd", NULL), 0, ft_outc);
+	tputs(tgetstr("ed", NULL), 0, ft_outc);
 	editor_search_print_prompt(e, search, prompt);
 	if (e->line != e->line_save)
 		free(e->line);
 	e->line = ft_strdup(line);
-	ft_putstr(e->line);
 	e->line_len = ft_strlen(e->line);
 	e->line_size = e->line_len;
 	e->cur = e->line_len;
+	put_line(e, 0);
 	editor_search_position_cursor(e, search);
 }
 

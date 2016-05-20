@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 16:45:30 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/12 16:46:01 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/20 19:31:31 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int		process_edition_key(t_env *e, int ret, char *buf)
 	if (ret == 1 && buf[0] == 127)
 	{
 		if (e->cur > 0)
-			backdelete_input_char(e, 0);
+			backdelete_input_char(e);
 		else
 			ft_putchar(7);
 	}
