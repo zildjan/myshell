@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 16:46:21 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/20 19:40:17 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/20 22:45:26 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,11 @@ int		move_cursor_left(t_env *e)
 			if (is_end_of_line(e, e->cur + 1))
 				nb = e->ws_col - (get_cur_pos(e, e->cur) % e->ws_col) - 1;
 		}
+		else if (e->line[e->cur] == '\n')
+		{
+			nb = (get_cur_pos(e, e->cur) % e->ws_col);
+			nb = e->ws_col - nb - 1;
+		}
 
 //		ft_printf("\nnb=%ld cur=%ld w=%ld\n", nb, (get_cur_pos(e, e->cur) % e->ws_col), e->ws_col);
 //		ft_printf("\nYEAH --> nb=%d\n", nb);
@@ -116,7 +121,8 @@ void	refresh_eol(t_env *e)
 void	put_line_char(t_env *e, int cur)
 {
 	ft_putchar(e->line[cur]);
-	if (e->t.xn && is_end_of_line(e, cur + 1) && e->line[cur] != '\t')
+	if (e->t.xn && is_end_of_line(e, cur + 1) && e->line[cur] != '\t'
+		&& e->line[cur] != '\n')
 	{
 		if (e->t.xn)
 			tputs(tgetstr("do", NULL), 0, ft_outc);

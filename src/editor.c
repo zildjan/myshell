@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 16:40:20 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/20 18:45:42 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/20 23:28:02 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int		get_term_line_input(t_env *e, int eof_exit)
 	}
 	if (e->line != e->line_save)
 		free(e->line_save);
-	close_line_edition(e);
+//	close_line_edition(e);
 	completion_free(e);
 
 	history_save_ent(e, e->line);
@@ -107,7 +107,5 @@ void	get_input_char(t_env *e, char c)
 	tputs(tgetstr("ei", NULL), 0, ft_outc);
 
 	refresh_eol(e);
-//	ft_putstr(e->line + e->cur);
-//	move_cursor_back(e, 0, 0);
 	realloc_input_line(e);
 }

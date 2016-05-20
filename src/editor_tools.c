@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 16:47:23 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/19 21:24:56 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/20 22:58:01 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,15 @@ int		get_cur_pos(t_env *e, int cur)
 				pos += e->t.tab_len - tmp;
 			}
 		}
+		else if (e->line[i] == '\n')
+		{
+			tmp = pos % e->ws_col;
+
+//			if ((tmp + (e->ws_col % e->t.tab_len) >= e->ws_col)
+//				&& (e->ws_col % e->t.tab_len != 0))
+				pos += e->ws_col - tmp;
+
+		}
 		else
 			pos++;
 	}
@@ -81,17 +90,10 @@ int		ft_outc(int c)
 
 void	close_line_edition(t_env *e)
 {
-	int		i;
-	int		line_len;
-
-	if (e->line_len <= 0)
-		return ;
-	line_len = e->line_len;
-	i = (line_len + e->prompt_len) / e->ws_col;
-	if (((line_len + e->prompt_len) % e->ws_col))
-		i++;
-	i *= e->ws_col;
-	i -= e->cur + 1 + e->prompt_len;
-	i /= e->ws_col;
-	ft_putnchar(i, '\n');
+//	ft_printf("SISI\n");
+	while (e->cur < e->line_len)
+	{
+		move_cursor_right(e);
+	}
+	ft_putchar('\n');
 }
