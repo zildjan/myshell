@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/01 23:00:22 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/02/23 01:28:11 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/21 01:05:27 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,16 @@ void	editor_completion_complete(t_env *e)
 
 	to_add = e->compl->mutual + ft_strlen(e->compl->cstart);
 	if (e->compl->lex.quo == NONE)
-		escaped = ft_escape_chars(to_add, " ;|\t\n><\\&'\"`$!");
+	{
+		if (ft_strchr(to_add, '\n'))
+		{
+			escaped = ft_strdup("'");
+			escaped = ft_strdupcat(escaped, to_add);
+			escaped = ft_strdupcat(escaped, "'");
+		}
+		else
+			escaped = ft_escape_chars(to_add, " ;|\t><\\&'\"`$!");
+	}
 	else if (e->compl->lex.quo == DOUB)
 		escaped = ft_escape_chars(to_add, "\"\\$");
 	else

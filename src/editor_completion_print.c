@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/06 00:43:31 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/20 19:54:25 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/21 00:40:36 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ void	editor_completion_print(t_env *e)
 
 	if (!e->compl->cur)
 	{
-		ft_putchar('\n');
 		close_line_edition(e);
 		if (editor_completion_print_ask(e))
 			editor_completion_print_col(e);
@@ -70,6 +69,8 @@ void	editor_completion_print_col(t_env *e)
 	int		line;
 
 	nb_col = (e->ws_col - 1) / (e->compl->len_max + 2);
+	if (nb_col <= 0)
+		nb_col = 1;
 	col_h = (e->compl->size / nb_col);
 	if (e->compl->size % nb_col)
 		col_h++;
