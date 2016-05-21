@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/21 23:27:17 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/22 00:33:54 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,13 @@ void	get_cmd(t_env *e)
 	char		*line_start;
 	int			ret;
 
-	line_start = e->line;
 	while (1)
 	{
-		lexer(e, &l, 0);
+		lexer(e, &l, ft_strlen(e->line));
+		free(l.buf);
+
 		type = parse_cmd_is_end(&l);
+
 		if (!type)
 		{
 			if (e->line && e->line != line_start)
@@ -35,20 +37,25 @@ void	get_cmd(t_env *e)
 			e->line = line_start;
 			break ;
 		}
-		ft_printf("SIII\n");
+
+		line_start = e->line;
 		ret = get_cmd_end(e, type);
+		line_start = ft_strdupcat(line_start, e->line);
+		free(e->line);
+		e->line = line_start;
+
 		if (ret == -1)
 			ft_putendl_fd("Syntax error: unexpected end of file", 2);
 		if (ret)
 		{
-			if (line_start)
-				free(line_start);
 			if (e->line)
 				free(e->line);
+			e->line = NULL;
 			return ;
 		}
-		line_start = ft_strdupcat(line_start, e->line);
+
 	}
+//*/
 	
 	parse_cmd(e);
 	free(e->line);
