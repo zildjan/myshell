@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/03 00:34:22 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/02/20 01:33:20 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/21 23:19:56 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ void	lexer(t_env *e, t_parse *l, int end)
 	l->quo = NONE;
 	l->bquo = NONE;
 	l->escape = 0;
+	l->separ = 0;
 	l->i = 0;
 	l->ib = 0;
 	l->buf_len = e->line_len;
