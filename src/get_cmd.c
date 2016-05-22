@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/22 00:33:54 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/23 00:28:12 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,12 @@ void	get_cmd(t_env *e)
 			break ;
 		}
 
+
+		if (l.buf_len && l.escape && !l.quo && !l.bquo)
+			e->line[ft_strlen(e->line) - 1] = 0;
+		else
+			e->line = ft_strdupcat(e->line, "\n");
+
 		line_start = e->line;
 		ret = get_cmd_end(e, type);
 		line_start = ft_strdupcat(line_start, e->line);
@@ -56,7 +62,9 @@ void	get_cmd(t_env *e)
 
 	}
 //*/
-	
+
+	if (e->term)
+		history_save_ent(e, e->line);
 	parse_cmd(e);
 	free(e->line);
 	e->line = NULL;
