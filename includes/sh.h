@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/23 23:01:57 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/24 00:07:33 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -355,7 +355,7 @@ void		parse_tilde_expansion(t_env *e, t_parse *p);
 **   PARSE_CMD_SUBSTITUTION
 */
 void		parse_cmd_substitution(t_env *e, t_parse *p);
-int			parse_cmd_substitution_gotoend(t_env *e, t_parse *p);
+int			parse_cmd_substitution_gotoend(t_env *e, t_parse *p, char *cmd);
 
 /*
 **   EXECUTE

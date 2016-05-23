@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/19 00:45:14 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/23 23:05:12 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/24 00:53:16 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,15 @@ void	parse_cmd_substitution(t_env *e, t_parse *p)
 	char	*out;
 
 	out = NULL;
+	cmd = ft_strnew(p->line_len);
 	start = p->i++;
-	if (!parse_cmd_substitution_gotoend(e, p))
+	if (!parse_cmd_substitution_gotoend(e, p, cmd))
 	{
 		p->error = EP_EOF;
+		free(cmd);
 		return ;
 	}
-	cmd = ft_strsub(e->line, start + 1, p->i - start - 1);
+//	cmd = ft_strsub(e->line, start + 1, p->i - start - 1);
 
 //	ft_printf("cmd='%s'\n", cmd);
 
@@ -95,14 +97,19 @@ void	parse_cmd_substitution(t_env *e, t_parse *p)
 
 }
 
-int		parse_cmd_substitution_gotoend(t_env *e, t_parse *p)
+int		parse_cmd_substitution_gotoend(t_env *e, t_parse *p, char *cmd)
 {
+	int		i;
+
+	i = 0;
 	while (e->line[p->i])
 	{
 		if (e->line[p->i] == '\\')
 			p->escape = 2;
 		else if (e->line[p->i] == '`' && !p->escape)
 			return (1);
+		else
+			cmd[i++] = e->line[p->i];
 		p->i++;
 		if (p->escape)
 			p->escape--;
