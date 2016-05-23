@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/06 00:29:40 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/02/20 01:34:01 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/23 17:13:38 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,20 +52,24 @@ int		lexer_operator_delim(t_env *e, t_parse *l)
 	{
 		l->i++;
 		l->a_id = 0;
+		l->separ = SEP_AND;
 	}
 	else if (e->line[l->i] == '|' && e->line[l->i + 1] == '|'
 			&& !l->quo && !l->escape)
 	{
 		l->i++;
 		l->a_id = 0;
+		l->separ = SEP_OR;
 	}
 	else if (e->line[l->i] == '|' && !l->quo && !l->escape)
 	{
 		l->a_id = 0;
+		l->separ = SEP_PIPE;
 	}
 	else if (e->line[l->i] == ';' && !l->quo && !l->escape)
 	{
 		l->a_id = 0;
+		l->separ = NONE;
 	}
 	else
 		return (lexer_exp_redir(e, l));

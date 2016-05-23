@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/02/23 01:14:39 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/23 20:02:21 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ void	parse_cmd_init(t_env *e, t_parse *p)
 	e->cmd[0].fd_in = 0;
 	e->cmd[0].fd_out = 1;
 	e->cmd[0].fd_err = 2;
+	p->ignore = 0;
 }
 
 int		parse_cmd_check_eol(t_env *e, t_parse *p)

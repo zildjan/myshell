@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/03/25 18:44:09 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/23 20:02:32 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,6 +121,7 @@ typedef struct	s_parse
 	int		redirec_fd;
 	char	*last_arg;
 	int		end;
+	int		ignore;
 }				t_parse;
 
 typedef struct	s_compl

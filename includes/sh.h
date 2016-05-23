@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/20 19:39:13 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/23 23:01:57 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -318,6 +318,7 @@ int			parse_cmd_redirection(t_env *e, t_parse *p);
 */
 int			parse_cmd_space_backslash(t_env *e, t_parse *p);
 int			parse_cmd_add_to_buf(t_env *e, t_parse *p);
+void		parse_cmd_reset_quotes(t_env *e, t_parse *p);
 
 /*
 **   PARSE_CMD_ADD_ELEMENT
@@ -340,7 +341,7 @@ void		new_redirec(t_env *e, char *file, int type, int fd);
 int			is_aspace(char c);
 void		parse_cmd_cleanline(t_env *e);
 void		realloc_parse_buffer(t_parse *p, int add);
-char		*dup_arg(char *buf);
+ char		*dup_arg(char *buf);
 void		parse_cmd_put_error(t_parse *p);
 
 /*

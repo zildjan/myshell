@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/23 00:28:12 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/23 18:19:58 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,10 @@ void	get_cmd(t_env *e)
 	char		*line_start;
 	int			ret;
 
+	line_start = e->line;
 	while (1)
 	{
-		lexer(e, &l, ft_strlen(e->line));
+		lexer(e, &l, -1);
 		free(l.buf);
 
 		type = parse_cmd_is_end(&l);
@@ -38,10 +39,9 @@ void	get_cmd(t_env *e)
 			break ;
 		}
 
-
-		if (l.buf_len && l.escape && !l.quo && !l.bquo)
+		if (l.buf_len && l.escape)
 			e->line[ft_strlen(e->line) - 1] = 0;
-		else
+		else if  (l.quo)
 			e->line = ft_strdupcat(e->line, "\n");
 
 		line_start = e->line;
@@ -65,6 +65,7 @@ void	get_cmd(t_env *e)
 
 	if (e->term)
 		history_save_ent(e, e->line);
+
 	parse_cmd(e);
 	free(e->line);
 	e->line = NULL;
@@ -80,7 +81,7 @@ int		get_cmd_end(t_env *e, char type)
 	else if (type == SEP_AND)
 		gen_prompt(e, "cmdand> ");
 	else if (type == SEP_OR)
-		gen_prompt(e, "or> ");
+		gen_prompt(e, "cmdor> ");
 	else if (type == '\'')
 		gen_prompt(e, "quote> ");
 	else if (type == '"')

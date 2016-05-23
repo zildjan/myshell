@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 17:05:18 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/14 01:56:12 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/23 23:02:01 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,4 +40,11 @@ int		parse_cmd_add_to_buf(t_env *e, t_parse *p)
 	if (e->line[p->i])
 		p->buf[p->ib++] = e->line[p->i];
 	return (1);
+}
+
+void	parse_cmd_reset_quotes(t_env *e, t_parse *p)
+{
+	if ((is_aspace(e->line[p->i + 1]) || !e->line[p->i + 1]) && !p->ib)
+		parse_add_arg(e, p);
+	p->quo = NONE;
 }

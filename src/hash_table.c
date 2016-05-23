@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/26 19:54:39 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/02/03 20:13:22 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/23 18:44:07 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,7 @@ void	hash_autofill(t_env *e)
 	struct dirent	*dir_ent;
 	void			*dirp;
 	char			buf[MAXPATHLEN + 1];
+	char			type;
 
 	if (!e->path)
 		return ;
@@ -115,7 +116,9 @@ void	hash_autofill(t_env *e)
 				ft_strcpy(buf, e->path[i]);
 				ft_strcat(buf, "/");
 				ft_strcat(buf, dir_ent->d_name);
-				if (!access(buf, X_OK) && !ft_strequ(dir_ent->d_name, ".")
+				type = ft_get_file_type(buf);
+				if (!ft_strequ(dir_ent->d_name, ".")
+					&& (type == '-' || type == 'l')
 					&& !ft_strequ(dir_ent->d_name, ".."))
 					hash_add(e, dir_ent->d_name, buf);
 			}

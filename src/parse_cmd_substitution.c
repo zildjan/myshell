@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/19 00:45:14 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/02/21 01:17:17 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/23 23:05:12 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ void	parse_cmd_substitution(t_env *e, t_parse *p)
 		return ;
 	}
 	cmd = ft_strsub(e->line, start + 1, p->i - start - 1);
+
+//	ft_printf("cmd='%s'\n", cmd);
 
 	int		fd[2];
 	pipe(fd);
@@ -69,11 +71,21 @@ void	parse_cmd_substitution(t_env *e, t_parse *p)
 
 	free(cmd);
 
+	int		i;
+
+	i = ft_strlen(out) - 1;
+	while (out[i] == '\n')
+		out[i--] = 0;
+
 	char	*save;
 	save = e->line;
 	e->line = ft_strsub(save, 0, start);
 	e->line = ft_strdupcat(e->line, out);
 	e->line = ft_strdupcat(e->line, save + p->i + 1);
+
+	p->ignore = start + ft_strlen(out);
+
+//	ft_printf("ignore=%d -> '%s'\nline='%s'\n", p->ignore, e->line + p->ignore, e->line);
 
 	p->line_len = ft_strlen(e->line);
 
