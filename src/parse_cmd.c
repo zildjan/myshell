@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/24 23:08:47 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/25 00:23:32 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,16 @@ void	parse_cmd(t_env *e)
 	parse_cmd_init(e, &p);
 	while (1)
 	{
-//		ft_printf("%c", e->line[p.i]);
 		if (parse_cmd_check_eol(e, &p))
 			break ;
 		parse_cmd_quotes(e, &p);
 		if (p.escape)
 			p.escape--;
+//		ft_printf("%c", e->line[p.i]);
+//		ft_printf("%d", e->line[p.i]);
+//		ft_printf("%d ", p.i);
 	}
+//	ft_printf("'%s' i=%d len=%d\n", e->line, p.i, p.line_len);
 	parse_cmd_loop_end(e, &p);
 	parse_cmd_put_error(&p);
 	if (!p.error)
@@ -75,7 +78,14 @@ int		parse_cmd_check_eol(t_env *e, t_parse *p)
 	if (!e->line[++p->i])
 	{
 		if (p->ib && !p->quo && !p->escape)
+		{
 			parse_add_arg(e, p);
+			if (p->quoted == -1)
+			{
+				p->quoted = NONE;
+				return (0);
+			}
+		}
 		if (parse_cmd_is_end(p))
 			p->error = EP_EOF;
 		return (1);
@@ -85,8 +95,8 @@ int		parse_cmd_check_eol(t_env *e, t_parse *p)
 
 void	parse_cmd_loop_end(t_env *e, t_parse *p)
 {
-	if (p->escape && p->ib && !p->line_len)
-		parse_add_arg(e, p);
+//	if (p->escape && p->ib && !p->line_len)
+//		parse_add_arg(e, p);
 	set_env_var(e, "_", p->last_arg);
 	if (!p->error && p->a_id == 0)
 	{

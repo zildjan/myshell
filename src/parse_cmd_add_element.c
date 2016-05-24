@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 17:06:44 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/24 23:06:48 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/24 23:39:28 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	parse_add_arg(t_env *e, t_parse *p)
 	if (p->a_id == 0 && p->quoted == NONE && !p->redirec)
 		if (parse_cmd_alias(e, p))
 		{
-			ft_printf("line='%s'\n", e->line);
+//			ft_printf("line='%s'\n", e->line);
 			return ;
 		}
 	old_size = sizeof(char*) * (p->a_id + 1);

@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/06 00:40:33 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/23 18:32:27 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/25 01:27:40 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,10 +129,11 @@ void	completion_add_dirent(t_env *e, t_dirent *file, char *path)
 	ft_strcat(buf, "/");
 	ft_strcat(buf, file->d_name);
 	type = ft_get_file_type(buf);
-	if (ft_strnequ(cstart, file->d_name, len) && (type == '-' || type == 'l'))
+	if (ft_strnequ(cstart, file->d_name, len))
 		if ((!ft_strequ(file->d_name, ".")
 			&& !ft_strequ(file->d_name, "..")) || cstart[0] == '.')
 			if (e->compl->lex.a_id
-				|| (!e->compl->lex.a_id && !access(buf, X_OK)))
+				|| (!e->compl->lex.a_id && (!access(buf, X_OK)
+											|| type == 'd')))
 				completion_addtoposs(e, file->d_name);
 }
