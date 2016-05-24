@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/24 21:12:33 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/24 23:08:47 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ void	parse_cmd(t_env *e)
 	parse_cmd_init(e, &p);
 	while (1)
 	{
+//		ft_printf("%c", e->line[p.i]);
 		if (parse_cmd_check_eol(e, &p))
 			break ;
 		parse_cmd_quotes(e, &p);

@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/24 18:35:10 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/24 22:56:28 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,6 +121,14 @@ int			builtin_hash_get_opt(t_env *e, char *opt_r, char *opt_s);
 void		builtin_hash_print(t_env *e, char opt_s);
 void		builtin_hash_print_stats(t_env *e, t_hash_stat *stats);
 void		builtin_hash_print_colstats(t_env *e, t_hash_stat *stats);
+
+/*
+**   BUILTIN_ALIAS
+*/
+void		builtin_alias(t_env *e);
+void		builtin_alias_add_check(t_env *e, char *str);
+void		builtin_alias_add(t_env *e, char *key, char *val);
+void		builtin_alias_print(t_env *e, char *key);
 
 /*
 **   GET_BIN_PATH
@@ -358,6 +366,11 @@ void		parse_tilde_expansion(t_env *e, t_parse *p);
 */
 void		parse_cmd_substitution(t_env *e, t_parse *p);
 int			parse_cmd_substitution_gotoend(t_env *e, t_parse *p, char *cmd);
+
+/*
+**   PARSE_CMD_ALIAS
+*/
+int			parse_cmd_alias(t_env *e, t_parse *p);
 
 /*
 **   EXECUTE

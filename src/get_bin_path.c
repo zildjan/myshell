@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/02/07 23:35:13 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/24 22:01:41 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,4 +66,6 @@ void	load_builtin_list(t_env *e)
 	e->builtin_list[7] = ft_strdup("history");
 	e->builtin_list[8] = ft_strdup("hash");
 	e->builtin_list[9] = ft_strdup("echo");
+	e->builtin_list[10] = ft_strdup("alias");
+	e->builtin_list[11] = ft_strdup("unalias");
 }

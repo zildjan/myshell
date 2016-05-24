@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/24 21:11:57 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/24 22:07:35 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,6 +139,13 @@ typedef struct	s_compl
 	t_parse			lex;
 }				t_compl;
 
+typedef struct	s_alias
+{
+	char			*key;
+	char			*val;
+	struct s_alias	*next;
+}				t_alias;
+
 typedef struct	s_redir
 {
 	char			*file;
@@ -173,13 +180,14 @@ typedef struct	s_cmd
 
 typedef struct	s_env
 {
-	char			sub;
+//	char			sub;
 	char			**var;
 	int				tab_size;
 	char			**path;
 	t_hash_b		**hash_t;
 	int				hash_size;
 	int				hash_total;
+	t_alias			*alias;
 	char			**builtin_list;
 	char			*home;
 	char			*home_dir;

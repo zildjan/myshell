@@ -6,7 +6,7 @@
 #    By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/01/04 17:14:24 by pbourrie          #+#    #+#              #
-#    Updated: 2016/02/19 00:46:21 by pbourrie         ###   ########.fr        #
+#    Updated: 2016/05/24 22:03:01 by pbourrie         ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -41,6 +41,8 @@ SRCS =		main.c \
 			builtin_history.c \
 			builtin_hash.c \
 			builtin_hash_print.c \
+			builtin_alias.c \
+			builtin_unalias.c \
 			get_bin_path.c \
 			hash_table.c \
 			hash_table_tools.c \
@@ -72,6 +74,7 @@ SRCS =		main.c \
 			parse_cmd_tools.c \
 			parse_cmd_expansion.c \
 			parse_cmd_substitution.c \
+			parse_cmd_alias.c \
 			redirection.c \
 			redirection_tools.c \
 			heredoc.c \
