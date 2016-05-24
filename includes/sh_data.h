@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/23 20:02:32 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/24 21:11:57 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,7 @@ typedef struct	s_histo
 typedef struct	s_parse
 {
 	char	quo;
+	char	quoted;
 	char	bquo;
 	char	escape;
 	char	*buf;

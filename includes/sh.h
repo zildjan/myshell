@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/24 00:07:33 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/24 18:35:10 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,13 @@
 /*
 **   INI_ENV
 */
-t_env		*init_env(int argc, char **argv, char **environ);
+t_env		*init_env(char **environ);
 void		init_env_var(t_env *e, char **environ);
 void		init_shlvl(t_env *e);
 void		init_pwd(t_env *e);
 void		refresh_nb_col(t_env *e);
+
+int			execute_script(t_env *e, char *path);
 
 /*
 **   GET_ENV
@@ -241,13 +243,13 @@ void		editor_completion_print_one(t_env *e, int id);
 char		*editor_search(t_env *e);
 void		editor_search_refresh(t_env *e, char *search, int num);
 int			editor_search_key(char *buf, char **search, int *num);
-void		editor_search_exit(t_env *e, char *buf, char *search);
+void		editor_search_exit(t_env *e, char *buf, char *search, char *prom);
 
 /*
 **   EDITOR_SEARCH_PRINT
 */
-void		editor_search_print(t_env *e, char *line, char *search, int prompt);
-void		editor_search_print_prompt(t_env *e, char *search, int prompt);
+void		editor_search_print(t_env *e, char *line, char *search, char *prompt);
+void		editor_search_print_prompt(t_env *e, char *search, char *prompt);
 void		editor_search_position_cursor(t_env *e, char *search);
 
 /*

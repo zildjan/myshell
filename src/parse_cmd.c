@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/24 00:52:58 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/24 21:12:33 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ void	parse_cmd_init(t_env *e, t_parse *p)
 	p->a_id = 0;
 	e->nb_cmd = 1;
 	p->quo = NONE;
+	p->quoted = NONE;
 	p->bquo = NONE;
 	p->escape = 0;
 	p->separ = 0;

@@ -6,19 +6,18 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/02/07 01:25:09 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/24 18:10:39 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "sh.h"
 
-t_env	*init_env(int argc, char **argv, char **environ)
+t_env	*init_env(char **environ)
 {
 	t_env	*e;
 
 	e = (t_env*)ft_memalloc(sizeof(t_env));
-	if (argc && argv)
-		init_env_var(e, environ);
+	init_env_var(e, environ);
 	e->job = NULL;
 	e->jobs_lst = NULL;
 	e->path = NULL;

@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/14 22:18:13 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/02/16 03:17:42 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/24 17:54:37 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,9 @@ char	*editor_search(t_env *e)
 	char	buf[8];
 	char	*search;
 	int		num;
+	char	*saved_prompt;
 
+	saved_prompt = ft_strdup(e->prompt);
 	search = ft_strdup("");
 	num = 1;
 	while (1)
@@ -27,7 +29,8 @@ char	*editor_search(t_env *e)
 		read(0, buf, 7);
 		if (!editor_search_key(buf, &search, &num))
 		{
-			editor_search_exit(e, buf, search);
+			editor_search_exit(e, buf, search, saved_prompt);
+			free(saved_prompt);
 			return (ft_strdup(buf));
 		}
 	}
@@ -51,7 +54,7 @@ void	editor_search_refresh(t_env *e, char *search, int num)
 	}
 	else
 		line = ft_strdup(e->line);
-	editor_search_print(e, line, search, 1);
+	editor_search_print(e, line, search, NULL);
 	free(line);
 }
 
@@ -80,15 +83,15 @@ int		editor_search_key(char *buf, char **search, int *num)
 	return (1);
 }
 
-void	editor_search_exit(t_env *e, char *buf, char *search)
+void	editor_search_exit(t_env *e, char *buf, char *search, char *prom)
 {
 	char	*line;
 
 	line = ft_strdup(e->line);
 	if (buf[0] == 3 && buf[1] == 0)
-		editor_search_print(e, line, search, 1);
+		editor_search_print(e, line, search, NULL);
 	else
-		editor_search_print(e, line, search, 0);
+		editor_search_print(e, line, search, prom);
 	free(line);
 	free(search);
 }

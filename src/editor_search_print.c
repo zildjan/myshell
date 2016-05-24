@@ -6,13 +6,13 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/16 03:16:30 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/20 19:42:30 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/24 17:53:00 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "sh.h"
 
-void	editor_search_print(t_env *e, char *line, char *search, int prompt)
+void	editor_search_print(t_env *e, char *line, char *search, char *prompt)
 {
 	int		len;
 
@@ -39,11 +39,11 @@ void	editor_search_print(t_env *e, char *line, char *search, int prompt)
 	editor_search_position_cursor(e, search);
 }
 
-void	editor_search_print_prompt(t_env *e, char *search, int prompt)
+void	editor_search_print_prompt(t_env *e, char *search, char *prompt)
 {
 	char	*str;
 
-	if (prompt)
+	if (!prompt)
 	{
 		str = ft_strdup("(reverse-i-search)`");
 		str = ft_strdupcat(str, search);
@@ -52,7 +52,7 @@ void	editor_search_print_prompt(t_env *e, char *search, int prompt)
 		free(str);
 	}
 	else
-		gen_prompt(e, NULL);
+		gen_prompt(e, prompt);
 	print_prompt(e);
 }
 
