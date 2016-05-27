@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/25 00:23:32 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/27 23:44:08 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,11 +80,9 @@ int		parse_cmd_check_eol(t_env *e, t_parse *p)
 		if (p->ib && !p->quo && !p->escape)
 		{
 			parse_add_arg(e, p);
-			if (p->quoted == -1)
-			{
-				p->quoted = NONE;
+//			ft_printf("line='%s' i=%d len=%d\n", e->line, p->i, ft_strlen(e->line));
+			if (e->line[p->i])
 				return (0);
-			}
 		}
 		if (parse_cmd_is_end(p))
 			p->error = EP_EOF;

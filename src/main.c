@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 12:18:49 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/24 21:10:22 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/27 23:53:07 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ int		main(int argc, char **argv, char **environ)
 	catch_signal();
 	if (argc > 1)
 		return (execute_script(e, argv[1]));
+	load_rc(e);
 	while (1)
 	{
 		if (isatty(0))
@@ -31,6 +32,16 @@ int		main(int argc, char **argv, char **environ)
 		get_cmd(e);
 	}
 	return (0);
+}
+
+void	load_rc(t_env *e)
+{
+	char	*path;
+
+	path = ft_strdup(e->home);
+	path = ft_strdupcat(path, "/.21shrc");
+	execute_script(e, path);
+	free(path);
 }
 
 int		execute_script(t_env *e, char *path)
@@ -68,7 +79,8 @@ int		execute_script(t_env *e, char *path)
 		free(e->line);
 		e->line = NULL;
 	}
-
+	if (e->line)
+		free(e->line);
 	close(fd);
 	return (0);
 }

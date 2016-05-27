@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/24 22:56:28 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/27 23:47:46 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ void		init_pwd(t_env *e);
 void		refresh_nb_col(t_env *e);
 
 int			execute_script(t_env *e, char *path);
+void		load_rc(t_env *e);
 
 /*
 **   GET_ENV
@@ -371,6 +372,7 @@ int			parse_cmd_substitution_gotoend(t_env *e, t_parse *p, char *cmd);
 **   PARSE_CMD_ALIAS
 */
 int			parse_cmd_alias(t_env *e, t_parse *p);
+void		parse_cmd_alias_rec(t_env *e, t_parse *p, char **cmd);
 
 /*
 **   EXECUTE
