@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/27 23:47:46 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/28 00:39:23 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -470,6 +470,7 @@ void		free_history(t_env *e);
 void		kill_jobs(t_env *e);
 void		free_path_and_env(t_env *e);
 void		free_hash_table(t_env *e);
+void		free_alias(t_env *e);
 
 /*
 **   FREE_CMD

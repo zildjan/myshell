@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/10 01:26:13 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/02/19 02:11:06 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/28 00:44:03 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,4 +97,20 @@ void	free_hash_table(t_env *e)
 	}
 	free(e->hash_t);
 	e->hash_size = 0;
+}
+
+void	free_alias(t_env *e)
+{
+	t_alias	*alias;
+	t_alias	*tofree;
+
+	alias = e->alias;
+	while (alias)
+	{
+		tofree = alias;
+		alias = alias->next;
+		free(tofree->key);
+		free(tofree->val);
+		free(tofree);
+	}
 }

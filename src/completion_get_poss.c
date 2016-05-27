@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/06 00:40:33 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/25 01:27:40 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/28 00:32:14 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ void	completion_get_cmd_poss(t_env *e, int len)
 	int				i;
 	struct dirent	*dir_ent;
 	void			*dirp;
+	t_alias			*alias;
 
 	e->compl->cstart = ft_strdup(e->compl->start);
 	if (ft_strequ(".", e->compl->cstart))
@@ -79,6 +80,13 @@ void	completion_get_cmd_poss(t_env *e, int len)
 	while (e->builtin_list[++i])
 		if (ft_strnequ(e->compl->start, e->builtin_list[i], len))
 			completion_addtoposs(e, e->builtin_list[i]);
+	alias = e->alias;
+	while (alias)
+	{
+		if (ft_strnequ(e->compl->start, alias->key, len))
+			completion_addtoposs(e, alias->key);
+		alias = alias->next;
+	}
 	if (!e->path)
 		return ;
 	i = -1;

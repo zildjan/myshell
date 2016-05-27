@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/24 21:19:43 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/27 23:44:06 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/28 01:03:56 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,10 @@ int		parse_cmd_alias(t_env *e, t_parse *p)
 		alias = alias->next;
 	}
 	line_save = e->line;
-	e->line = cmd;
-
-//	ft_printf("->line='%s'\n", e->line);
+	e->line = ft_strndup(e->line, p->i - p->ib);
+	e->line = ft_strdupcat(e->line, cmd);
 	e->line = ft_strdupcat(e->line, line_save + p->i);
-
+	free(cmd);
 	free(line_save);
 	p->ib = 0;
 	if (p->i != p->line_len)
@@ -47,7 +46,7 @@ int		parse_cmd_alias(t_env *e, t_parse *p)
 	ft_strclr(p->buf);
 	p->quo = NONE;
 	p->quoted = 1;
-	p->line_len += ft_strlen(e->line);
+	p->line_len = ft_strlen(e->line);
 //	ft_printf("-- line='%s' i=%d\n", e->line, p->i);
 	return (1);
 }

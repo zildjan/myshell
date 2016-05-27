@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/07 19:30:05 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/02/10 01:26:53 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/28 00:41:35 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ void	free_env(t_env *e)
 	free_path_and_env(e);
 	free_hash_table(e);
 	completion_free(e);
+	free_alias(e);
 	free_env_var(e);
 	free(e);
 }

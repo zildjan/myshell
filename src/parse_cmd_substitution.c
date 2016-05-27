@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/19 00:45:14 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/24 00:53:16 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/28 01:30:50 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void	parse_cmd_substitution(t_env *e, t_parse *p)
 
 	while (1)
 	{
-		ret = read(fd[0], &buf, 100);
+		ret = read(fd[0], &buf, 99);
 		out = ft_strdupcat(out, buf);
 		ft_bzero(buf, 100);
 		if (ret < 1)
