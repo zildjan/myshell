@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/24 21:58:29 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/27 23:38:27 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/29 00:09:07 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,10 @@ void	builtin_alias(t_env *e)
 		i = 0;
 		while (e->carg[++i])
 		{
-
-//			else
+			if (ft_strchr(e->carg[i], '='))
 				builtin_alias_add_check(e, e->carg[i]);
+			else
+				builtin_alias_print(e, e->carg[i]);
 		}
 	}
 }
@@ -90,9 +91,21 @@ void	builtin_alias_print(t_env *e, char *key)
 	t_alias	*alias;
 
 	alias = e->alias;
-	while (alias && !key)
+	while (alias)
 	{
-		ft_printf("alias %s='%s'\n", alias->key, alias->val);
+		if (ft_strequ(alias->key, key) || !key)
+		{
+			ft_printf("alias %s='%s'\n", alias->key, alias->val);
+			if (key)
+				return ;
+		}
 		alias = alias->next;
+	}
+	if (key)
+	{
+		e->status = 1;
+		ft_putstr_fd("21sh: alias: ", e->cmd[e->cid].fd_err);
+		ft_putstr_fd(key, e->cmd[e->cid].fd_err);
+		ft_putendl_fd(": not found.", e->cmd[e->cid].fd_err);
 	}
 }

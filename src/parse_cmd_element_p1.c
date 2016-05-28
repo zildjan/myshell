@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 17:04:22 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/24 21:13:38 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/28 23:05:55 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int		parse_cmd_quotes(t_env *e, t_parse *p)
 {
 	if (e->line[p->i] == '\'' && (!p->quo || p->quo == SIMP)
-		&& !p->escape)
+		&& !p->escape && p->ignore <= p->i)
 	{
 		p->quoted = SIMP;
 		if (p->quo)
@@ -24,7 +24,7 @@ int		parse_cmd_quotes(t_env *e, t_parse *p)
 			p->quo = SIMP;
 	}
 	else if (e->line[p->i] == '"' && (!p->quo || p->quo == DOUB)
-			&& !p->escape)
+			&& !p->escape && p->ignore <= p->i)
 	{
 		p->quoted = DOUB;
 		if (p->quo)
@@ -32,7 +32,8 @@ int		parse_cmd_quotes(t_env *e, t_parse *p)
 		else
 			p->quo = DOUB;
 	}
-	else if (e->line[p->i] == '`' && p->quo != SIMP	&& !p->escape)
+	else if (e->line[p->i] == '`' && p->quo != SIMP
+			 && !p->escape && p->ignore <= p->i)
 		parse_cmd_substitution(e, p);
 	else
 		return (parse_cmd_operator(e, p));
@@ -42,7 +43,7 @@ int		parse_cmd_quotes(t_env *e, t_parse *p)
 int		parse_cmd_operator(t_env *e, t_parse *p)
 {
 	if (e->line[p->i] == '&' && e->line[p->i + 1] == '&'
-		&& !p->quo && !p->escape)
+		&& !p->quo && !p->escape && p->ignore <= p->i)
 	{
 		p->i++;
 		if (p->ib > 0)
@@ -53,7 +54,7 @@ int		parse_cmd_operator(t_env *e, t_parse *p)
 			parse_add_cmd(e, p, SEP_AND);
 	}
 	else if (e->line[p->i] == '|' && e->line[p->i + 1] == '|'
-			&& !p->quo && !p->escape)
+			&& !p->quo && !p->escape && p->ignore <= p->i)
 	{
 		p->i++;
 		if (p->ib > 0)
@@ -71,7 +72,7 @@ int		parse_cmd_operator(t_env *e, t_parse *p)
 int		parse_cmd_pipe_comma(t_env *e, t_parse *p)
 {
 	if (e->line[p->i] == '|' && !p->quo
-		&& !p->escape)
+		&& !p->escape && p->ignore <= p->i)
 	{
 		if (p->ib > 0)
 			parse_add_arg(e, p);
@@ -81,7 +82,7 @@ int		parse_cmd_pipe_comma(t_env *e, t_parse *p)
 			parse_add_cmd(e, p, SEP_PIPE);
 	}
 	else if (e->line[p->i] == ';' && !p->quo
-			&& !p->escape)
+			&& !p->escape && p->ignore <= p->i)
 	{
 		if (p->ib > 0)
 			parse_add_arg(e, p);
@@ -117,7 +118,7 @@ int		parse_cmd_redirection(t_env *e, t_parse *p)
 	if (((ft_isdigit(e->line[p->i]) && is_aspace(e->line[p->i - 1])
 		&& (e->line[p->i + 1] == '<' || e->line[p->i + 1] == '>'))
 		|| (e->line[p->i] == '<' || e->line[p->i] == '>'))
-		&& !p->quo && !p->escape)
+		&& !p->quo && !p->escape && p->ignore <= p->i)
 	{
 		if (p->ib > 0)
 			parse_add_arg(e, p);

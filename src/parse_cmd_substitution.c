@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/19 00:45:14 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/28 01:30:50 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/29 00:16:09 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,7 @@ void	parse_cmd_substitution(t_env *e, t_parse *p)
 {
 	int		start;
 	char	*cmd;
-	char	*out;
 
-	out = NULL;
 	cmd = ft_strnew(p->line_len);
 	start = p->i++;
 	if (!parse_cmd_substitution_gotoend(e, p, cmd))
@@ -27,9 +25,9 @@ void	parse_cmd_substitution(t_env *e, t_parse *p)
 		free(cmd);
 		return ;
 	}
-//	cmd = ft_strsub(e->line, start + 1, p->i - start - 1);
+	p->escape = 0;
 
-//	ft_printf("cmd='%s'\n", cmd);
+
 
 	int		fd[2];
 	pipe(fd);
@@ -51,7 +49,9 @@ void	parse_cmd_substitution(t_env *e, t_parse *p)
 
 	char	buf[100];
 	int		ret;
+	char	*out;
 
+	out = NULL;
 	out = ft_strdup("");
 	ft_bzero(buf, 100);
 	close(fd[1]);
@@ -86,11 +86,9 @@ void	parse_cmd_substitution(t_env *e, t_parse *p)
 	e->line = ft_strdupcat(e->line, save + p->i + 1);
 
 	p->ignore = start + ft_strlen(out);
-
-//	ft_printf("ignore=%d -> '%s'\nline='%s'\n", p->ignore, e->line + p->ignore, e->line);
-
 	p->line_len = ft_strlen(e->line);
 
+	p->quoted = 1;
 	p->i = start - 1;
 	free(save);
 	free(out);

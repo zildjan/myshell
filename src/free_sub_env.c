@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/10 01:26:13 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/28 00:44:03 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/29 00:00:37 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,4 +113,5 @@ void	free_alias(t_env *e)
 		free(tofree->val);
 		free(tofree);
 	}
+	e->alias = NULL;
 }

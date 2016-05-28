@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/28 00:39:23 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/28 23:52:43 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,6 +130,12 @@ void		builtin_alias(t_env *e);
 void		builtin_alias_add_check(t_env *e, char *str);
 void		builtin_alias_add(t_env *e, char *key, char *val);
 void		builtin_alias_print(t_env *e, char *key);
+
+/*
+**   BUILTIN_UNALIAS
+*/
+void		builtin_unalias(t_env *e);
+void		builtin_unalias_remove(t_env *e, char *name);
 
 /*
 **   GET_BIN_PATH
