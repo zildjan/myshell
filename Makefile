@@ -6,7 +6,7 @@
 #    By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/01/04 17:14:24 by pbourrie          #+#    #+#              #
-#    Updated: 2016/05/24 22:03:01 by pbourrie         ###   ########.fr        #
+#    Updated: 2016/05/29 23:33:45 by pbourrie         ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -29,6 +29,7 @@ RT =		\033[0m
 
 SRCS =		main.c \
 			init_env.c \
+			script.c \
 			get_env.c \
 			set_env.c \
 			builtin_cd.c \

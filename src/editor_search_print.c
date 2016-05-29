@@ -6,13 +6,13 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/16 03:16:30 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/24 17:53:00 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/29 23:34:37 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "sh.h"
 
-void	editor_search_print(t_env *e, char *line, char *search, char *prompt)
+void	editor_search_print(t_env *e, char *line, char *search, char *prom)
 {
 	int		len;
 
@@ -28,7 +28,7 @@ void	editor_search_print(t_env *e, char *line, char *search, char *prompt)
 	tputs(tgetstr("dm", NULL), 0, ft_outc);
 	tputs(tgetstr("cd", NULL), 0, ft_outc);
 	tputs(tgetstr("ed", NULL), 0, ft_outc);
-	editor_search_print_prompt(e, search, prompt);
+	editor_search_print_prompt(e, search, prom);
 	if (e->line != e->line_save)
 		free(e->line);
 	e->line = ft_strdup(line);

@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/28 23:19:05 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/30 00:18:00 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,7 @@ void	parse_cmd(t_env *e)
 		parse_cmd_quotes(e, &p);
 		if (p.escape)
 			p.escape--;
-//		ft_printf("%c", e->line[p.i]);
-//		ft_printf("%d", e->line[p.i]);
-//		ft_printf("%d ", p.i);
 	}
-//	ft_printf("line='%s' i=%d len=%d\n", e->line, p.i, p.line_len);
 	parse_cmd_loop_end(e, &p);
 	parse_cmd_put_error(&p);
 	if (!p.error)
@@ -51,6 +47,8 @@ void	parse_cmd_init(t_env *e, t_parse *p)
 	e->nb_cmd = 1;
 	p->quo = NONE;
 	p->quoted = NONE;
+	p->doalias = 0;
+	p->aliased = 0;
 	p->bquo = NONE;
 	p->escape = 0;
 	p->separ = 0;
@@ -80,7 +78,6 @@ int		parse_cmd_check_eol(t_env *e, t_parse *p)
 		if (p->ib && !p->quo && !p->escape)
 		{
 			parse_add_arg(e, p);
-//			ft_printf("line='%s' i=%d len=%d\n", e->line, p->i, ft_strlen(e->line));
 			if (e->line[p->i])
 				return (0);
 		}

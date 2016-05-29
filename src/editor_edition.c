@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 16:49:14 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/20 19:39:41 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/30 00:12:37 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,7 @@ void	delete_input_nchar(t_env *e, int n)
 	tputs(tgetstr("dm", NULL), 0, ft_outc);
 	tputs(tgetstr("cd", NULL), 0, ft_outc);
 	tputs(tgetstr("ed", NULL), 0, ft_outc);
-
 	e->line_len -= n;
-
 	refresh_eol(e);
 }
 
@@ -44,17 +42,14 @@ void	backdelete_input_char(t_env *e)
 
 	i = e->cur - 1;
 	move_cursor_left(e);
-
 	tputs(tgetstr("dm", NULL), 0, ft_outc);
 	tputs(tgetstr("cd", NULL), 0, ft_outc);
 	tputs(tgetstr("ed", NULL), 0, ft_outc);
-
 	while (e->line[i])
 	{
 		e->line[i] = e->line[i + 1];
 		i++;
 	}
-
 	e->line_len--;
 	refresh_eol(e);
 }
@@ -99,17 +94,14 @@ void	switch_to_histo(t_env *e)
 	tputs(tgetstr("dm", NULL), 0, ft_outc);
 	tputs(tgetstr("cd", NULL), 0, ft_outc);
 	tputs(tgetstr("ed", NULL), 0, ft_outc);
-
 	if (e->line != e->line_save)
 		free(e->line);
 	if (e->histo_cur)
 		e->line = ft_strdup(e->histo_cur->line);
 	else
 		e->line = e->line_save;
-
 	e->line_len = ft_strlen(e->line);
 	e->line_size = e->line_len;
 	e->cur = e->line_len;
-
 	put_line(e, 0);
 }

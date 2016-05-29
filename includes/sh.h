@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/28 23:52:43 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/29 23:35:21 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,11 @@ void		init_shlvl(t_env *e);
 void		init_pwd(t_env *e);
 void		refresh_nb_col(t_env *e);
 
-int			execute_script(t_env *e, char *path);
+/*
+**   SCRIPT
+*/
+int			execute_script(t_env *e, char *path, char error);
+int			execute_script_open(char *path, int *fd, char error);
 void		load_rc(t_env *e);
 
 /*
@@ -263,7 +267,7 @@ void		editor_search_exit(t_env *e, char *buf, char *search, char *prom);
 /*
 **   EDITOR_SEARCH_PRINT
 */
-void		editor_search_print(t_env *e, char *line, char *search, char *prompt);
+void		editor_search_print(t_env *e, char *line, char *search, char *prom);
 void		editor_search_print_prompt(t_env *e, char *search, char *prompt);
 void		editor_search_position_cursor(t_env *e, char *search);
 
@@ -358,7 +362,7 @@ void		new_redirec(t_env *e, char *file, int type, int fd);
 int			is_aspace(char c);
 void		parse_cmd_cleanline(t_env *e);
 void		realloc_parse_buffer(t_parse *p, int add);
- char		*dup_arg(char *buf);
+char		*dup_arg(char *buf);
 void		parse_cmd_put_error(t_parse *p);
 
 /*

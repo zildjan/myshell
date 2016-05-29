@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 16:46:21 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/20 22:45:26 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/30 00:23:35 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ int		move_cursor_right(t_env *e)
 	if (e->cur < e->line_len)
 	{
 		e->cur++;
-
 		nb = 1;
 		if (e->line[e->cur - 1] == '\t')
 		{
@@ -50,17 +49,13 @@ int		move_cursor_left(t_env *e)
 	int		i;
 	int		nb;
 
-//	ft_printf("\nYEAH --> cur=%d\n", get_cur_pos(e, e->cur));
-
 	if (e->cur > 0)
 	{
 		e->cur--;
 		nb = 1;
 		if (is_end_of_line(e, e->cur + 1))
 		{
-//		ft_printf("\nYEAH --> nb=%d\n", nb);			
 			tputs(tgetstr("up", NULL), 0, ft_outc);
-
 			if (e->t.mi)
 				tputs(tgoto(tgetstr("ch", NULL), 0, e->ws_col - 1), 0, ft_outc);
 			else
@@ -71,13 +66,11 @@ int		move_cursor_left(t_env *e)
 			}
 			nb = 0;
 		}
-
 		if (e->line[e->cur] == '\t')
 		{
 			nb = (get_cur_pos(e, e->cur) % e->ws_col);
 			nb %= e->t.tab_len;
 			nb = e->t.tab_len - nb;
-
 			if (is_end_of_line(e, e->cur + 1))
 				nb = e->ws_col - (get_cur_pos(e, e->cur) % e->ws_col) - 1;
 		}
@@ -86,13 +79,8 @@ int		move_cursor_left(t_env *e)
 			nb = (get_cur_pos(e, e->cur) % e->ws_col);
 			nb = e->ws_col - nb - 1;
 		}
-
-//		ft_printf("\nnb=%ld cur=%ld w=%ld\n", nb, (get_cur_pos(e, e->cur) % e->ws_col), e->ws_col);
-//		ft_printf("\nYEAH --> nb=%d\n", nb);
-
 		while (nb-- > 0)
-				tputs(tgetstr("le", NULL), 0, ft_outc);
-
+			tputs(tgetstr("le", NULL), 0, ft_outc);
 		return (1);
 	}
 	else
@@ -104,18 +92,12 @@ void	refresh_eol(t_env *e)
 	int		cur_save;
 
 	put_line(e, e->cur);
-
 	cur_save = e->cur;
 	e->cur = e->line_len;
-
-//	ft_printf("\nYEAH --> cur=%d save=%d\n", e->cur, cur_save);
-
 	while (cur_save < e->cur)
 	{
-//		usleep(950000);
 		move_cursor_left(e);
 	}
-
 }
 
 void	put_line_char(t_env *e, int cur)

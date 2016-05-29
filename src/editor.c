@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 16:40:20 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/23 00:14:27 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/30 00:20:40 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,6 @@ int		get_term_line_input(t_env *e, int eof_exit)
 	{
 		ft_bzero(buf, 8);
 		ret = read(0, &buf, 7);
-
-//		ft_printf("'%d' '%d' ret=%d\n", buf[0], buf[1], ret);
-
 		if (!(ret = process_all_key(e, ret, buf, eof_exit)))
 			get_input_chars(e, buf);
 		if (ret == -1)
@@ -38,9 +35,7 @@ int		get_term_line_input(t_env *e, int eof_exit)
 	}
 	if (e->line != e->line_save)
 		free(e->line_save);
-//	close_line_edition(e);
 	completion_free(e);
-
 	return (e->line_len);
 }
 
@@ -61,7 +56,7 @@ int		process_all_key(t_env *e, int ret, char *buf, int eof_exit)
 }
 
 void	get_input_chars(t_env *e, char *buf)
-{		
+{
 	while (ft_isprint(*buf) || is_aspace(*buf) || *buf == -115 || *buf == -119)
 	{
 		if (*buf == -115)
@@ -88,22 +83,15 @@ void	get_input_char(t_env *e, char c)
 	}
 	e->line[e->cur++] = c;
 	e->line_len++;
-
 	tputs(tgetstr("dm", NULL), 0, ft_outc);
 	tputs(tgetstr("cd", NULL), 0, ft_outc);
 	tputs(tgetstr("ed", NULL), 0, ft_outc);
-
 	tputs(tgetstr("im", NULL), 0, ft_outc);
 	if (!e->t.eo)
 		tputs(tgetstr("ic", NULL), 0, ft_outc);
-
-//ft_printf("'%d'\n", c);
-
 	put_line_char(e, e->cur - 1);
-
 	tputs(tgetstr("ip", NULL), 0, ft_outc);
 	tputs(tgetstr("ei", NULL), 0, ft_outc);
-
 	refresh_eol(e);
 	realloc_input_line(e);
 }

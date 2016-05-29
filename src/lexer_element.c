@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/06 00:29:40 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/23 17:13:38 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/30 00:19:39 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int		lexer_quotes(t_env *e, t_parse *l)
 		else
 			l->quo = DOUB;
 	}
-	else if (e->line[l->i] == '`' && l->quo != SIMP	&& !l->escape)
+	else if (e->line[l->i] == '`' && l->quo != SIMP && !l->escape)
 	{
 		if (l->bquo)
 			l->bquo = NONE;

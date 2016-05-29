@@ -6,14 +6,14 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/24 21:19:43 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/28 01:03:56 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/30 00:07:16 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "sh.h"
 
 int		parse_cmd_alias(t_env *e, t_parse *p)
-{//return (0);
+{
 	t_alias	*alias;
 	char	*line_save;
 	char	*cmd;
@@ -21,6 +21,7 @@ int		parse_cmd_alias(t_env *e, t_parse *p)
 	cmd = ft_strdup(p->buf);
 	char *cmd_save;
 	cmd_save = cmd;
+	p->doalias = 0;
 	parse_cmd_alias_rec(e, p, &cmd);
 	if (cmd == cmd_save)
 	{
@@ -33,21 +34,22 @@ int		parse_cmd_alias(t_env *e, t_parse *p)
 		alias->used = 0;
 		alias = alias->next;
 	}
+	if (cmd[ft_strlen(cmd) - 1] == ' ')
+		p->doalias = 1;
 	line_save = e->line;
 	e->line = ft_strndup(e->line, p->i - p->ib);
 	e->line = ft_strdupcat(e->line, cmd);
 	e->line = ft_strdupcat(e->line, line_save + p->i);
-	free(cmd);
-	free(line_save);
 	p->ib = 0;
 	if (p->i != p->line_len)
 		p->i--;
 	p->i -= ft_strlen(p->buf);
+	p->aliased = p->i + ft_strlen(cmd);
 	ft_strclr(p->buf);
 	p->quo = NONE;
-	p->quoted = 1;
 	p->line_len = ft_strlen(e->line);
-//	ft_printf("-- line='%s' i=%d\n", e->line, p->i);
+	free(cmd);
+	free(line_save);
 	return (1);
 }
 
@@ -64,7 +66,6 @@ void	parse_cmd_alias_rec(t_env *e, t_parse *p, char **cmd)
 		i++;
 	word = ft_strndup(*cmd, i);
 	alias = e->alias;
-//	ft_printf("cmd='%s', word='%s'\n", *cmd, word);
 	while (alias)
 	{
 		if (ft_strequ(alias->key, word) && !alias->used)
@@ -81,4 +82,3 @@ void	parse_cmd_alias_rec(t_env *e, t_parse *p, char **cmd)
 	}
 	free(word);
 }
-//*/

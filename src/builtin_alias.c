@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/24 21:58:29 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/29 00:09:07 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/29 23:42:29 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ void	builtin_alias_add_check(t_env *e, char *str)
 		i++;
 	key = ft_strndup(str, i++);
 	val = ft_strdup(str + i);
-
 	if (builtin_setenv_check(key, 0, 1))
 	{
 		ft_putendl_fd("21sh: alias: invalid name.", e->cmd[e->cid].fd_err);

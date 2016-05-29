@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/27 23:20:39 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/29 23:54:20 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,6 +123,8 @@ typedef struct	s_parse
 	char	*last_arg;
 	int		end;
 	int		ignore;
+	char	doalias;
+	int		aliased;
 }				t_parse;
 
 typedef struct	s_compl
@@ -181,7 +183,6 @@ typedef struct	s_cmd
 
 typedef struct	s_env
 {
-//	char			sub;
 	char			**var;
 	int				tab_size;
 	char			**path;

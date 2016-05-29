@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 16:47:23 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/20 22:58:01 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/30 00:20:13 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,15 +49,10 @@ int		get_cur_pos(t_env *e, int cur)
 	{
 		if (e->line[i] == '\t')
 		{
-//			ft_printf("\nYEAH cur=%d --\n", pos);
-//			print_prompt(e);
-//			ft_putstr(e->line);
 			tmp = pos % e->ws_col;
 			if ((tmp + (e->ws_col % e->t.tab_len) >= e->ws_col)
 				&& (e->ws_col % e->t.tab_len != 0))
-			{
 				pos += e->ws_col - tmp;
-			}
 			else
 			{
 				tmp = tmp % e->t.tab_len;
@@ -67,18 +62,11 @@ int		get_cur_pos(t_env *e, int cur)
 		else if (e->line[i] == '\n')
 		{
 			tmp = pos % e->ws_col;
-
-//			if ((tmp + (e->ws_col % e->t.tab_len) >= e->ws_col)
-//				&& (e->ws_col % e->t.tab_len != 0))
-				pos += e->ws_col - tmp;
-
+			pos += e->ws_col - tmp;
 		}
 		else
 			pos++;
 	}
-
-//	ft_printf("\npos=%ld\n", pos);
-
 	return (pos);
 }
 
@@ -90,7 +78,6 @@ int		ft_outc(int c)
 
 void	close_line_edition(t_env *e)
 {
-//	ft_printf("SISI\n");
 	while (e->cur < e->line_len)
 	{
 		move_cursor_right(e);
