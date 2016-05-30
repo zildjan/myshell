@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/24 21:58:29 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/29 23:42:29 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/31 01:22:28 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void	builtin_alias_add(t_env *e, char *key, char *val)
 	t_alias	*new;
 
 	alias = e->alias;
-	while (alias && alias->next)
+	while (alias)
 	{
 		if (ft_strequ(alias->key, key))
 		{
@@ -79,10 +79,9 @@ void	builtin_alias_add(t_env *e, char *key, char *val)
 	new->val = val;
 	new->used = 0;
 	new->next = NULL;
-	if (!e->alias)
-		e->alias = new;
-	else
-		alias->next = new;
+	if (e->alias)
+		new->next = e->alias;
+	e->alias = new;
 }
 
 void	builtin_alias_print(t_env *e, char *key)
