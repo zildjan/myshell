@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/10 18:58:17 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/28 23:36:51 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/30 22:31:33 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,14 @@ int		process_builtin(t_env *e)
 		history_print(e);
 	else if (ft_strequ(e->cmd[e->cid].arg[0], "hash"))
 		builtin_hash(e);
-	else if (ft_strequ(e->cmd[e->cid].arg[0], "alias"))
+	else if (!process_builtin_2(e))
+		return (0);
+	return (1);
+}
+
+int		process_builtin_2(t_env *e)
+{
+	if (ft_strequ(e->cmd[e->cid].arg[0], "alias"))
 		builtin_alias(e);
 	else if (ft_strequ(e->cmd[e->cid].arg[0], "unalias"))
 		builtin_unalias(e);

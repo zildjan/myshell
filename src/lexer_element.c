@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/06 00:29:40 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/30 00:19:39 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/30 22:36:47 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,14 @@ int		lexer_quotes(t_env *e, t_parse *l)
 		else
 			l->quo = DOUB;
 	}
-	else if (e->line[l->i] == '`' && l->quo != SIMP && !l->escape)
+	else
+		return (lexer_bquotes_pipes(e, l));
+	return (1);
+}
+
+int		lexer_bquotes_pipes(t_env *e, t_parse *l)
+{
+	if (e->line[l->i] == '`' && l->quo != SIMP && !l->escape)
 	{
 		if (l->bquo)
 			l->bquo = NONE;
@@ -39,6 +46,13 @@ int		lexer_quotes(t_env *e, t_parse *l)
 			l->bquo = 1;
 			l->a_id = 0;
 		}
+	}
+	else if (e->line[l->i] == '|' && e->line[l->i + 1] == '|'
+			&& !l->quo && !l->escape)
+	{
+		l->i++;
+		l->a_id = 0;
+		l->separ = SEP_OR;
 	}
 	else
 		return (lexer_operator_delim(e, l));
@@ -53,13 +67,6 @@ int		lexer_operator_delim(t_env *e, t_parse *l)
 		l->i++;
 		l->a_id = 0;
 		l->separ = SEP_AND;
-	}
-	else if (e->line[l->i] == '|' && e->line[l->i + 1] == '|'
-			&& !l->quo && !l->escape)
-	{
-		l->i++;
-		l->a_id = 0;
-		l->separ = SEP_OR;
 	}
 	else if (e->line[l->i] == '|' && !l->quo && !l->escape)
 	{

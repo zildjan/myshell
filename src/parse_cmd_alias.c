@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/24 21:19:43 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/30 00:07:16 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/30 22:43:41 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,10 @@
 
 int		parse_cmd_alias(t_env *e, t_parse *p)
 {
-	t_alias	*alias;
-	char	*line_save;
+	char	*cmd_save;
 	char	*cmd;
 
 	cmd = ft_strdup(p->buf);
-	char *cmd_save;
 	cmd_save = cmd;
 	p->doalias = 0;
 	parse_cmd_alias_rec(e, p, &cmd);
@@ -28,6 +26,24 @@ int		parse_cmd_alias(t_env *e, t_parse *p)
 		free(cmd);
 		return (0);
 	}
+	parse_cmd_alias_addtoline(e, p, cmd);
+	if (p->i != p->line_len)
+		p->i--;
+	p->i -= ft_strlen(p->buf);
+	p->aliased = p->i + ft_strlen(cmd);
+	ft_strclr(p->buf);
+	p->ib = 0;
+	p->quo = NONE;
+	p->line_len = ft_strlen(e->line);
+	free(cmd);
+	return (1);
+}
+
+void	parse_cmd_alias_addtoline(t_env *e, t_parse *p, char *cmd)
+{
+	char	*line_save;
+	t_alias	*alias;
+
 	alias = e->alias;
 	while (alias)
 	{
@@ -40,19 +56,8 @@ int		parse_cmd_alias(t_env *e, t_parse *p)
 	e->line = ft_strndup(e->line, p->i - p->ib);
 	e->line = ft_strdupcat(e->line, cmd);
 	e->line = ft_strdupcat(e->line, line_save + p->i);
-	p->ib = 0;
-	if (p->i != p->line_len)
-		p->i--;
-	p->i -= ft_strlen(p->buf);
-	p->aliased = p->i + ft_strlen(cmd);
-	ft_strclr(p->buf);
-	p->quo = NONE;
-	p->line_len = ft_strlen(e->line);
-	free(cmd);
 	free(line_save);
-	return (1);
 }
-
 
 void	parse_cmd_alias_rec(t_env *e, t_parse *p, char **cmd)
 {

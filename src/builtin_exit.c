@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/28 00:44:33 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/30 20:37:48 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,5 @@ void	builtin_exit_all(t_env *e, int status)
 	kill_jobs(e);
 	term_restore_backup(NULL);
 	free_env(e);
-//	while (1)
-//		sleep(2);
 	exit(status);
 }

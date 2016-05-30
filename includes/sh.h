@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/29 23:35:21 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/30 23:10:49 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,6 +177,8 @@ void		set_home_path(t_env *e);
 **   GET_CMD
 */
 void		get_cmd(t_env *e);
+void		get_cmd_is_ended(t_env *e);
+int			get_cmd_get_end(t_env *e, t_parse *l, char **line_start, int type);
 int			get_cmd_end(t_env *e, char type);
 int			get_input_line(t_env *e, int eof_exit);
 
@@ -221,14 +223,20 @@ void		paste_input_line(t_env *e);
 void		switch_to_histo(t_env *e);
 
 /*
+**   EDITOR_LINE
+*/
+void		refresh_eol(t_env *e);
+void		put_line_char(t_env *e, int cur);
+void		put_line(t_env *e, int start);
+
+/*
 **   EDITOR CURSOR
 */
 int			move_cursor_right(t_env *e);
 int			move_cursor_left(t_env *e);
-void		refresh_eol(t_env *e);
-void		put_line_char(t_env *e, int cur);
-void		put_line(t_env *e, int start);
-void		move_cursor_back(t_env *e, char delete, int i);
+void		move_cursor_left_char_parse(t_env *e, int *nb);
+int			get_cur_pos(t_env *e, int cur);
+void		get_cur_pos_loop(t_env *e, int *i, int *pos);
 
 /*
 **   EDITOR TOOLS
@@ -237,7 +245,6 @@ void		realloc_input_line(t_env *e);
 int			is_end_of_line(t_env *e, int cur);
 int			ft_outc(int c);
 void		close_line_edition(t_env *e);
-int			get_cur_pos(t_env *e, int cur);
 
 /*
 **   EDITOR_COMPLETION
@@ -285,6 +292,11 @@ void		completion_free(t_env *e);
 void		completion_get_poss(t_env *e);
 void		completion_get_var_poss(t_env *e, int len);
 void		completion_get_cmd_poss(t_env *e, int len);
+void		completion_get_alias_poss(t_env *e, int len);
+
+/*
+**   COMPLETION_GET_FILE_POSS
+*/
 void		completion_get_file_poss(t_env *e, char *path);
 void		completion_add_dirent(t_env *e, t_dirent *dir_ent, char *path);
 
@@ -299,6 +311,7 @@ int			lexer_add_to_buf(t_env *e, t_parse *l);
 **   LEXER ELEMENT
 */
 int			lexer_quotes(t_env *e, t_parse *l);
+int			lexer_bquotes_pipes(t_env *e, t_parse *l);
 int			lexer_operator_delim(t_env *e, t_parse *l);
 int			lexer_exp_redir(t_env *e, t_parse *l);
 int			lexer_space_escape(t_env *e, t_parse *l);
@@ -346,6 +359,7 @@ void		parse_cmd_reset_quotes(t_env *e, t_parse *p);
 */
 void		parse_add_cmd(t_env *e, t_parse *p, char sep);
 void		parse_add_arg(t_env *e, t_parse *p);
+int			parse_add_arg_redir_alias(t_env *e, t_parse *p);
 void		parse_add_cmd_sep(t_env *e, t_parse *p, char sep);
 
 /*
@@ -376,21 +390,26 @@ void		parse_tilde_expansion(t_env *e, t_parse *p);
 **   PARSE_CMD_SUBSTITUTION
 */
 void		parse_cmd_substitution(t_env *e, t_parse *p);
+char		*parse_cmd_substitution_fork(t_env *e, int *fd, char *cmd);
+char		*parse_cmd_substitution_get_output(t_env *e, int *fd, int pid);
+void		parse_cmd_substi_line(t_env *e, t_parse *p, char *out, int start);
 int			parse_cmd_substitution_gotoend(t_env *e, t_parse *p, char *cmd);
 
 /*
 **   PARSE_CMD_ALIAS
 */
 int			parse_cmd_alias(t_env *e, t_parse *p);
+void		parse_cmd_alias_addtoline(t_env *e, t_parse *p, char *cmd);
 void		parse_cmd_alias_rec(t_env *e, t_parse *p, char **cmd);
 
 /*
 **   EXECUTE
 */
-int			process_builtin(t_env *e);
 void		process_cmd(t_env *e);
 void		process_bin(t_env *e, char **env);
 void		process_fork(t_env *e, char *cmd_path, char **env);
+int			process_builtin(t_env *e);
+int			process_builtin_2(t_env *e);
 
 /*
 **   WAIT

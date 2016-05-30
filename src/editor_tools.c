@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 16:47:23 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/30 00:20:13 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/30 20:23:35 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,39 +35,6 @@ int		is_end_of_line(t_env *e, int cur)
 		return (1);
 	}
 	return (0);
-}
-
-int		get_cur_pos(t_env *e, int cur)
-{
-	int		pos;
-	int		i;
-	int		tmp;
-
-	pos = e->prompt_len;
-	i = -1;
-	while (++i < cur && i < e->line_len)
-	{
-		if (e->line[i] == '\t')
-		{
-			tmp = pos % e->ws_col;
-			if ((tmp + (e->ws_col % e->t.tab_len) >= e->ws_col)
-				&& (e->ws_col % e->t.tab_len != 0))
-				pos += e->ws_col - tmp;
-			else
-			{
-				tmp = tmp % e->t.tab_len;
-				pos += e->t.tab_len - tmp;
-			}
-		}
-		else if (e->line[i] == '\n')
-		{
-			tmp = pos % e->ws_col;
-			pos += e->ws_col - tmp;
-		}
-		else
-			pos++;
-	}
-	return (pos);
 }
 
 int		ft_outc(int c)

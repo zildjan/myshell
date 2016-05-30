@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/23 18:19:58 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/30 22:21:10 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,20 +17,26 @@ void	get_cmd(t_env *e)
 	get_input_line(e, 1);
 	if (e->line == NULL)
 		return ;
+	get_cmd_is_ended(e);
+	if (e->term)
+		history_save_ent(e, e->line);
+	parse_cmd(e);
+	free(e->line);
+	e->line = NULL;
+}
 
+void	get_cmd_is_ended(t_env *e)
+{
 	t_parse		l;
 	int			type;
 	char		*line_start;
-	int			ret;
 
 	line_start = e->line;
 	while (1)
 	{
 		lexer(e, &l, -1);
 		free(l.buf);
-
 		type = parse_cmd_is_end(&l);
-
 		if (!type)
 		{
 			if (e->line && e->line != line_start)
@@ -38,37 +44,34 @@ void	get_cmd(t_env *e)
 			e->line = line_start;
 			break ;
 		}
-
-		if (l.buf_len && l.escape)
-			e->line[ft_strlen(e->line) - 1] = 0;
-		else if  (l.quo)
-			e->line = ft_strdupcat(e->line, "\n");
-
-		line_start = e->line;
-		ret = get_cmd_end(e, type);
-		line_start = ft_strdupcat(line_start, e->line);
-		free(e->line);
-		e->line = line_start;
-
-		if (ret == -1)
-			ft_putendl_fd("Syntax error: unexpected end of file", 2);
-		if (ret)
-		{
-			if (e->line)
-				free(e->line);
-			e->line = NULL;
+		if (get_cmd_get_end(e, &l, &line_start, type))
 			return ;
-		}
-
 	}
-//*/
+}
 
-	if (e->term)
-		history_save_ent(e, e->line);
+int		get_cmd_get_end(t_env *e, t_parse *l, char **line_start, int type)
+{
+	int		ret;
 
-	parse_cmd(e);
+	if (l->buf_len && l->escape)
+		e->line[ft_strlen(e->line) - 1] = 0;
+	else if (l->quo)
+		e->line = ft_strdupcat(e->line, "\n");
+	*line_start = e->line;
+	ret = get_cmd_end(e, type);
+	*line_start = ft_strdupcat(*line_start, e->line);
 	free(e->line);
-	e->line = NULL;
+	e->line = *line_start;
+	if (ret == -1)
+		ft_putendl_fd("Syntax error: unexpected end of file", 2);
+	if (ret)
+	{
+		if (e->line)
+			free(e->line);
+		e->line = NULL;
+		return (1);
+	}
+	return (0);
 }
 
 int		get_cmd_end(t_env *e, char type)

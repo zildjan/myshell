@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/30 00:18:00 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/30 22:38:01 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,10 +88,13 @@ int		parse_cmd_check_eol(t_env *e, t_parse *p)
 	return (0);
 }
 
+/*
+**	if (p->escape && p->ib && !p->line_len)
+**		parse_add_arg(e, p);
+*/
+
 void	parse_cmd_loop_end(t_env *e, t_parse *p)
 {
-//	if (p->escape && p->ib && !p->line_len)
-//		parse_add_arg(e, p);
 	set_env_var(e, "_", p->last_arg);
 	if (!p->error && p->a_id == 0)
 	{

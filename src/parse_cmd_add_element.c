@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 17:06:44 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/30 00:10:59 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/30 22:25:46 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,15 +45,8 @@ void	parse_add_arg(t_env *e, t_parse *p)
 	int		new_size;
 	char	***parg;
 
-	if (p->redirec)
-	{
-		parse_add_redirec(e, p);
+	if (parse_add_arg_redir_alias(e, p))
 		return ;
-	}
-	if ((p->a_id == 0 || p->doalias) && p->aliased < p->i
-		&& p->quoted == NONE && !p->redirec)
-		if (parse_cmd_alias(e, p))
-			return ;
 	old_size = sizeof(char*) * (p->a_id + 1);
 	new_size = sizeof(char*) * (p->a_id + 2);
 	parg = &e->cmd[e->cid].arg;
@@ -70,6 +63,20 @@ void	parse_add_arg(t_env *e, t_parse *p)
 	p->quo = NONE;
 	p->quoted = NONE;
 	p->a_id++;
+}
+
+int		parse_add_arg_redir_alias(t_env *e, t_parse *p)
+{
+	if (p->redirec)
+	{
+		parse_add_redirec(e, p);
+		return (1);
+	}
+	if ((p->a_id == 0 || p->doalias) && p->aliased < p->i
+		&& p->quoted == NONE && !p->redirec)
+		if (parse_cmd_alias(e, p))
+			return (1);
+	return (0);
 }
 
 void	parse_add_cmd_sep(t_env *e, t_parse *p, char sep)
