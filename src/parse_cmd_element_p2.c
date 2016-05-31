@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 17:05:18 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/23 23:02:01 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/31 22:38:36 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int		parse_cmd_space_backslash(t_env *e, t_parse *p)
 		if (p->ib > 0)
 			parse_add_arg(e, p);
 	}
-	else if (e->line[p->i] == '\\' && !p->escape
+	else if (e->line[p->i] == '\\' && !p->escape && p->ignore <= p->i
 			&& ((!p->quo)
 				|| (p->quo == DOUB && e->line[p->i + 1] == '"')
 				|| (p->quo == DOUB && e->line[p->i + 1] == '$')

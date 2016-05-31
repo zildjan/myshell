@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/19 00:45:14 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/30 23:11:05 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/05/31 22:32:03 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ void	parse_cmd_substitution(t_env *e, t_parse *p)
 	p->escape = 0;
 	pipe(fd);
 	out = parse_cmd_substitution_fork(e, fd, cmd);
+	ft_printf("out='%s'\n", out);
 	parse_cmd_substi_line(e, p, out, start);
 }
 
@@ -109,7 +110,9 @@ int		parse_cmd_substitution_gotoend(t_env *e, t_parse *p, char *cmd)
 			p->escape = 2;
 		else if (e->line[p->i] == '`' && !p->escape)
 			return (1);
-		else
+//		if (!p->escape || (p->escape && e->line[p->i + 1] != '\\'
+//								&& e->line[p->i + 1] != '$'
+//								&& e->line[p->i + 1] != '`'))
 			cmd[i++] = e->line[p->i];
 		p->i++;
 		if (p->escape)
