@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/10 18:58:17 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/30 22:31:33 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/06/01 22:28:54 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,8 @@ void	process_fork(t_env *e, char *cmd_path, char **env)
 		{
 			if (access(cmd_path, X_OK))
 				put_error(ERRACCES, NULL, e->carg[0], e->cmd[e->cid].fd_err);
+			else if (ft_get_file_type(cmd_path) == 'd')
+				put_error(ERRISDIR, NULL, e->carg[0], e->cmd[e->cid].fd_err);
 			else
 				put_error(ERREXEFORM, NULL, e->carg[0], e->cmd[e->cid].fd_err);
 			exit(126);
