@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 16:40:20 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/30 00:20:40 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/06/01 19:23:07 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,13 +42,16 @@ int		get_term_line_input(t_env *e, int eof_exit)
 int		process_all_key(t_env *e, int ret, char *buf, int eof_exit)
 {
 	char	*tmp;
+	int		save;
 
 	if (ret == 1 && buf[0] == 18)
 	{
+		save = e->prompt_len;
 		tmp = editor_search(e);
 		ft_strncpy(buf, tmp, 7);
 		free(tmp);
 		ret = ft_strlen(buf);
+		e->prompt_len = save;
 	}
 	if (buf[1] == 91)
 		buf[1] = 79;
