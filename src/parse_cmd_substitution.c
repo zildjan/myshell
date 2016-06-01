@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/19 00:45:14 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/31 22:32:03 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/06/01 00:46:44 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,19 +18,22 @@ void	parse_cmd_substitution(t_env *e, t_parse *p)
 	char	*cmd;
 	int		fd[2];
 	char	*out;
+	char	save[2];
 
 	cmd = ft_strnew(p->line_len);
 	start = p->i++;
-	if (!parse_cmd_substitution_gotoend(e, p, cmd))
+	save[0] = p->escape;
+	save[1] = p->quo;
+	if (!parse_cmd_substi_parse_line(e, p, cmd))
 	{
 		p->error = EP_EOF;
 		free(cmd);
 		return ;
 	}
-	p->escape = 0;
+	p->escape = save[0];
+	p->quo = save[1];
 	pipe(fd);
 	out = parse_cmd_substitution_fork(e, fd, cmd);
-	ft_printf("out='%s'\n", out);
 	parse_cmd_substi_line(e, p, out, start);
 }
 
@@ -97,26 +100,4 @@ void	parse_cmd_substi_line(t_env *e, t_parse *p, char *out, int start)
 	p->i = start - 1;
 	free(save);
 	free(out);
-}
-
-int		parse_cmd_substitution_gotoend(t_env *e, t_parse *p, char *cmd)
-{
-	int		i;
-
-	i = 0;
-	while (e->line[p->i])
-	{
-		if (e->line[p->i] == '\\')
-			p->escape = 2;
-		else if (e->line[p->i] == '`' && !p->escape)
-			return (1);
-//		if (!p->escape || (p->escape && e->line[p->i + 1] != '\\'
-//								&& e->line[p->i + 1] != '$'
-//								&& e->line[p->i + 1] != '`'))
-			cmd[i++] = e->line[p->i];
-		p->i++;
-		if (p->escape)
-			p->escape--;
-	}
-	return (0);
 }

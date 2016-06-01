@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/30 23:10:49 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/06/01 00:45:56 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -393,7 +393,12 @@ void		parse_cmd_substitution(t_env *e, t_parse *p);
 char		*parse_cmd_substitution_fork(t_env *e, int *fd, char *cmd);
 char		*parse_cmd_substitution_get_output(t_env *e, int *fd, int pid);
 void		parse_cmd_substi_line(t_env *e, t_parse *p, char *out, int start);
-int			parse_cmd_substitution_gotoend(t_env *e, t_parse *p, char *cmd);
+
+/*
+**   PARSE_CMD_SUBSTITUTION_PARSE_LINE
+*/
+int			parse_cmd_substi_parse_line(t_env *e, t_parse *p, char *cmd);
+void		parse_cmd_substi_parse_line_quotes(t_env *e, t_parse *p);
 
 /*
 **   PARSE_CMD_ALIAS

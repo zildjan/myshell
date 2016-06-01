@@ -6,7 +6,7 @@
 #    By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/01/04 17:14:24 by pbourrie          #+#    #+#              #
-#    Updated: 2016/05/30 20:21:51 by pbourrie         ###   ########.fr        #
+#    Updated: 2016/06/01 00:47:00 by pbourrie         ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -77,6 +77,7 @@ SRCS =		main.c \
 			parse_cmd_tools.c \
 			parse_cmd_expansion.c \
 			parse_cmd_substitution.c \
+			parse_cmd_substitution_parse_line.c \
 			parse_cmd_alias.c \
 			redirection.c \
 			redirection_tools.c \

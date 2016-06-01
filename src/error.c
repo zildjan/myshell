@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/20 23:31:47 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/06/01 02:15:13 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,8 @@ void	put_sig_error(int ret, char *path, int fd)
 		ft_putstr_fd(" Segmentation fault : ", fd);
 	else if (ret == SIGBUS)
 		ft_putstr_fd(" Bus error : ", fd);
+	else if (ret == SIGTERM)
+		ft_putstr_fd(" Terminated : ", fd);
 	else if (ret == SIGPIPE)
 		ft_putstr_fd(" Broken pipe : ", fd);
 	else if (ret == SIGIOT)
@@ -57,9 +59,9 @@ void	put_sig_error(int ret, char *path, int fd)
 	else if (ret == SIGQUIT)
 		ft_putstr_fd(" Quit : ", fd);
 	else
-		ft_putstr_fd(" error: ", fd);
+		ft_putstr_fd(" Error: ", fd);
 	ft_putnbr_fd(ret, fd);
-	ft_putstr_fd("  ", fd);
+	ft_putstr_fd(" :  ", fd);
 	ft_putendl_fd(path, fd);
 }
 

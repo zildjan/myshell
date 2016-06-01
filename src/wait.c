@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/10 15:54:41 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/13 18:37:30 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/06/01 02:12:15 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,14 +51,14 @@ void	process_wait(t_env *e, int pid, int job)
 	{
 		if (ret != SIGINT)
 			process_wait_error(e, ret, job);
+		else
+			ft_putchar('\n');
 		e->status = (WTERMSIG(ret)) + 128;
 	}
 	else if (WIFSTOPPED(ret))
 	{
 		if (WSTOPSIG(ret) == SIGTSTP)
-		{
 			jobs_add(e, pid);
-		}
 	}
 	else
 		e->status = WEXITSTATUS(ret);
