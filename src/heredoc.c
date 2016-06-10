@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/10 20:08:09 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/06/11 01:09:16 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ void	get_heredoc(t_env *e, char *eof)
 
 	line_save = e->line;
 	e->line = NULL;
+	gen_prompt(e, "heredoc> ");
 	get_heredoc_p2(e, eof);
 	if (e->line)
 		free(e->line);
@@ -65,7 +66,7 @@ void	get_heredoc_p2(t_env *e, char *eof)
 	total_len = 0;
 	prev = NULL;
 	free_heredoc(e, e->cid);
-	ft_putstr("heredoc> ");
+	print_prompt(e);
 	ret = get_input_line(e, 0);
 	while (!ft_strequ(e->line, eof) && ret != -1)
 	{
@@ -87,6 +88,6 @@ void	get_heredoc_p3(t_env *e, int *ret, t_hdoc *hdoc)
 		e->cmd[e->cid].hdoc = hdoc;
 	free(e->line);
 	e->line = NULL;
-	ft_putstr("heredoc> ");
+	print_prompt(e);
 	*ret = get_input_line(e, 0);
 }
