@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 17:04:22 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/06/01 00:18:43 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/06/10 23:57:46 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,8 @@ int		parse_cmd_operator(t_env *e, t_parse *p)
 	{
 		p->i++;
 		if (p->ib > 0)
-			parse_add_arg(e, p);
+			if (!parse_add_arg(e, p))
+				return (1);
 		if (p->a_id == 0)
 			p->error = EP_NULL_CMD;
 		else
@@ -58,7 +59,8 @@ int		parse_cmd_operator(t_env *e, t_parse *p)
 	{
 		p->i++;
 		if (p->ib > 0)
-			parse_add_arg(e, p);
+			if (!parse_add_arg(e, p))
+				return (1);
 		if (p->a_id == 0)
 			p->error = EP_NULL_CMD;
 		else
@@ -75,7 +77,8 @@ int		parse_cmd_pipe_comma(t_env *e, t_parse *p)
 		&& !p->escape && p->ignore <= p->i)
 	{
 		if (p->ib > 0)
-			parse_add_arg(e, p);
+			if (!parse_add_arg(e, p))
+				return (1);
 		if (p->a_id == 0)
 			p->error = EP_NULL_CMD;
 		else
@@ -85,7 +88,8 @@ int		parse_cmd_pipe_comma(t_env *e, t_parse *p)
 			&& !p->escape && p->ignore <= p->i)
 	{
 		if (p->ib > 0)
-			parse_add_arg(e, p);
+			if (!parse_add_arg(e, p))
+				return (1);
 		if (p->a_id == 0)
 			p->error = EP_NULL_CMD;
 		else

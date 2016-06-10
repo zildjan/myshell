@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/06/01 00:45:56 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/06/10 23:49:19 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -358,7 +358,7 @@ void		parse_cmd_reset_quotes(t_env *e, t_parse *p);
 **   PARSE_CMD_ADD_ELEMENT
 */
 void		parse_add_cmd(t_env *e, t_parse *p, char sep);
-void		parse_add_arg(t_env *e, t_parse *p);
+int			parse_add_arg(t_env *e, t_parse *p);
 int			parse_add_arg_redir_alias(t_env *e, t_parse *p);
 void		parse_add_cmd_sep(t_env *e, t_parse *p, char sep);
 

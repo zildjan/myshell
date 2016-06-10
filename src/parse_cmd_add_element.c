@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 17:06:44 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/30 22:25:46 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/06/10 23:50:15 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,14 +39,14 @@ void	parse_add_cmd(t_env *e, t_parse *p, char sep)
 	parse_add_cmd_sep(e, p, sep);
 }
 
-void	parse_add_arg(t_env *e, t_parse *p)
+int		parse_add_arg(t_env *e, t_parse *p)
 {
 	int		old_size;
 	int		new_size;
 	char	***parg;
 
 	if (parse_add_arg_redir_alias(e, p))
-		return ;
+		return (0);
 	old_size = sizeof(char*) * (p->a_id + 1);
 	new_size = sizeof(char*) * (p->a_id + 2);
 	parg = &e->cmd[e->cid].arg;
@@ -63,6 +63,7 @@ void	parse_add_arg(t_env *e, t_parse *p)
 	p->quo = NONE;
 	p->quoted = NONE;
 	p->a_id++;
+	return (1);
 }
 
 int		parse_add_arg_redir_alias(t_env *e, t_parse *p)
