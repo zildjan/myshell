@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 17:04:22 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/06/10 23:57:46 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/06/20 22:53:04 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,10 +45,10 @@ int		parse_cmd_operator(t_env *e, t_parse *p)
 	if (e->line[p->i] == '&' && e->line[p->i + 1] == '&'
 		&& !p->quo && !p->escape && p->ignore <= p->i)
 	{
-		p->i++;
 		if (p->ib > 0)
 			if (!parse_add_arg(e, p))
 				return (1);
+		p->i++;
 		if (p->a_id == 0)
 			p->error = EP_NULL_CMD;
 		else
@@ -57,10 +57,10 @@ int		parse_cmd_operator(t_env *e, t_parse *p)
 	else if (e->line[p->i] == '|' && e->line[p->i + 1] == '|'
 			&& !p->quo && !p->escape && p->ignore <= p->i)
 	{
-		p->i++;
 		if (p->ib > 0)
 			if (!parse_add_arg(e, p))
 				return (1);
+		p->i++;
 		if (p->a_id == 0)
 			p->error = EP_NULL_CMD;
 		else
