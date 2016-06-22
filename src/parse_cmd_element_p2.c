@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 17:05:18 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/31 22:38:36 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/06/23 01:33:42 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,4 +47,35 @@ void	parse_cmd_reset_quotes(t_env *e, t_parse *p)
 	if ((is_aspace(e->line[p->i + 1]) || !e->line[p->i + 1]) && !p->ib)
 		parse_add_arg(e, p);
 	p->quo = NONE;
+}
+
+int		parse_operators(t_env *e, t_parse *p, int separ, char doub)
+{
+	if (p->ib > 0)
+		if (!parse_add_arg(e, p))
+			return (1);
+	if (doub)
+		p->i++;
+	if (p->a_id == 0)
+		p->error = EP_NULL_CMD;
+	else
+	{
+		if (!p->error)
+			process_cmd(e);
+		else
+			return (1);
+		free_cmd(e);
+		parse_init_cmd(e, p);
+		p->quoted = NONE;
+		p->doalias = 0;
+		p->separ = separ;
+		if (p->last_arg)
+		{
+			set_env_var(e, "_", p->last_arg);
+			free(p->last_arg);
+			p->last_arg = NULL;
+		}
+		parse_add_cmd_sep(e, p, p->separ);
+	}
+	return (0);
 }

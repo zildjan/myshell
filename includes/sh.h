@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/06/10 23:49:19 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/06/23 01:06:48 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -333,7 +333,8 @@ char		*history_find(t_env *e, char *str, int num);
 **   PARSE_CMD
 */
 void		parse_cmd(t_env *e);
-void		parse_cmd_init(t_env *e, t_parse *p);
+void		parse_init(t_env *e, t_parse *p);
+void		parse_init_cmd(t_env *e, t_parse *p);
 int			parse_cmd_check_eol(t_env *e, t_parse *p);
 void		parse_cmd_loop_end(t_env *e, t_parse *p);
 int			parse_cmd_is_end(t_parse *p);
@@ -353,6 +354,7 @@ int			parse_cmd_redirection(t_env *e, t_parse *p);
 int			parse_cmd_space_backslash(t_env *e, t_parse *p);
 int			parse_cmd_add_to_buf(t_env *e, t_parse *p);
 void		parse_cmd_reset_quotes(t_env *e, t_parse *p);
+int			parse_operators(t_env *e, t_parse *p, int separ, char doub);
 
 /*
 **   PARSE_CMD_ADD_ELEMENT

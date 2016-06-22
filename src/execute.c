@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/10 18:58:17 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/06/01 22:28:54 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/06/23 01:10:19 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ void	process_cmd(t_env *e)
 	e->wait_cid = 0;
 	while (e->nb_cmd > e->cid)
 	{
+//		ft_printf("condi=%d\n", e->cmd[e->cid].condi);
 		e->carg = e->cmd[e->cid].arg;
 		condi = e->cmd[e->cid].condi;
 		if (condi != SEP_PIPE)

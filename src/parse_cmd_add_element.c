@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 17:06:44 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/06/10 23:50:15 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/06/23 01:29:24 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,8 @@ int		parse_add_arg(t_env *e, t_parse *p)
 	else
 		*parg = (char**)ft_memrealloc(*parg, old_size, new_size);
 	e->cmd[e->cid].arg[p->a_id] = dup_arg(p->buf);
-	if (p->a_id == 0)
-		p->last_arg = e->cmd[e->cid].arg[p->a_id];
+	if (p->a_id == 0 && e->cmd[e->cid].arg[p->a_id])
+		p->last_arg = ft_strdup(e->cmd[e->cid].arg[p->a_id]);
 	e->cmd[e->cid].arg[p->a_id + 1] = NULL;
 	ft_strclr(p->buf);
 	p->ib = 0;

@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 17:04:22 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/06/20 22:53:04 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/06/23 01:08:01 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,26 +45,14 @@ int		parse_cmd_operator(t_env *e, t_parse *p)
 	if (e->line[p->i] == '&' && e->line[p->i + 1] == '&'
 		&& !p->quo && !p->escape && p->ignore <= p->i)
 	{
-		if (p->ib > 0)
-			if (!parse_add_arg(e, p))
-				return (1);
-		p->i++;
-		if (p->a_id == 0)
-			p->error = EP_NULL_CMD;
-		else
-			parse_add_cmd(e, p, SEP_AND);
+		if (parse_operators(e, p, SEP_AND, 1))
+			return (1);
 	}
 	else if (e->line[p->i] == '|' && e->line[p->i + 1] == '|'
 			&& !p->quo && !p->escape && p->ignore <= p->i)
 	{
-		if (p->ib > 0)
-			if (!parse_add_arg(e, p))
-				return (1);
-		p->i++;
-		if (p->a_id == 0)
-			p->error = EP_NULL_CMD;
-		else
-			parse_add_cmd(e, p, SEP_OR);
+		if (parse_operators(e, p, SEP_OR, 1))
+			return (1);
 	}
 	else
 		return (parse_cmd_pipe_comma(e, p));
@@ -87,13 +75,8 @@ int		parse_cmd_pipe_comma(t_env *e, t_parse *p)
 	else if (e->line[p->i] == ';' && !p->quo
 			&& !p->escape && p->ignore <= p->i)
 	{
-		if (p->ib > 0)
-			if (!parse_add_arg(e, p))
-				return (1);
-		if (p->a_id == 0)
-			p->error = EP_NULL_CMD;
-		else
-			parse_add_cmd(e, p, NONE);
+		if (parse_operators(e, p, NONE, 0))
+			return (1);
 	}
 	else
 		return (parse_cmd_expansion(e, p));
