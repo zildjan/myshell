@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/06/23 01:06:48 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/06/24 20:24:28 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -305,6 +305,7 @@ void		completion_add_dirent(t_env *e, t_dirent *dir_ent, char *path);
 */
 void		lexer(t_env *e, t_parse *lex, int end);
 void		lexer_add_arg(t_parse *l);
+void		lexer_add_cmd(t_parse *l, int separ);
 int			lexer_add_to_buf(t_env *e, t_parse *l);
 
 /*

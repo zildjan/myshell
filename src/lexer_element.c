@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/06 00:29:40 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/30 22:36:47 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/06/24 22:59:42 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,7 @@ int		lexer_bquotes_pipes(t_env *e, t_parse *l)
 			&& !l->quo && !l->escape)
 	{
 		l->i++;
-		l->a_id = 0;
-		l->separ = SEP_OR;
+		lexer_add_cmd(l, SEP_OR);
 	}
 	else
 		return (lexer_operator_delim(e, l));
@@ -65,18 +64,15 @@ int		lexer_operator_delim(t_env *e, t_parse *l)
 		&& !l->quo && !l->escape)
 	{
 		l->i++;
-		l->a_id = 0;
-		l->separ = SEP_AND;
+		lexer_add_cmd(l, SEP_AND);
 	}
 	else if (e->line[l->i] == '|' && !l->quo && !l->escape)
 	{
-		l->a_id = 0;
-		l->separ = SEP_PIPE;
+		lexer_add_cmd(l, SEP_PIPE);
 	}
 	else if (e->line[l->i] == ';' && !l->quo && !l->escape)
 	{
-		l->a_id = 0;
-		l->separ = NONE;
+		lexer_add_cmd(l, NONE);
 	}
 	else
 		return (lexer_exp_redir(e, l));
@@ -96,14 +92,7 @@ int		lexer_exp_redir(t_env *e, t_parse *l)
 			&& !l->quo && !l->escape)
 	{
 		lexer_add_arg(l);
-		if (ft_isdigit(e->line[l->i]))
-			l->i++;
-		if (e->line[l->i + 1] == '>' || e->line[l->i + 1] == '<')
-			l->i++;
-		if (e->line[l->i + 1] == '&')
-			l->i++;
-		while (is_aspace(e->line[l->i + 1]))
-			l->i++;
+		parse_get_redirec_type(e, l);
 	}
 	else
 		return (lexer_space_escape(e, l));

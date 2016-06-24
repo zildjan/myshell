@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 17:08:16 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/12 17:09:22 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/06/24 22:57:15 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	parse_add_redirec_p2(t_parse *p)
 void	parse_get_redirec_type(t_env *e, t_parse *p)
 {
 	if (p->redirec)
-		p->error = EP_MISS_REDIREC;
+		p->error = EP_SYNTAX;
 	if (e->line[p->i] == '>' && e->line[p->i + 1] != '>')
 		p->redirec = R_OUT;
 	else if (e->line[p->i] == '>' && e->line[p->i + 1] == '>')
