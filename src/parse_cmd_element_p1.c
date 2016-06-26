@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 17:04:22 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/06/23 01:08:01 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/06/26 22:44:14 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,13 +36,16 @@ int		parse_cmd_quotes(t_env *e, t_parse *p)
 			&& !p->escape && p->ignore <= p->i)
 		parse_cmd_substitution(e, p);
 	else
-		return (parse_cmd_operator(e, p));
+		return (parse_cmd_operator_parenthesis(e, p));
 	return (1);
 }
 
-int		parse_cmd_operator(t_env *e, t_parse *p)
+int		parse_cmd_operator_parenthesis(t_env *e, t_parse *p)
 {
-	if (e->line[p->i] == '&' && e->line[p->i + 1] == '&'
+	if (e->line[p->i] == '(' && p->quo != SIMP
+			&& !p->escape && p->ignore <= p->i)
+		parse_cmd_subcmd(e, p);
+	else if (e->line[p->i] == '&' && e->line[p->i + 1] == '&'
 		&& !p->quo && !p->escape && p->ignore <= p->i)
 	{
 		if (parse_operators(e, p, SEP_AND, 1))

@@ -6,22 +6,22 @@
 #    By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/01/04 17:14:24 by pbourrie          #+#    #+#              #
-#    Updated: 2016/06/01 00:47:00 by pbourrie         ###   ########.fr        #
+#    Updated: 2016/06/26 22:46:38 by pbourrie         ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
 NAME=21sh
 
-ifdef FLAGS 
-ifeq ($(FLAGS), no) 
-CFLAGS= 
-endif 
-ifeq ($(FLAGS), debug) 
+ifdef FLAGS
+ifeq ($(FLAGS), no)
+CFLAGS=
+endif
+ifeq ($(FLAGS), debug)
 CFLAGS= -Wall -Wextra -Werror -ansi -pedantic -g
-endif 
-else 
+endif
+else
 CFLAGS = -Wall -Wextra -Werror -O3
-endif 
+endif
 
 B  =		\033[1m
 UL =		\033[4m
@@ -79,6 +79,7 @@ SRCS =		main.c \
 			parse_cmd_substitution.c \
 			parse_cmd_substitution_parse_line.c \
 			parse_cmd_alias.c \
+			parse_cmd_subcmd.c \
 			redirection.c \
 			redirection_tools.c \
 			heredoc.c \
@@ -93,7 +94,7 @@ SRCS =		main.c \
 			signal.c \
 			free_env.c \
 			free_sub_env.c \
-			free_cmd.c 
+			free_cmd.c
 SRC = $(sort $(SRCS))
 SRC_PATH = src/
 OBJ_PATH = obj/

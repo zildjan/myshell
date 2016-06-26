@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/06/24 20:16:18 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/06/26 22:36:44 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,6 +169,7 @@ typedef struct	s_cmd
 {
 	char		**arg;
 	char		condi;
+	char		sub;
 	int			pid;
 	int			pgid;
 	int			fd_in;
@@ -184,6 +185,7 @@ typedef struct	s_cmd
 
 typedef struct	s_env
 {
+	int				fd_in;
 	char			**var;
 	int				tab_size;
 	char			**path;

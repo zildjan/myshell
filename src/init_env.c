@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/24 18:10:39 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/06/26 19:55:52 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ t_env	*init_env(char **environ)
 	t_env	*e;
 
 	e = (t_env*)ft_memalloc(sizeof(t_env));
+	e->fd_in = 0;
 	init_env_var(e, environ);
 	e->job = NULL;
 	e->jobs_lst = NULL;

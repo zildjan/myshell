@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/06/24 22:51:10 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/06/26 20:17:18 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,13 @@ void	get_cmd(t_env *e)
 	get_cmd_is_ended(e);
 	if (e->line == NULL)
 		return ;
-	if (e->term)
+//	ft_printf("line='%s'\n", e->line);
+	if (e->term && !e->fd_in)
 		history_save_ent(e, e->line);
 	lexer(e, &lex, -1);
 	if (!lex.error)
 	{
-		ft_printf("PARSING\n");
+//		ft_printf("PARSING\n");
 		parse_cmd(e);
 	}
 	else
@@ -108,7 +109,7 @@ int		get_cmd_end(t_env *e, char type)
 		gen_prompt(e, "bquote> ");
 	else
 		gen_prompt(e, "> ");
-	if (isatty(0))
+	if (isatty(e->fd_in))
 		print_prompt(e);
 	ret = get_input_line(e, 0);
 	if (ret == -1 && type)
@@ -122,16 +123,19 @@ int		get_input_line(t_env *e, int eof_exit)
 {
 	int		ret;
 
-	if (e->term)
+	if (e->term && !e->fd_in)
 		ret = get_term_line_input(e, eof_exit);
 	else
 	{
-		ret = get_next_line(0, &e->line);
+		ret = get_next_line(e->fd_in, &e->line);
 		if (ret == 0 && eof_exit)
 		{
-			if (isatty(0))
+			if (isatty(e->fd_in))
 				ft_printf("exit\n");
-			builtin_exit(e);
+			if (e->fd_in)
+				e->fd_in = -1;
+			else
+				builtin_exit(e);
 		}
 		else if (ret == 0)
 			ret = -1;

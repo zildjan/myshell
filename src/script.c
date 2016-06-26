@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/29 23:32:56 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/29 23:35:13 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/06/26 20:16:47 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ void	load_rc(t_env *e)
 	path = ft_strdupcat(path, "/.21shrc");
 	execute_script(e, path, 0);
 	free(path);
+	e->fd_in = 0;
 }
 
 int		execute_script(t_env *e, char *path, char error)
@@ -30,12 +31,11 @@ int		execute_script(t_env *e, char *path, char error)
 	fd = 0;
 	if ((ret = execute_script_open(path, &fd, error)) != 0)
 		return (ret);
+	e->fd_in = fd;
 	e->line = NULL;
-	while (get_next_line(fd, &e->line) > 0)
+	while (e->fd_in > 0)
 	{
-		parse_cmd(e);
-		free(e->line);
-		e->line = NULL;
+		get_cmd(e);
 	}
 	if (e->line)
 		free(e->line);

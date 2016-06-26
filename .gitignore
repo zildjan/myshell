@@ -5,3 +5,4 @@ libft/obj
 obj/
 *.old
 *.out
+test.sh

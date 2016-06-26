@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/06/24 20:24:28 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/06/26 22:52:25 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -344,7 +344,7 @@ int			parse_cmd_is_end(t_parse *p);
 **   PARSE_CMD_ELEMENT_P1
 */
 int			parse_cmd_quotes(t_env *e, t_parse *p);
-int			parse_cmd_operator(t_env *e, t_parse *p);
+int			parse_cmd_operator_parenthesis(t_env *e, t_parse *p);
 int			parse_cmd_pipe_comma(t_env *e, t_parse *p);
 int			parse_cmd_expansion(t_env *e, t_parse *p);
 int			parse_cmd_redirection(t_env *e, t_parse *p);
@@ -409,6 +409,11 @@ void		parse_cmd_substi_parse_line_quotes(t_env *e, t_parse *p);
 int			parse_cmd_alias(t_env *e, t_parse *p);
 void		parse_cmd_alias_addtoline(t_env *e, t_parse *p, char *cmd);
 void		parse_cmd_alias_rec(t_env *e, t_parse *p, char **cmd);
+
+/*
+**   PARSE_CMD_SUBCMD
+*/
+void		parse_cmd_subcmd(t_env *e, t_parse *p);
 
 /*
 **   EXECUTE
