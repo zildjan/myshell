@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/06/26 23:54:46 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/06/27 22:46:21 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,7 +177,7 @@ void		set_home_path(t_env *e);
 **   GET_CMD
 */
 void		get_cmd(t_env *e);
-void		get_cmd_is_ended(t_env *e);
+t_parse		get_cmd_is_ended(t_env *e);
 int			get_cmd_get_end(t_env *e, t_parse *l, char **line_start, int type);
 int			get_cmd_end(t_env *e, char type);
 int			get_input_line(t_env *e, int eof_exit);

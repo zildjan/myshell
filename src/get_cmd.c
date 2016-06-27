@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/06/27 02:33:03 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/06/27 22:47:24 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,12 @@ void	get_cmd(t_env *e)
 	get_input_line(e, 1);
 	if (e->line == NULL)
 		return ;
-	get_cmd_is_ended(e);
+	lex = get_cmd_is_ended(e);
 	if (e->line == NULL)
 		return ;
 //	ft_printf("line='%s'\n", e->line);
 	if (e->term && !e->fd_in)
 		history_save_ent(e, e->line);
-	lexer(e, &lex, -1);
 	if (!lex.error)
 	{
 //		ft_printf("PARSING\n");
@@ -36,12 +35,11 @@ void	get_cmd(t_env *e)
 		parse_cmd_put_error(&lex);
 		e->status = 258;
 	}
-	free(lex.buf);
 	free(e->line);
 	e->line = NULL;
 }
 
-void	get_cmd_is_ended(t_env *e)
+t_parse	get_cmd_is_ended(t_env *e)
 {
 	t_parse		l;
 	int			type;
@@ -61,8 +59,9 @@ void	get_cmd_is_ended(t_env *e)
 			break ;
 		}
 		if (get_cmd_get_end(e, &l, &line_start, type))
-			return ;
+			return (l);
 	}
+	return (l);
 }
 
 int		get_cmd_get_end(t_env *e, t_parse *l, char **line_start, int type)
