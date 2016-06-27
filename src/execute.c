@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/10 18:58:17 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/06/23 01:10:19 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/06/27 02:32:56 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,11 @@ void	process_bin(t_env *e, char **env)
 	char	*cmd_path;
 	char	*cmd;
 
+	if (e->cmd[e->cid].sub)
+	{
+		process_fork_subcmd(e);
+		return ;
+	}
 	cmd = e->cmd[e->cid].arg[0];
 	cmd_path = get_cmd_path(e, cmd);
 	if (ft_strchr(cmd, '/') && ft_get_file_type(cmd) != -1)
@@ -95,6 +100,34 @@ void	process_fork(t_env *e, char *cmd_path, char **env)
 			exit(126);
 		}
 	}
+}
+
+void	process_fork_subcmd(t_env *e)
+{
+//	ft_printf("subcmd='%s'\n", e->cmd[e->cid].arg[0]);
+
+	int		child;
+
+	child = fork();
+	if (child > 0)
+	{
+		e->cmd[e->cid].pid = child;
+		if (e->cmd[e->cid].condi != SEP_PIPE || e->cmd_pgid == 0)
+			e->cmd_pgid = child;
+		e->cmd[e->cid].status = 1;
+	}
+	else if (child == 0)
+	{
+		setpgid(e->cmd[e->cid].pid, e->cmd_pgid);
+		tcsetpgrp(0, getpid());
+		redirec_assign(e);
+		free(e->line);
+		e->line = ft_strdup(e->cmd[e->cid].arg[0]);
+		free_cmd(e);
+		parse_cmd(e);
+		exit(e->status);
+	}
+// */
 }
 
 int		process_builtin(t_env *e)

@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/06/26 22:36:44 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/06/27 01:07:27 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,8 @@ typedef struct	s_parse
 	char	quoted;
 	char	bquo;
 	char	escape;
+	int		sub;
+	char	is_sub;
 	char	*buf;
 	int		i;
 	int		ib;

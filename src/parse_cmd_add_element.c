@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 17:06:44 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/06/23 01:29:24 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/06/27 02:32:35 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,13 @@ void	parse_add_cmd(t_env *e, t_parse *p, char sep)
 	e->cmd[e->cid].condi = NONE;
 	e->cmd[e->cid].redir = NULL;
 	e->cmd[e->cid].hdoc = NULL;
-	set_env_var(e, "_", p->last_arg);
+//	set_env_var(e, "_", p->last_arg);
+	if (p->last_arg)
+	{
+		set_env_var(e, "_", p->last_arg);
+		free(p->last_arg);
+		p->last_arg = NULL;
+	}
 	parse_add_cmd_sep(e, p, sep);
 }
 
@@ -77,6 +83,13 @@ int		parse_add_arg_redir_alias(t_env *e, t_parse *p)
 		&& p->quoted == NONE && !p->redirec)
 		if (parse_cmd_alias(e, p))
 			return (1);
+//	printf("-> sub=%d cid=%d buf='%s' line='%s'\n",
+//		   e->cmd[e->cid].sub, e->cid, p->buf, e->line + p->i);
+	if (e->cmd[e->cid].sub)
+	{
+		p->error = EP_SYNTAX;
+		return (1);
+	}
 	return (0);
 }
 

@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/06/26 20:17:18 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/06/27 02:33:03 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,8 @@ int		get_cmd_end(t_env *e, char type)
 		gen_prompt(e, "dquote> ");
 	else if (type == '`')
 		gen_prompt(e, "bquote> ");
+	else if (type == '(')
+		gen_prompt(e, "subsh> ");
 	else
 		gen_prompt(e, "> ");
 	if (isatty(e->fd_in))

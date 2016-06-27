@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/06/23 01:32:20 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/06/27 02:32:09 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ void	parse_cmd(t_env *e)
 	parse_init(e, &p);
 	while (1)
 	{
+//			printf("CELUICi [] ib=%d\n", p.ib);
 		if (parse_cmd_check_eol(e, &p))
 			break ;
 		parse_cmd_quotes(e, &p);
@@ -51,6 +52,7 @@ void	parse_init(t_env *e, t_parse *p)
 	p->aliased = 0;
 	p->bquo = NONE;
 	p->escape = 0;
+	p->sub = 0;
 	p->separ = 0;
 	p->last_arg = NULL;
 	p->redirec = NONE;
@@ -85,6 +87,7 @@ int		parse_cmd_check_eol(t_env *e, t_parse *p)
 	{
 		if (p->ib && !p->quo && !p->escape)
 		{
+
 			parse_add_arg(e, p);
 			if (e->line[p->i])
 				return (0);
@@ -131,6 +134,8 @@ int		parse_cmd_is_end(t_parse *p)
 		return ('`');
 	else if (p->escape)
 		return ('\\');
+	else if (p->sub > 0)
+		return ('(');
 	else if (!p->a_id && p->separ)
 		return (p->separ);
 	else

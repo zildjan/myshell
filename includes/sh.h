@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/06/26 22:52:25 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/06/26 23:54:46 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -414,6 +414,8 @@ void		parse_cmd_alias_rec(t_env *e, t_parse *p, char **cmd);
 **   PARSE_CMD_SUBCMD
 */
 void		parse_cmd_subcmd(t_env *e, t_parse *p);
+int			parse_cmd_subcmd_parse_line(t_env *e, t_parse *p);
+void		parse_cmd_subcmd_parse_line_quotes(t_env *e, t_parse *p);
 
 /*
 **   EXECUTE
@@ -421,6 +423,7 @@ void		parse_cmd_subcmd(t_env *e, t_parse *p);
 void		process_cmd(t_env *e);
 void		process_bin(t_env *e, char **env);
 void		process_fork(t_env *e, char *cmd_path, char **env);
+void		process_fork_subcmd(t_env *e);
 int			process_builtin(t_env *e);
 int			process_builtin_2(t_env *e);
 
