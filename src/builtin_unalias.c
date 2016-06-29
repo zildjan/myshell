@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/24 22:09:09 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/29 00:07:10 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/06/30 01:46:06 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	builtin_unalias(t_env *e)
 	if (e->carg[1] == NULL)
 	{
 		i = e->cmd[e->cid].fd_err;
-		ft_putendl_fd("21sh: unalias: usage: [-a] name [name ...]", i);
+		ft_putendl_fd("42sh: unalias: usage: [-a] name [name ...]", i);
 		e->status = 2;
 	}
 	else if (ft_strequ(e->carg[1], "-a"))
@@ -57,7 +57,7 @@ void	builtin_unalias_remove(t_env *e, char *name)
 		pre = alias;
 		alias = alias->next;
 	}
-	ft_putstr_fd("21sh: unalias: ", e->cmd[e->cid].fd_err);
+	ft_putstr_fd("42sh: unalias: ", e->cmd[e->cid].fd_err);
 	ft_putstr_fd(name, e->cmd[e->cid].fd_err);
 	ft_putendl_fd(": not found.", e->cmd[e->cid].fd_err);
 }

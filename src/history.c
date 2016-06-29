@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/03/14 18:41:21 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/06/30 01:46:54 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	history_init(t_env *e)
 {
 	if (e->home)
 	{
-		e->histo_file = ft_strjoin(e->home, "/.21sh_history");
+		e->histo_file = ft_strjoin(e->home, "/.42sh_history");
 	}
 	else
 		e->histo_file = NULL;

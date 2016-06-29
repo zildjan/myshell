@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/10 18:58:17 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/06/27 23:05:13 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/06/28 00:12:02 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,7 @@ void	process_fork(t_env *e, char *cmd_path, char **env)
 			tcsetpgrp(0, getpid());
 		}
 		redirec_assign(e);
+//		ft_printf("EXEC '%s'\n", cmd_path);
 		if (execve(cmd_path, e->cmd[e->cid].arg, env) == -1)
 		{
 			if (access(cmd_path, X_OK))
@@ -111,6 +112,7 @@ void	process_fork_subcmd(t_env *e)
 
 	int		child;
 
+		e->sub = 1;
 	child = fork();
 	if (child > 0)
 	{
@@ -121,7 +123,7 @@ void	process_fork_subcmd(t_env *e)
 	}
 	else if (child == 0)
 	{
-		e->sub = 1;
+		e->sub = 0;
 		setpgid(e->cmd[e->cid].pid, e->cmd_pgid);
 		tcsetpgrp(0, getpid());
 		redirec_assign(e);

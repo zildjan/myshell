@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/24 21:58:29 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/31 01:22:28 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/06/30 01:45:42 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,12 +45,12 @@ void	builtin_alias_add_check(t_env *e, char *str)
 	val = ft_strdup(str + i);
 	if (builtin_setenv_check(key, 0, 1))
 	{
-		ft_putendl_fd("21sh: alias: invalid name.", e->cmd[e->cid].fd_err);
+		ft_putendl_fd("42sh: alias: invalid name.", e->cmd[e->cid].fd_err);
 		e->status = 1;
 	}
 	else if (builtin_setenv_check(val, 0, 0))
 	{
-		ft_putendl_fd("21sh: alias: Bad character.", e->cmd[e->cid].fd_err);
+		ft_putendl_fd("42sh: alias: Bad character.", e->cmd[e->cid].fd_err);
 		e->status = 1;
 	}
 	else
@@ -102,7 +102,7 @@ void	builtin_alias_print(t_env *e, char *key)
 	if (key)
 	{
 		e->status = 1;
-		ft_putstr_fd("21sh: alias: ", e->cmd[e->cid].fd_err);
+		ft_putstr_fd("42sh: alias: ", e->cmd[e->cid].fd_err);
 		ft_putstr_fd(key, e->cmd[e->cid].fd_err);
 		ft_putendl_fd(": not found.", e->cmd[e->cid].fd_err);
 	}

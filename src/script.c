@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/29 23:32:56 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/06/26 20:16:47 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/06/30 01:47:07 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	load_rc(t_env *e)
 	char	*path;
 
 	path = ft_strdup(e->home);
-	path = ft_strdupcat(path, "/.21shrc");
+	path = ft_strdupcat(path, "/.42shrc");
 	execute_script(e, path, 0);
 	free(path);
 	e->fd_in = 0;

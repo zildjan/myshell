@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/06/01 02:15:13 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/06/30 01:46:34 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	put_error(int err, char *cmd, char *path, int fd)
 {
 	if (!cmd)
-		cmd = ft_strdup("21sh");
+		cmd = ft_strdup("42sh");
 	ft_putstr_fd(cmd, fd);
 	ft_putstr_fd(": ", fd);
 	free(cmd);
@@ -67,7 +67,7 @@ void	put_sig_error(int ret, char *path, int fd)
 
 void	put_cmd_opt_error(char *cmd, char opt, int fd, char *usage)
 {
-	ft_putstr_fd("21sh: ", fd);
+	ft_putstr_fd("42sh: ", fd);
 	ft_putstr_fd(cmd, fd);
 	ft_putstr_fd(": -", fd);
 	ft_putchar_fd(opt, fd);

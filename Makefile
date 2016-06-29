@@ -6,11 +6,11 @@
 #    By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/01/04 17:14:24 by pbourrie          #+#    #+#              #
-#    Updated: 2016/06/26 22:46:38 by pbourrie         ###   ########.fr        #
+#    Updated: 2016/06/30 01:45:05 by pbourrie         ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
-NAME=21sh
+NAME=42sh
 
 ifdef FLAGS
 ifeq ($(FLAGS), no)
