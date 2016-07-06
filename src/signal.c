@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/13 19:14:16 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/06/27 22:56:42 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/07/06 23:55:48 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,8 @@ void	sig_handler(t_env *e, int signum)
 		term_restore_backup(NULL);
 		exit(1);
 	}
-	if (se->sub)
-		return ;
+//	if (se->sub)
+//		return ;
 
 	if (signum == SIGTTIN)
 	{

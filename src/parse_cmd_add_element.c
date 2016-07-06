@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 17:06:44 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/06/27 02:32:35 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/07/07 00:15:10 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ int		parse_add_arg(t_env *e, t_parse *p)
 
 	if (parse_add_arg_redir_alias(e, p))
 		return (0);
+	ft_printf("buf=%s\n", p->buf);
 	old_size = sizeof(char*) * (p->a_id + 1);
 	new_size = sizeof(char*) * (p->a_id + 2);
 	parg = &e->cmd[e->cid].arg;
