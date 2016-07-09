@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 17:06:44 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/07/07 00:15:10 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/07/09 02:00:09 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,9 +51,15 @@ int		parse_add_arg(t_env *e, t_parse *p)
 	int		new_size;
 	char	***parg;
 
+//	ft_printf("ARG -> buf=%s\n", p->buf);
+	if (p->redirec)
+	{
+		parse_add_redirec(e, p);
+		return (1);
+	}
 	if (parse_add_arg_redir_alias(e, p))
 		return (0);
-	ft_printf("buf=%s\n", p->buf);
+//	ft_printf("ARG OK\n");
 	old_size = sizeof(char*) * (p->a_id + 1);
 	new_size = sizeof(char*) * (p->a_id + 2);
 	parg = &e->cmd[e->cid].arg;
@@ -75,11 +81,6 @@ int		parse_add_arg(t_env *e, t_parse *p)
 
 int		parse_add_arg_redir_alias(t_env *e, t_parse *p)
 {
-	if (p->redirec)
-	{
-		parse_add_redirec(e, p);
-		return (1);
-	}
 	if ((p->a_id == 0 || p->doalias) && p->aliased < p->i
 		&& p->quoted == NONE && !p->redirec)
 		if (parse_cmd_alias(e, p))
