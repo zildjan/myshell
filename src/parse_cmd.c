@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/07/09 01:54:12 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/07/11 23:30:06 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,12 +35,16 @@ void	parse_cmd(t_env *e)
 			p.escape--;
 	}
 
+	ft_printf("END a_id=%d buf='%s' ib=%d l='%s' ", p.a_id, p.buf, p.ib, e->line+p.i);
+	ft_printf("line='%s'\n", e->line);
+
 	parse_cmd_loop_end(e, &p);
 	parse_cmd_put_error(&p);
 	if (!p.error)
 		process_cmd(e);
 	if (p.last_arg)
 		free(p.last_arg);
+
 	free_cmd(e);
 }
 
@@ -87,7 +91,7 @@ int		parse_cmd_check_eol(t_env *e, t_parse *p)
 	{
 		if (p->ib && !p->quo && !p->escape)
 		{
-
+			ft_printf("ICI\n");
 			parse_add_arg(e, p);
 			if (e->line[p->i])
 				return (0);

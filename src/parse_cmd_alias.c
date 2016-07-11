@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/24 21:19:43 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/07/07 01:49:58 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/07/11 20:33:26 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,17 +20,18 @@ int		parse_cmd_alias(t_env *e, t_parse *p)
 	cmd = ft_strdup(p->buf);
 	cmd_save = cmd;
 	p->doalias = 0;
+//	p->line_len = ft_strlen(e->line);
 	parse_cmd_alias_rec(e, p, &cmd);
 	if (cmd == cmd_save)
 	{
 		free(cmd);
 		return (0);
 	}
+//	ft_printf("PARSING\n");
 	parse_cmd_alias_addtoline(e, p, cmd);
 	if (p->i != p->line_len)
 		p->i--;
 	p->i -= ft_strlen(p->buf);
-//	p->i++;
 	p->aliased = p->i + ft_strlen(cmd);
 	ft_strclr(p->buf);
 	p->ib = 0;

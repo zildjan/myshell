@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/06/27 22:47:24 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/07/11 23:30:49 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ void	get_cmd(t_env *e)
 		parse_cmd_put_error(&lex);
 		e->status = 258;
 	}
+	ft_putstr("TOTO2\n");
+
 	free(e->line);
 	e->line = NULL;
 }

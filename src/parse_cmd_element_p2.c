@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 17:05:18 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/07/09 02:00:48 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/07/11 20:23:43 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,8 @@ void	parse_cmd_reset_quotes(t_env *e, t_parse *p)
 
 int		parse_operators(t_env *e, t_parse *p, int separ, char doub)
 {
-//	ft_printf("a_id=%d buf='%s' l='%s' ", p->a_id, p->buf, e->line+p->i);
-//	ft_printf("line='%s'\n", e->line);
+	ft_printf("a_id=%d buf='%s' ib=%d l='%s' ", p->a_id, p->buf, p->ib, e->line+p->i);
+	ft_printf("line='%s'\n", e->line);
 	if (p->ib > 0)
 		if (!parse_add_arg(e, p))
 			return (1);
@@ -60,8 +60,8 @@ int		parse_operators(t_env *e, t_parse *p, int separ, char doub)
 	if (doub)
 		p->i++;
 	if (p->a_id == 0)
-		p->error = EP_NULL_CMD;
-//		p->error = EP_AMB_IN;
+//		p->error = EP_NULL_CMD;
+		p->error = EP_AMB_IN;
 	else
 	{
 		if (p->redirec)
@@ -83,6 +83,6 @@ int		parse_operators(t_env *e, t_parse *p, int separ, char doub)
 		}
 		parse_add_cmd_sep(e, p, p->separ);
 	}
-//	ft_printf("->a_id=%d buf='%s' l='%s'\n", p->a_id, p->buf, e->line+p->i);
+	ft_printf("->a_id=%d buf='%s' l='%s'\n", p->a_id, p->buf, e->line+p->i);
 	return (0);
 }
