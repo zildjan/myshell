@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 17:04:22 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/07/11 20:36:57 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/07/12 02:10:18 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,11 +107,7 @@ int		parse_cmd_expansion(t_env *e, t_parse *p)
 	else if (e->line[p->i] == '~' && !p->quo && !p->ib
 			&& !p->escape && p->ignore <= p->i)
 	{
-		if (e->line[p->i + 1] == '/' || is_aspace(e->line[p->i + 1])
-			|| !e->line[p->i + 1])
-			parse_tilde_expansion(e, p);
-		else
-			return (parse_cmd_redirection(e, p));
+		parse_tilde_expansion(e, p);
 	}
 	else
 		return (parse_cmd_redirection(e, p));
