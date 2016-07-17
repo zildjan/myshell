@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/13 22:16:21 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/12 17:31:21 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/07/17 01:49:20 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	jobs_add(t_env *e, int pid)
 			tmp = tmp->next;
 		new = (t_job*)ft_memalloc(sizeof(t_job));
 		new->pid = pid;
-		new->pgid = e->cmd_pgid;
+		new->pgid = pid; ///////////
 		new->id = id + 1;
 		new->name = ft_strdup(e->carg[0]);
 		new->next = NULL;

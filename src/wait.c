@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/10 15:54:41 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/06/01 02:12:15 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/07/17 02:06:11 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,10 @@ void	process_wait(t_env *e, int pid, int job)
 	int		ret;
 
 	ret = 0;
-	waitpid(pid, &ret, WUNTRACED);
-	if (e->wait_cid == e->cid || job)
-		tcsetpgrp(0, getpid());
+	waitpid(pid, &ret, 0);
+//	perror("");
+//	if (e->wait_cid == e->cid || job)
+//		tcsetpgrp(0, getpid());
 	term_restore(e);
 	if (WIFSIGNALED(ret))
 	{

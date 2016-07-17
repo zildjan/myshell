@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/07/12 02:12:22 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/07/17 00:10:50 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ void	parse_cmd(t_env *e)
 	if (p.last_arg)
 		free(p.last_arg);
 
+//	ft_printf("ICI pid=%d\n", getpid());
 	free_cmd(e);
 }
 

@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/13 19:14:16 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/07/06 23:55:48 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/07/17 02:09:36 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	sig_print(int signum)
 	}
 	if (nb > 100)
 		exit(0);
-	ft_printf("signal = %ld  (try %ld)\n", signum, nb);
+	ft_printf("signal = %ld  (try %ld)  %d\n", signum, nb, getpid());
 }
 
 void	catch_signal(void)
@@ -44,6 +44,21 @@ void	catch_signal(void)
 	signal(SIGWINCH, sig_mediator);
 }
 
+void	signal_default(void)
+{
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
+	signal(SIGTSTP, SIG_DFL);
+	signal(SIGTTIN, SIG_DFL);
+	signal(SIGTTOU, SIG_DFL);
+	signal(SIGSEGV, SIG_DFL);
+	signal(SIGILL, SIG_DFL);
+	signal(SIGABRT, SIG_DFL);
+	signal(SIGFPE, SIG_DFL);
+	signal(SIGBUS, SIG_DFL);
+	signal(SIGWINCH, SIG_DFL);
+}
+
 void	sig_handler(t_env *e, int signum)
 {
 	static t_env *se = NULL;
@@ -57,8 +72,12 @@ void	sig_handler(t_env *e, int signum)
 		term_restore_backup(NULL);
 		exit(1);
 	}
+
+//	sig_print(signum);
 //	if (se->sub)
 //		return ;
+//	if (se->sub)
+//		ft_printf("SUBME\n");
 
 	if (signum == SIGTTIN)
 	{

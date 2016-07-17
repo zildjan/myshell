@@ -6,14 +6,14 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/06/27 22:46:21 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/07/17 01:33:05 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FT_SH_H
 # define FT_SH_H
 
-# include <curses.h>
+//# include <curses.h>
 # include <term.h>
 # include <termios.h>
 # include <termcap.h>
@@ -421,11 +421,14 @@ void		parse_cmd_subcmd_parse_line_quotes(t_env *e, t_parse *p);
 **   EXECUTE
 */
 void		process_cmd(t_env *e);
-void		process_bin(t_env *e, char **env);
-void		process_fork(t_env *e, char *cmd_path, char **env);
+void		process_bin(t_env *e, char **env, int dofork);
+void		process_fork(t_env *e, char *cmd_path, char **env, int dofork);
+
 void		process_fork_subcmd(t_env *e);
 int			process_builtin(t_env *e);
 int			process_builtin_2(t_env *e);
+
+void		process_piped_cmd(t_env *e);
 
 /*
 **   WAIT
@@ -537,5 +540,7 @@ void		put_cmd_opt_error(char *cmd, char opt, int fd, char *usage);
 void		catch_signal(void);
 void		sig_handler(t_env *e, int signum);
 void		sig_mediator(int signum);
+
+void		signal_default(void);
 
 #endif

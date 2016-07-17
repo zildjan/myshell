@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/06/27 22:51:03 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/07/17 01:47:08 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -210,7 +210,6 @@ typedef struct	s_env
 	int				cid;
 	int				nb_cmd;
 	int				wait_cid;
-	int				cmd_pgid;
 	t_job			*job;
 	t_job			*jobs_lst;
 	t_compl			*compl;

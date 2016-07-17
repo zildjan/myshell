@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/12 19:40:34 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/01/10 16:28:03 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/07/16 01:58:07 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,6 +136,6 @@ void	builtin_env_exec(t_env *e, char **env, int i)
 		free(e->carg);
 		e->carg = cmd;
 		e->cmd[e->cid].arg = e->carg;
-		process_bin(e, env);
+		process_bin(e, env, 1);
 	}
 }
