@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/10 18:58:17 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/07/17 02:23:05 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/07/18 02:10:31 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,6 @@ void	process_cmd(t_env *e)
 void	process_piped_cmd(t_env *e)
 {
 	int		child;
-//	int		ret;
 	int		dofork;
 
 	e->cid = 0;
@@ -57,8 +56,11 @@ void	process_piped_cmd(t_env *e)
 
 	if (child > 0)
 	{
-		setpgid(child, child);
-		tcsetpgrp(0, child);
+		if (!e->sub)
+		{
+			setpgid(child, child);
+			tcsetpgrp(0, child);
+		}
 //		process_wait(e, child, 0);
 		process_wait(e, child * (-1), 0);
 
@@ -80,8 +82,7 @@ void	process_piped_cmd(t_env *e)
 		while (e->nb_cmd > e->cid)
 		{
 			e->carg = e->cmd[e->cid].arg;
-			if (!redirec_open_all(e))
-				ft_printf("ERRRORORORO\n");
+			redirec_open_all(e);
 			e->cid++;
 		}
 		e->cid = 0;
@@ -150,15 +151,7 @@ void	process_fork(t_env *e, char *cmd_path, char **env, int dofork)
 	{
 //		e->sub = 1;
 		signal_default();
-		if (!e->sub)
-		{
-//			setpgid(e->cmd[e->cid].pid, e->cmd_pgid);
-//		ft_printf("ICI\n");
-//			tcsetpgrp(0, getpid());
 
-		}
-
-//		tcsetpgrp(0, e->cmd_pgid);
 		redirec_assign(e);
 //		ft_printf("EXEC '%s'\n", cmd_path);
 		if (execve(cmd_path, e->cmd[e->cid].arg, env) == -1)
@@ -180,19 +173,25 @@ void	process_fork_subcmd(t_env *e)
 
 	int		child;
 
-	e->sub = 1;
+//	e->sub = 1;
 	child = fork();
+
+	term_restore_back(e);
+
 	if (child > 0)
 	{
+		setpgid(child, child);
+		tcsetpgrp(0, child);
+
 		e->cmd[e->cid].pid = child;
 //	if (e->cmd[e->cid].condi != SEP_PIPE || e->cmd_pgid == 0)
 		e->cmd[e->cid].status = 1;
 	}
 	else if (child == 0)
 	{
-		e->sub = 0;
-		setpgid(e->cmd[e->cid].pid, getpid());
-		tcsetpgrp(0, getpid());
+		e->sub = 1;
+		signal_default();
+
 		redirec_assign(e);
 		free(e->line);
 		e->line = ft_strdup(e->cmd[e->cid].arg[0]);
