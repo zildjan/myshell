@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/07/17 01:33:05 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/07/19 01:16:57 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -424,7 +424,7 @@ void		process_cmd(t_env *e);
 void		process_bin(t_env *e, char **env, int dofork);
 void		process_fork(t_env *e, char *cmd_path, char **env, int dofork);
 
-void		process_fork_subcmd(t_env *e);
+void		process_fork_subcmd(t_env *e, int dofork);
 int			process_builtin(t_env *e);
 int			process_builtin_2(t_env *e);
 

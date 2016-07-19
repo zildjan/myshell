@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/07/17 00:10:50 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/07/19 02:37:30 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ void	parse_cmd(t_env *e)
 		if (parse_cmd_check_eol(e, &p))
 			break ;
 		parse_cmd_quotes(e, &p);
+
 		if (p.escape)
 			p.escape--;
 	}
@@ -40,8 +41,10 @@ void	parse_cmd(t_env *e)
 
 	parse_cmd_loop_end(e, &p);
 	parse_cmd_put_error(&p);
-	if (!p.error)
+
+	if (!p.error && e->cmd[e->cid].arg)//PAS SUR
 		process_cmd(e);
+
 	if (p.last_arg)
 		free(p.last_arg);
 
@@ -92,13 +95,15 @@ int		parse_cmd_check_eol(t_env *e, t_parse *p)
 	{
 		if (p->ib && !p->quo && !p->escape)
 		{
-//			ft_printf("ICI\n");
 			parse_add_arg(e, p);
 			if (e->line[p->i])
 				return (0);
 		}
+
 		if (parse_cmd_is_end(p))
+		{
 			p->error = EP_EOF;
+		}
 		return (1);
 	}
 	return (0);

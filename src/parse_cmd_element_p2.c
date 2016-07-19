@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 17:05:18 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/07/12 02:12:54 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/07/19 02:23:21 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,8 +70,10 @@ int		parse_operators(t_env *e, t_parse *p, int separ, char doub)
 			process_cmd(e);
 		else
 			return (1);
+
 		free_cmd(e);
 		parse_init_cmd(e, p);
+
 		p->quoted = NONE;
 		p->doalias = 0;
 		p->separ = separ;
@@ -82,7 +84,10 @@ int		parse_operators(t_env *e, t_parse *p, int separ, char doub)
 			p->last_arg = NULL;
 		}
 		parse_add_cmd_sep(e, p, p->separ);
+
+
 	}
 //	ft_printf("->a_id=%d buf='%s' l='%s'\n", p->a_id, p->buf, e->line+p->i);
+
 	return (0);
 }
