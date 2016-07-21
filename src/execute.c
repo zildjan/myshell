@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/10 18:58:17 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/07/19 02:33:31 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/07/21 02:11:31 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,12 @@ void	process_cmd(t_env *e)
 
 //	ft_printf("nb_cmd=%d\n", e->nb_cmd);
 
+	e->cid = 0;
 	if (e->nb_cmd > 1)
 	{
 		process_piped_cmd(e);
 		return ;
 	}
-
-	e->cid = 0;
 
 //		ft_printf("condi=%d\n", e->cmd[e->cid].condi);
 	e->carg = e->cmd[e->cid].arg;
@@ -44,8 +43,6 @@ void	process_cmd(t_env *e)
 	if (e->cmd[e->cid].status > 0)
 		process_wait(e, e->cmd[e->cid].pid, 0);
 
-//	ft_putstr_fd("ICI*\n", 2);
-//	tcsetpgrp(0, getpid());
 	redirec_close(e, e->cid);
 
 	e->carg = NULL;
@@ -54,33 +51,35 @@ void	process_cmd(t_env *e)
 
 void	process_piped_cmd(t_env *e)
 {
-	int		child;
-	int		dofork;
+	char	dofork;
 
-	e->cid = 0;
 	dofork = 1;
-	term_restore_back(e);
-	child = fork();
+	int		pid;
 
-	if (child > 0)
+	pid = 0;
+	if (!e->sub)
+		term_restore_back(e);
+	if (dofork)
+		pid = fork();
+	if (pid > 0 || dofork == 0)
 	{
-
-		setpgid(child, child);
-//		if (!e->sub)
-		tcsetpgrp(0, child);
-
-//		process_wait(e, child, 0);
-
-		process_wait(e, child * (-1), 0);
-
-
-//		tcsetpgrp(0, getpid());
-
+		if (!e->sub)
+		{
+			setpgid(pid, pid);
+			tcsetpgrp(0, pid);
+		}
+		e->cmd[e->cid].pid = pid;
+		e->cmd[e->cid].status = 1;
 	}
-	else
+	if (pid == 0)
 	{
-		e->sub = 1;
+		if (!e->sub)
+		{
+			setpgid(0, getpid());
+			tcsetpgrp(0, getpid());
+		}
 		signal_default();
+		e->sub = 1;
 
 		while (e->nb_cmd > e->cid)
 		{
@@ -103,9 +102,11 @@ void	process_piped_cmd(t_env *e)
 		}
 		exit(e->status);
 	}
+	else
+		process_wait(e, e->cmd[e->cid].pid, 0);
 }
 
-void	process_bin(t_env *e, char **env, int dofork)
+void	process_bin(t_env *e, char **env, char dofork)
 {
 	char	*cmd_path;
 	char	*cmd;
@@ -121,8 +122,6 @@ void	process_bin(t_env *e, char **env, int dofork)
 		cmd_path = ft_strdup(cmd);
 	if (cmd_path != NULL)
 	{
-		if (!e->sub)
-			term_restore_back(e);
 		process_fork(e, cmd_path, env, dofork);
 		free(cmd_path);
 	}
@@ -136,30 +135,41 @@ void	process_bin(t_env *e, char **env, int dofork)
 	}
 }
 
-void	process_fork(t_env *e, char *cmd_path, char **env, int dofork)
+void	process_fork(t_env *e, char *cmd_path, char **env, char dofork)
 {
-	int		child;
+	int		pid;
 
-	child = 0;
+	pid = 0;
+	if (!e->sub)
+		term_restore_back(e);
 	if (dofork)
-		child = fork();
-	if (child > 0 || dofork == 0)
+		pid = fork();
+	if (pid > 0 || dofork == 0)
 	{
-		e->cmd[e->cid].pid = child;
-		e->cmd[e->cid].status = 1;
 		if (!e->sub)
 		{
-			setpgid(child, child);
-			tcsetpgrp(0, child);
+			setpgid(pid, pid);
+			tcsetpgrp(0, pid);
 		}
+		e->cmd[e->cid].pid = pid;
+		e->cmd[e->cid].status = 1;
 	}
-	if (child == 0)
+	if (pid == 0)
 	{
-//		e->sub = 1;
+		if (!e->sub)
+		{
+			setpgid(0, getpid());
+			tcsetpgrp(0, getpid());
+		}
 		signal_default();
+		e->sub = 1;
+
 		if (e->cmd[e->cid].status == -1)
 			exit(1);
+
+
 		redirec_assign(e);
+
 //		ft_printf("EXEC '%s'\n", cmd_path);
 		if (execve(cmd_path, e->cmd[e->cid].arg, env) == -1)
 		{
@@ -174,35 +184,37 @@ void	process_fork(t_env *e, char *cmd_path, char **env, int dofork)
 	}
 }
 
-void	process_fork_subcmd(t_env *e, int dofork)
+void	process_fork_subcmd(t_env *e, char dofork)
 {
 //	ft_printf("subcmd='%s'\n", e->cmd[e->cid].arg[0]);
 
-	int		child;
+	int		pid;
 
-	child = 0;
-	if (dofork)
-		child = fork();
-
+	pid = 0;
 	if (!e->sub)
 		term_restore_back(e);
-
-	if (child > 0 || dofork == 0)
+	if (dofork)
+		pid = fork();
+	if (pid > 0 || dofork == 0)
 	{
 		if (!e->sub)
 		{
-			setpgid(child, child);
-			tcsetpgrp(0, child);
+			setpgid(pid, pid);
+			tcsetpgrp(0, pid);
 		}
-
-		e->cmd[e->cid].pid = child;
-//	if (e->cmd[e->cid].condi != SEP_PIPE || e->cmd_pgid == 0)
+		e->cmd[e->cid].pid = pid;
 		e->cmd[e->cid].status = 1;
 	}
-	if (child == 0)
+	if (pid == 0)
 	{
-		e->sub = 1;
+		if (!e->sub)
+		{
+			setpgid(0, getpid());
+			tcsetpgrp(0, getpid());
+		}
 		signal_default();
+		e->sub = 1;
+
 
 		redirec_assign(e);
 		free(e->line);

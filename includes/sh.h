@@ -1,3 +1,4 @@
+
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
@@ -6,7 +7,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/07/19 01:16:57 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/07/21 02:11:12 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -421,10 +422,12 @@ void		parse_cmd_subcmd_parse_line_quotes(t_env *e, t_parse *p);
 **   EXECUTE
 */
 void		process_cmd(t_env *e);
-void		process_bin(t_env *e, char **env, int dofork);
-void		process_fork(t_env *e, char *cmd_path, char **env, int dofork);
+void		process_bin(t_env *e, char **env, char dofork);
 
-void		process_fork_subcmd(t_env *e, int dofork);
+
+void		process_fork(t_env *e, char *cmd_path, char **env, char dofork);
+
+void		process_fork_subcmd(t_env *e, char dofork);
 int			process_builtin(t_env *e);
 int			process_builtin_2(t_env *e);
 
@@ -435,7 +438,6 @@ void		process_piped_cmd(t_env *e);
 */
 void		process_wait(t_env *e, int pid, int job);
 void		process_wait_error(t_env *e, int ret, int job);
-void		process_wait_list(t_env *e);
 
 /*
 **   HEREDOC

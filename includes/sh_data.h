@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/07/18 23:11:54 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/07/20 23:51:36 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -209,7 +209,6 @@ typedef struct	s_env
 	char			**carg;
 	int				cid;
 	int				nb_cmd;
-	int				wait_cid;
 	t_job			*job;
 	t_job			*jobs_lst;
 	t_compl			*compl;

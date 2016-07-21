@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/13 19:14:16 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/07/19 01:18:23 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/07/20 23:46:35 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,10 @@ void	catch_signal(void)
 	signal(SIGINT, sig_mediator);
 	signal(SIGQUIT, sig_mediator);
 	signal(SIGTSTP, sig_mediator);
-	signal(SIGTTIN, sig_mediator);
-	signal(SIGTTOU, sig_mediator);
+//	signal(SIGTTIN, sig_mediator);
+//	signal(SIGTTOU, sig_mediator);
+	signal(SIGTTIN, SIG_IGN);
+	signal(SIGTTOU, SIG_IGN);
 	signal(SIGSEGV, sig_mediator);
 	signal(SIGILL, sig_mediator);
 	signal(SIGABRT, sig_mediator);
