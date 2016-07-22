@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/07/19 02:37:30 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/07/23 01:31:31 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ void	parse_init_cmd(t_env *e, t_parse *p)
 	e->cid = 0;
 	p->a_id = 0;
 	e->nb_cmd = 1;
+	e->background_cmd = 0;
 	e->cmd = (t_cmd*)ft_memalloc(sizeof(t_cmd) * (e->nb_cmd));
 	e->cmd[0].redir = NULL;
 	e->cmd[0].hdoc = NULL;

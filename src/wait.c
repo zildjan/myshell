@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/10 15:54:41 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/07/21 02:23:09 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/07/23 01:38:02 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,30 +16,44 @@ void	process_wait(t_env *e, int pid, int job)
 {
 	int		ret;
 
+	if (!e->sub && e->background_cmd && !job)
+	{
+		jobs_add(e, pid);
+		return ;
+	}
 	ret = 0;
+
 	waitpid(pid, &ret, WUNTRACED);
 //	perror("");
 //	if (e->wait_cid == e->cid || job)
+
 	if (!e->sub)
 		tcsetpgrp(0, getpid());
 	if (!e->sub)
 		term_restore(e);
-	if (WIFSIGNALED(ret))
+	process_wait_status(e, ret, pid, job);
+}
+
+void	process_wait_status(t_env *e, int status, int pid, int job)
+{
+	if (WIFSIGNALED(status))
 	{
-		if (ret != SIGINT && !e->sub)
-			process_wait_error(e, ret, job);
+		if (status != SIGINT && !e->sub)
+			process_wait_error(e, status, job);
 		else if (!e->sub)
 			ft_putchar('\n');
-		e->status = (WTERMSIG(ret)) + 128;
+		e->status = (WTERMSIG(status)) + 128;
 	}
-	else if (WIFSTOPPED(ret) && !e->sub)
+	else if (WIFSTOPPED(status) && !e->sub)
 	{
-		if (WSTOPSIG(ret) == SIGTSTP)
+//		ft_printf("ICI sign=%d\n", WSTOPSIG(status));
+		if (WSTOPSIG(status) == SIGTSTP)
 			jobs_add(e, pid);
 	}
 	else
-		e->status = WEXITSTATUS(ret);
-	if (!WIFSTOPPED(ret) && job && !e->sub)
+		e->status = WEXITSTATUS(status);
+
+	if (!WIFSTOPPED(status) && job && !e->sub)
 		jobs_remove(e, pid);
 }
 

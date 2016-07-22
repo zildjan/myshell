@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/13 19:14:16 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/07/20 23:46:35 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/07/23 00:48:45 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ void	catch_signal(void)
 //	signal(SIGTTOU, sig_mediator);
 	signal(SIGTTIN, SIG_IGN);
 	signal(SIGTTOU, SIG_IGN);
+	signal(SIGCHLD, sig_mediator);
 	signal(SIGSEGV, sig_mediator);
 	signal(SIGILL, sig_mediator);
 	signal(SIGABRT, sig_mediator);
@@ -53,6 +54,7 @@ void	signal_default(void)
 	signal(SIGTSTP, SIG_DFL);
 	signal(SIGTTIN, SIG_DFL);
 	signal(SIGTTOU, SIG_DFL);
+	signal(SIGCHLD, SIG_DFL);
 	signal(SIGSEGV, SIG_DFL);
 	signal(SIGILL, SIG_DFL);
 	signal(SIGABRT, SIG_DFL);
@@ -93,6 +95,8 @@ void	sig_handler(t_env *e, int signum)
 	{
 		refresh_nb_col(se);
 	}
+	else if (signum == SIGCHLD)
+		jobs_update_status(se);
 }
 
 void	sig_mediator(int signum)

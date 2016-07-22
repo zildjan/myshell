@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/07/22 01:41:26 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/07/23 00:49:17 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -441,6 +441,7 @@ void		process_init_child(t_env *e);
 **   WAIT
 */
 void		process_wait(t_env *e, int pid, int job);
+void		process_wait_status(t_env *e, int status, int pid, int job);
 void		process_wait_error(t_env *e, int ret, int job);
 
 /*
@@ -498,6 +499,8 @@ void		term_load_key2(t_env *e);
 /*
 **   JOBS
 */
+void		jobs_update_status(t_env *e);
+
 void		jobs_add(t_env *e, int pid);
 void		jobs_continue(t_env *e);
 void		jobs_remove(t_env *e, int pid);

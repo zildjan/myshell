@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/10 18:58:17 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/07/22 01:50:19 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/07/23 01:43:26 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,10 @@ void	process_cmd(t_env *e)
 	int		condi;
 
 	e->cid = 0;
+	e->carg = e->cmd[e->cid].arg;
 	if (e->nb_cmd > 1)
 		return (process_piped_cmd(e));
 
-	e->carg = e->cmd[e->cid].arg;
 	condi = e->cmd[e->cid].condi;
 
 	if (redirec_open_all(e)
@@ -44,7 +44,8 @@ void	process_set_child_attr(t_env *e, int pid)
 	if (!e->sub)
 	{
 		setpgid(pid, pid);
-		tcsetpgrp(0, pid);
+		if (!e->background_cmd)
+			tcsetpgrp(0, pid);
 	}
 	e->cmd[e->cid].pid = pid;
 	e->cmd[e->cid].status = 1;
@@ -55,7 +56,8 @@ void	process_init_child(t_env *e)
 	if (!e->sub)
 	{
 		setpgid(0, getpid());
-		tcsetpgrp(0, getpid());
+		if (!e->background_cmd)
+			tcsetpgrp(0, getpid());
 	}
 	signal_default();
 	e->sub = 1;
@@ -68,7 +70,7 @@ void	process_piped_cmd(t_env *e)
 	int		pid;
 
 	pid = 0;
-	if (!e->sub)
+	if (!e->sub && !e->background_cmd)
 		term_restore_back(e);
 	pid = fork();
 	if (pid > 0)
@@ -139,7 +141,7 @@ void	process_fork(t_env *e, char *cmd_path, char **env, char dofork)
 	int		pid;
 
 	pid = 0;
-	if (!e->sub)
+	if (!e->sub && !e->background_cmd)
 		term_restore_back(e);
 	if (dofork)
 		pid = fork();
@@ -172,7 +174,7 @@ void	process_fork_subcmd(t_env *e, char dofork)
 	int		pid;
 
 	pid = 0;
-	if (!e->sub)
+	if (!e->sub && !e->background_cmd)
 		term_restore_back(e);
 	if (dofork)
 		pid = fork();
@@ -184,6 +186,7 @@ void	process_fork_subcmd(t_env *e, char dofork)
 		redirec_assign(e);
 		free(e->line);
 		e->line = ft_strdup(e->cmd[e->cid].arg[0]);
+
 		free_cmd(e);
 		parse_cmd(e);
 		exit(e->status);
