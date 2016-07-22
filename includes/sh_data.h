@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/07/20 23:51:36 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/07/22 01:54:28 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,8 @@ typedef struct	s_job
 {
 	char			*name;
 	int				id;
-	int				pid;
 	int				pgid;
+	struct termios	tmodes;
 	struct s_job	*next;
 }				t_job;
 
@@ -172,6 +172,7 @@ typedef struct	s_cmd
 	char		**arg;
 	char		condi;
 	char		sub;
+	char		background;
 	int			pid;
 	int			pgid;
 	int			fd_in;

@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/13 22:16:21 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/07/17 01:49:20 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/07/22 01:10:45 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ void	jobs_add(t_env *e, int pid)
 		while (tmp && tmp->next)
 			tmp = tmp->next;
 		new = (t_job*)ft_memalloc(sizeof(t_job));
-		new->pid = pid;
 		new->pgid = pid; ///////////
 		new->id = id + 1;
 		new->name = ft_strdup(e->carg[0]);
@@ -57,7 +56,7 @@ void	jobs_continue(t_env *e)
 	term_restore_back(e);
 	tcsetpgrp(0, e->job->pgid);
 	killpg(e->job->pgid, SIGCONT);
-	process_wait(e, e->job->pid, 1);
+	process_wait(e, e->job->pgid, 1);
 }
 
 void	jobs_remove(t_env *e, int pid)
@@ -67,7 +66,7 @@ void	jobs_remove(t_env *e, int pid)
 
 	pre_job = NULL;
 	job = e->jobs_lst;
-	while (job && job->pid != pid)
+	while (job && job->pgid != pid)
 	{
 		pre_job = job;
 		job = job->next;
@@ -110,7 +109,7 @@ int		jobs_count(t_env *e, int pid)
 	i = 0;
 	while (tmp)
 	{
-		if (tmp->pid == pid)
+		if (tmp->pgid == pid)
 			return (-1);
 		tmp = tmp->next;
 		i++;

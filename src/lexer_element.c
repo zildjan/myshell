@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/06 00:29:40 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/06/27 01:49:07 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/07/22 01:52:17 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,11 @@ int		lexer_operator_delim(t_env *e, t_parse *l)
 		lexer_add_cmd(l, SEP_PIPE);
 	}
 	else if (e->line[l->i] == ';' && !l->quo && !l->escape)
+	{
+		lexer_add_cmd(l, NONE);
+	}
+	else if (e->line[l->i] == '&' && e->line[l->i + 1] == '&'
+		&& !l->quo && !l->escape)
 	{
 		lexer_add_cmd(l, NONE);
 	}

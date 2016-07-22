@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/10 18:58:17 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/07/21 02:11:31 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/07/22 01:50:19 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,19 +16,12 @@ void	process_cmd(t_env *e)
 {
 	int		condi;
 
-//	ft_printf("nb_cmd=%d\n", e->nb_cmd);
-
 	e->cid = 0;
 	if (e->nb_cmd > 1)
-	{
-		process_piped_cmd(e);
-		return ;
-	}
+		return (process_piped_cmd(e));
 
-//		ft_printf("condi=%d\n", e->cmd[e->cid].condi);
 	e->carg = e->cmd[e->cid].arg;
 	condi = e->cmd[e->cid].condi;
-
 
 	if (redirec_open_all(e)
 		&& ((condi != SEP_AND && condi != SEP_OR)
@@ -39,71 +32,80 @@ void	process_cmd(t_env *e)
 			process_bin(e, e->var, 1);
 	}
 
-//	ft_putstr_fd("ICI\n", 2);
 	if (e->cmd[e->cid].status > 0)
 		process_wait(e, e->cmd[e->cid].pid, 0);
 
 	redirec_close(e, e->cid);
-
 	e->carg = NULL;
+}
 
+void	process_set_child_attr(t_env *e, int pid)
+{
+	if (!e->sub)
+	{
+		setpgid(pid, pid);
+		tcsetpgrp(0, pid);
+	}
+	e->cmd[e->cid].pid = pid;
+	e->cmd[e->cid].status = 1;
+}
+
+void	process_init_child(t_env *e)
+{
+	if (!e->sub)
+	{
+		setpgid(0, getpid());
+		tcsetpgrp(0, getpid());
+	}
+	signal_default();
+	e->sub = 1;
+	if (e->cmd[e->cid].status == -1)
+		exit(1);
 }
 
 void	process_piped_cmd(t_env *e)
 {
-	char	dofork;
-
-	dofork = 1;
 	int		pid;
 
 	pid = 0;
 	if (!e->sub)
 		term_restore_back(e);
-	if (dofork)
-		pid = fork();
-	if (pid > 0 || dofork == 0)
-	{
-		if (!e->sub)
-		{
-			setpgid(pid, pid);
-			tcsetpgrp(0, pid);
-		}
-		e->cmd[e->cid].pid = pid;
-		e->cmd[e->cid].status = 1;
-	}
+	pid = fork();
+	if (pid > 0)
+		process_set_child_attr(e, pid);
 	if (pid == 0)
-	{
-		if (!e->sub)
-		{
-			setpgid(0, getpid());
-			tcsetpgrp(0, getpid());
-		}
-		signal_default();
-		e->sub = 1;
-
-		while (e->nb_cmd > e->cid)
-		{
-			e->carg = e->cmd[e->cid].arg;
-			if (!redirec_open_all(e))
-				e->cmd[e->cid].status = -1;
-			e->cid++;
-		}
-		e->cid = 0;
-		while (e->nb_cmd > e->cid)
-		{
-			if (e->nb_cmd - 1 == e->cid)
-				dofork = 0;
-			e->carg = e->cmd[e->cid].arg;
-
-			if (!process_builtin(e))
-				process_bin(e, e->var, dofork);
-
-			e->cid++;
-		}
-		exit(e->status);
-	}
+		process_piped_cmd_child(e);
 	else
+	{
 		process_wait(e, e->cmd[e->cid].pid, 0);
+		e->carg = NULL;
+	}
+}
+
+void	process_piped_cmd_child(t_env *e)
+{
+	char	dofork;
+
+	process_init_child(e);
+	dofork = 1;
+	while (e->nb_cmd > e->cid)
+	{
+		e->carg = e->cmd[e->cid].arg;
+		if (!redirec_open_all(e))
+			e->cmd[e->cid].status = -1;
+		e->cid++;
+	}
+	e->cid = 0;
+	while (e->nb_cmd > e->cid)
+	{
+		if (e->nb_cmd - 1 == e->cid)
+			dofork = 0;
+		e->carg = e->cmd[e->cid].arg;
+		if (!process_builtin(e))
+			process_bin(e, e->var, dofork);
+		e->cid++;
+	}
+	exit(e->status);
 }
 
 void	process_bin(t_env *e, char **env, char dofork)
@@ -112,10 +114,7 @@ void	process_bin(t_env *e, char **env, char dofork)
 	char	*cmd;
 
 	if (e->cmd[e->cid].sub)
-	{
-		process_fork_subcmd(e, dofork);
-		return ;
-	}
+		return (process_fork_subcmd(e, dofork));
 	cmd = e->cmd[e->cid].arg[0];
 	cmd_path = get_cmd_path(e, cmd);
 	if (ft_strchr(cmd, '/') && ft_get_file_type(cmd) != -1)
@@ -145,28 +144,10 @@ void	process_fork(t_env *e, char *cmd_path, char **env, char dofork)
 	if (dofork)
 		pid = fork();
 	if (pid > 0 || dofork == 0)
-	{
-		if (!e->sub)
-		{
-			setpgid(pid, pid);
-			tcsetpgrp(0, pid);
-		}
-		e->cmd[e->cid].pid = pid;
-		e->cmd[e->cid].status = 1;
-	}
+		process_set_child_attr(e, pid);
 	if (pid == 0)
 	{
-		if (!e->sub)
-		{
-			setpgid(0, getpid());
-			tcsetpgrp(0, getpid());
-		}
-		signal_default();
-		e->sub = 1;
-
-		if (e->cmd[e->cid].status == -1)
-			exit(1);
-
+		process_init_child(e);
 
 		redirec_assign(e);
 
@@ -196,26 +177,10 @@ void	process_fork_subcmd(t_env *e, char dofork)
 	if (dofork)
 		pid = fork();
 	if (pid > 0 || dofork == 0)
-	{
-		if (!e->sub)
-		{
-			setpgid(pid, pid);
-			tcsetpgrp(0, pid);
-		}
-		e->cmd[e->cid].pid = pid;
-		e->cmd[e->cid].status = 1;
-	}
+		process_set_child_attr(e, pid);
 	if (pid == 0)
 	{
-		if (!e->sub)
-		{
-			setpgid(0, getpid());
-			tcsetpgrp(0, getpid());
-		}
-		signal_default();
-		e->sub = 1;
-
-
+		process_init_child(e);
 		redirec_assign(e);
 		free(e->line);
 		e->line = ft_strdup(e->cmd[e->cid].arg[0]);

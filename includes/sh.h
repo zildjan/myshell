@@ -1,4 +1,3 @@
-
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
@@ -7,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/07/21 02:11:12 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/07/22 01:41:26 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -424,14 +423,19 @@ void		parse_cmd_subcmd_parse_line_quotes(t_env *e, t_parse *p);
 void		process_cmd(t_env *e);
 void		process_bin(t_env *e, char **env, char dofork);
 
-
 void		process_fork(t_env *e, char *cmd_path, char **env, char dofork);
 
-void		process_fork_subcmd(t_env *e, char dofork);
 int			process_builtin(t_env *e);
 int			process_builtin_2(t_env *e);
 
+
+void		process_fork_subcmd(t_env *e, char dofork);
+
 void		process_piped_cmd(t_env *e);
+void		process_piped_cmd_child(t_env *e);
+
+void		process_set_child_attr(t_env *e, int pid);
+void		process_init_child(t_env *e);
 
 /*
 **   WAIT

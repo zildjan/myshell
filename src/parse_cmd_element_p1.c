@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 17:04:22 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/07/19 02:24:18 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/07/22 01:56:18 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,15 @@ int		parse_cmd_pipe_comma(t_env *e, t_parse *p)
 	else if (e->line[p->i] == ';' && !p->quo
 			&& !p->escape && p->ignore <= p->i)
 	{
+		if (parse_operators(e, p, NONE, 0))
+		{
+			return (1);// A VERFIFIER UTILITE
+		}
+	}
+	else if (e->line[p->i] == '&' && !p->quo
+			&& !p->escape && p->ignore <= p->i)
+	{
+		e->cmd[e->cid].background = 1;
 		if (parse_operators(e, p, NONE, 0))
 		{
 			return (1);
