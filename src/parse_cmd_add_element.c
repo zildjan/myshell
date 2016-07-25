@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 17:06:44 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/07/11 20:16:57 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/07/25 01:18:42 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ int		parse_add_arg(t_env *e, t_parse *p)
 //	ft_printf("ARG -> buf=%s\n", p->buf);
 	if (p->redirec)
 	{
+//	ft_printf("ICI\n");
 		parse_add_redirec(e, p);
 		return (1);
 	}

@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/13 22:16:21 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/07/23 01:08:22 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/07/24 23:53:26 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,8 @@ void	jobs_add(t_env *e, int pid)
 		else
 			tmp->next = new;
 	}
-
+//	term_restore(e);
+//	tcsetpgrp(0, getpid());
 	ft_printf("\n[%ld]  - %ld suspended  %s\n", e->job->id, pid, e->job->name);
 
 }

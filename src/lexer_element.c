@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/06 00:29:40 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/07/22 01:52:17 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/07/25 02:15:31 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,8 +91,7 @@ int		lexer_operator_delim(t_env *e, t_parse *l)
 	{
 		lexer_add_cmd(l, NONE);
 	}
-	else if (e->line[l->i] == '&' && e->line[l->i + 1] == '&'
-		&& !l->quo && !l->escape)
+	else if (e->line[l->i] == '&' && !l->quo && !l->escape)
 	{
 		lexer_add_cmd(l, NONE);
 	}
@@ -108,13 +107,19 @@ int		lexer_exp_redir(t_env *e, t_parse *l)
 	{
 		parse_tilde_expansion(e, l);
 	}
-	else if (((ft_isdigit(e->line[l->i]) && is_aspace(e->line[l->i - 1])
+	else if (((ft_isdigit(e->line[l->i])
+			&& (l->i - 1 == -1 || is_aspace(e->line[l->i - 1]))
 			&& (e->line[l->i + 1] == '<' || e->line[l->i + 1] == '>'))
 			|| (e->line[l->i] == '<' || e->line[l->i] == '>'))
 			&& !l->quo && !l->escape)
 	{
 		lexer_add_arg(l);
 		parse_get_redirec_type(e, l);
+		if (e->line[l->i] && e->line[l->i + 1] == '&')
+		{
+			l->i++;
+			return (lexer_add_to_buf(e, l));
+		}
 	}
 	else
 		return (lexer_space_escape(e, l));

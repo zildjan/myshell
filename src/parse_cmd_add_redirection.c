@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 17:08:16 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/06/24 22:57:15 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/07/25 02:22:33 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,10 @@ int		parse_add_redirec(t_env *e, t_parse *p)
 {
 	if (!p->ib)
 		return (p->error = EP_MISS_REDIREC);
+//	ft_putnbr(p->i - p->ib);
+	if (e->line[p->i - p->ib - 1] != '>' && e->line[p->i - p->ib - 1] != '<')
+		return (p->error = EP_SYNTAX);
+
 	if (p->redirec_fd < 0)
 	{
 		p->redirec_fd = 0;
@@ -24,6 +28,7 @@ int		parse_add_redirec(t_env *e, t_parse *p)
 	}
 	if (p->buf[0] == '&')
 	{
+//		ft_printf("ICI buf='%s' fd=%d\n", p->buf, p->redirec_fd);
 		if (!ft_isdigit(p->buf[1]) && p->buf[1] != '-')
 			p->error = EP_BAD_FD;
 		else if (p->buf[2])

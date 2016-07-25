@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 17:04:22 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/07/23 01:31:14 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/07/25 02:04:16 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,8 @@ int		parse_cmd_expansion(t_env *e, t_parse *p)
 
 int		parse_cmd_redirection(t_env *e, t_parse *p)
 {
-	if (((ft_isdigit(e->line[p->i]) && is_aspace(e->line[p->i - 1])
+	if (((ft_isdigit(e->line[p->i])
+		&& (p->i - 1 == -1 || is_aspace(e->line[p->i - 1]))
 		&& (e->line[p->i + 1] == '<' || e->line[p->i + 1] == '>'))
 		|| (e->line[p->i] == '<' || e->line[p->i] == '>'))
 		&& !p->quo && !p->escape && p->ignore <= p->i)
@@ -137,9 +138,16 @@ int		parse_cmd_redirection(t_env *e, t_parse *p)
 		if (p->ib > 0)
 			parse_add_arg(e, p);
 		p->redirec_fd = -1;
+//		ft_printf("ICI buf='%s' fd=%d line='%s'\n", p->buf, p->redirec_fd, e->line + p->i);
 		if (ft_isdigit(e->line[p->i]))
 			p->redirec_fd = e->line[p->i++] - 48;
 		parse_get_redirec_type(e, p);
+		if (e->line[p->i] && e->line[p->i + 1] == '&')
+		{
+			p->i++;
+			return (parse_cmd_add_to_buf(e, p));
+		}
+
 	}
 	else
 		return (parse_cmd_space_backslash(e, p));

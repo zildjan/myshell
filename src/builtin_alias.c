@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/24 21:58:29 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/06/30 01:45:42 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/07/25 00:11:09 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,11 @@ void	builtin_alias_print(t_env *e, char *key)
 	{
 		if (ft_strequ(alias->key, key) || !key)
 		{
-			ft_printf("alias %s='%s'\n", alias->key, alias->val);
+			ft_putstr_fd("alias ", e->cmd[e->cid].fd_out);
+			ft_putstr_fd(alias->key, e->cmd[e->cid].fd_out);
+			ft_putstr_fd("='", e->cmd[e->cid].fd_out);
+			ft_putstr_fd(alias->val, e->cmd[e->cid].fd_out);
+			ft_putstr_fd("'\n", e->cmd[e->cid].fd_out);
 			if (key)
 				return ;
 		}
