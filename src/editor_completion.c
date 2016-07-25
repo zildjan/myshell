@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/01 23:00:22 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/05/21 01:05:27 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/07/26 01:21:36 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,20 @@ void	editor_completion(t_env *e)
 {
 	completion_update(e);
 	if (e->compl->size == 0)
+	{
 		ft_putchar(7);
+	}
 	else if (e->compl->mutual[0] != 0)
 	{
 		editor_completion_complete(e);
 		if (e->compl->size == 1)
+//			&& !ft_strequ(e->compl->mutual, e->compl->cstart))
+		{
 			editor_completion_complete_end(e);
+//			return ;
+		}
 	}
-	if (e->compl->size > 1)
+	if (e->compl->size > 1 || ft_strequ(e->compl->mutual, e->compl->cstart))
 		editor_completion_print(e);
 }
 
@@ -33,7 +39,11 @@ void	editor_completion_complete(t_env *e)
 	char	*escaped;
 
 	to_add = e->compl->mutual + ft_strlen(e->compl->cstart);
-	if (e->compl->lex.quo == NONE)
+	if (e->compl->lex.quo == DOUB)
+		escaped = ft_escape_chars(to_add, "\"\\$");
+	else if (e->compl->lex.quo == SIMP)
+		escaped = escape_simple_quotes(to_add);
+	else
 	{
 		if (ft_strchr(to_add, '\n'))
 		{
@@ -44,10 +54,6 @@ void	editor_completion_complete(t_env *e)
 		else
 			escaped = ft_escape_chars(to_add, " ;|\t><\\&'\"`$!");
 	}
-	else if (e->compl->lex.quo == DOUB)
-		escaped = ft_escape_chars(to_add, "\"\\$");
-	else
-		escaped = escape_simple_quotes(to_add);
 	get_input_chars(e, escaped);
 	free(escaped);
 }
@@ -62,16 +68,16 @@ void	editor_completion_complete_end(t_env *e)
 	type = ft_get_file_type(path);
 	if (type == 'd' || (type != 'd' && type != 'l'))
 	{
-		if (e->compl->lex.quo == DOUB)
+		if (e->compl->lex.quo == DOUB && e->cur == e->line_len)
 			get_input_char(e, '"');
-		else if (e->compl->lex.quo == SIMP)
+		else if (e->compl->lex.quo == SIMP && e->cur == e->line_len)
 			get_input_char(e, '\'');
 	}
 	if (type == 'd')
 		get_input_char(e, '/');
 	else if (type == 'l')
 		editor_completion_complete_end_link(e);
-	else
+	else if (e->cur == e->line_len)
 		get_input_char(e, ' ');
 	free(path);
 }
