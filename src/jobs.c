@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/13 22:16:21 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/07/24 23:53:26 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/07/27 01:22:47 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,18 +15,20 @@
 void	jobs_update_status(t_env *e)
 {
 	int		status;
+	t_job	*job;
 	int		pid;
 
-	pid = 1;
+	job = e->jobs_lst;
 //	ft_printf("ICI\n");
-	while (pid > 0)
+	while (job)
 	{
-		pid = waitpid (WAIT_ANY, &status, WUNTRACED | WNOHANG);
+		pid = waitpid (job->pgid, &status, WUNTRACED | WNOHANG);
 		if (pid > 0)
 		{
 //			ft_printf("pid=%d status=%d\n", pid, status);
 			process_wait_status(e, status, pid, 1);
 		}
+		job = job->next;
 	}
 }
 
@@ -77,10 +79,11 @@ void	jobs_continue(t_env *e)
 	}
 	name = e->job->name;
 	ft_printf("[%ld]  - %ld continued  %s\n", e->job->id, e->job->pgid, name);
+
 	term_restore_back(e);
 	tcsetpgrp(0, e->job->pgid);
 	killpg(e->job->pgid, SIGCONT);
-	process_wait(e, e->job->pgid, 1);
+//	process_wait(e, e->job->pgid, 1);
 }
 
 void	jobs_remove(t_env *e, int pid)

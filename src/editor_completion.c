@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/01 23:00:22 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/07/26 01:21:36 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/07/26 23:38:37 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,11 @@ void	editor_completion(t_env *e)
 	{
 		editor_completion_complete(e);
 		if (e->compl->size == 1)
-//			&& !ft_strequ(e->compl->mutual, e->compl->cstart))
 		{
 			editor_completion_complete_end(e);
-//			return ;
 		}
 	}
-	if (e->compl->size > 1 || ft_strequ(e->compl->mutual, e->compl->cstart))
+	if (e->compl->size > 1)
 		editor_completion_print(e);
 }
 

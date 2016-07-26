@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/10 15:54:41 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/07/24 23:45:27 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/07/27 01:25:43 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,13 +46,20 @@ void	process_wait_status(t_env *e, int status, int pid, int job)
 	}
 	else if (WIFSTOPPED(status) && !e->sub)
 	{
-//		ft_printf("ICI sign=%d\n", WSTOPSIG(status));
-		if (WSTOPSIG(status) == SIGTSTP)
+
+//		if (WSTOPSIG(status) == SIGTSTP)
+		if (!job)
 			jobs_add(e, pid);
+
 	}
 	else
 		e->status = WEXITSTATUS(status);
-
+	if (job)
+	{
+//		ft_printf("ICI sign=%d\n", WSTOPSIG(status));
+		tcsetpgrp(0, getpid());
+		term_restore(e);
+	}
 	if (!WIFSTOPPED(status) && job && !e->sub)
 		jobs_remove(e, pid);
 }

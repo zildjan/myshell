@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/10 01:26:13 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/07/23 01:10:50 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/07/27 00:06:04 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ void	kill_jobs(t_env *e)
 	int		i;
 	int		ret;
 
+	signal(SIGCHLD, SIG_DFL);
 	i = 0;
 	job = e->jobs_lst;
 	while (job)
