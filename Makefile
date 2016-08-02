@@ -6,7 +6,7 @@
 #    By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/01/04 17:14:24 by pbourrie          #+#    #+#              #
-#    Updated: 2016/06/30 01:45:05 by pbourrie         ###   ########.fr        #
+#    Updated: 2016/08/03 01:45:54 by pbourrie         ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -99,6 +99,7 @@ SRC = $(sort $(SRCS))
 SRC_PATH = src/
 OBJ_PATH = obj/
 INC_PATH = -I libft/includes/ -I includes/
+HEADERS = includes/sh.h includes/sh_data.h
 LIBS = libft/libft.a -ltermcap
 OBJ = $(SRC:.c=.o)
 OBJS = $(addprefix $(OBJ_PATH), $(OBJ))
@@ -111,10 +112,10 @@ $(NAME) : $(OBJS)
 	@gcc -o $(NAME) $(LIBS) $(OBJS)
 	@echo "	$(B)Done$(RT)"
 
-$(OBJ_PATH)%.o : $(SRC_PATH)%.c
+$(OBJ_PATH)%.o : $(SRC_PATH)%.c $(HEADERS)
 	@[ -e $(OBJ_PATH) ] || (mkdir $(OBJ_PATH))
-	@echo "	*$(B)Compiling$(RT) $?"
-	@gcc $(CFLAGS) $(INC_PATH) -c -o $@ $?
+	@echo "	*$(B)Compiling$(RT) $<"
+	@gcc $(CFLAGS) $(INC_PATH) -c -o $@ $<
 
 relib :
 	@make -C libft/ fclean
