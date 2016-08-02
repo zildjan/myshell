@@ -6,22 +6,22 @@
 #    By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/01/04 17:14:24 by pbourrie          #+#    #+#              #
-#    Updated: 2016/02/03 23:53:24 by pbourrie         ###   ########.fr        #
+#    Updated: 2016/08/03 01:53:02 by pbourrie         ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
 NAME = 		libft.a
 
-ifdef FLAGS 
-ifeq ($(FLAGS), no) 
-CFLAGS= 
-endif 
-ifeq ($(FLAGS), debug) 
+ifdef FLAGS
+ifeq ($(FLAGS), no)
+CFLAGS=
+endif
+ifeq ($(FLAGS), debug)
 CFLAGS= -Wall -Wextra -Werror -ansi -pedantic -g
-endif 
-else 
+endif
+else
 CFLAGS = -Wall -Wextra -Werror -O3
-endif 
+endif
 
 B  =		\033[1m
 UL =		\033[4m
@@ -151,11 +151,16 @@ SRCS =		ft_bzero.c \
 			ft_get_dirup.c \
 			ft_is_hidden_file.c \
 			ft_list_dir_content.c \
-			ft_rgbtohex.c 
+			ft_rgbtohex.c
 SRC = $(sort $(SRCS))
 SRC_PATH = src/
 OBJ_PATH = obj/
 INC_PATH = includes/
+HEADERS =	includes/color.h \
+			includes/ft_printf.h \
+			includes/ft_printf_struct.h \
+			includes/get_next_line.h \
+			includes/libft.h
 OBJ = $(SRC:.c=.o)
 OBJS = $(addprefix $(OBJ_PATH), $(OBJ))
 
@@ -168,11 +173,11 @@ $(NAME) : $(OBJS)
 	@echo "	$(B)Creation of index to $(NAME)$(RT)"
 	@ranlib $(NAME)
 
-$(OBJ_PATH)%.o : $(SRC_PATH)%.c
+$(OBJ_PATH)%.o : $(SRC_PATH)%.c $(HEADERS)
 	@[ -e $(OBJ_PATH) ] || (mkdir $(OBJ_PATH))
 	@[ -e $(OBJ_PATH)/ft_printf ] || (mkdir $(OBJ_PATH)/ft_printf)
-	@printf "	*$(B)Compiling$(RT) $?                         \r"
-	@gcc $(CFLAGS) -I $(INC_PATH) -c -o $@ $?
+	@printf "	*$(B)Compiling$(RT) $<                         \r"
+	@gcc $(CFLAGS) -I $(INC_PATH) -c -o $@ $<
 
 clean :
 	@echo "	$(B)Removing libft object files$(RT)"
