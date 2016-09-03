@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/06/01 22:23:06 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/09/04 00:35:13 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ void	load_builtin_list(t_env *e)
 	e->builtin_list[3] = ft_strdup("unsetenv");
 	e->builtin_list[4] = ft_strdup("env");
 	e->builtin_list[5] = ft_strdup("fg");
+	e->builtin_list[5] = ft_strdup("bg");
 	e->builtin_list[6] = ft_strdup("jobs");
 	e->builtin_list[7] = ft_strdup("history");
 	e->builtin_list[8] = ft_strdup("hash");
