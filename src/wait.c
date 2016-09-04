@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/10 15:54:41 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/09/04 01:55:17 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/09/04 22:44:42 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,11 +51,19 @@ void	process_wait_status(t_env *e, int status, int pid, int job)
 		{
 			if (!job)
 				jobs_add(e, pid);
+			else
+			{
+				ft_printf("\r                      \n[d]  - d suspended  s\n");
+				if (isatty(e->fd_in))
+				{
+					gen_prompt(e, NULL);
+					print_prompt(e);
+				}
+			}
 		}
 		else if (WSTOPSIG(status) == SIGTTOU && job)
 		{
-			ft_printf("\n[d]  - %d suspended (tty output)  s\n", job);
-			killpg(job, SIGINT);
+			ft_printf("\r[d]  - %d suspended (tty output)  s\n", job);
 			if (isatty(e->fd_in))
 			{
 				gen_prompt(e, NULL);
@@ -64,8 +72,7 @@ void	process_wait_status(t_env *e, int status, int pid, int job)
 		}
 		else if (WSTOPSIG(status) == SIGTTIN && job)
 		{
-			ft_printf("\n[d]  - %d suspended (tty input)  s\n", job);
-			killpg(job, SIGINT);
+			ft_printf("\r[d]  - %d suspended (tty input)  s\n", job);
 			if (isatty(e->fd_in))
 			{
 				gen_prompt(e, NULL);

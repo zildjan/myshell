@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/09/04 00:35:13 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/09/04 22:48:43 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,11 +62,11 @@ void	load_builtin_list(t_env *e)
 	e->builtin_list[3] = ft_strdup("unsetenv");
 	e->builtin_list[4] = ft_strdup("env");
 	e->builtin_list[5] = ft_strdup("fg");
-	e->builtin_list[5] = ft_strdup("bg");
-	e->builtin_list[6] = ft_strdup("jobs");
-	e->builtin_list[7] = ft_strdup("history");
-	e->builtin_list[8] = ft_strdup("hash");
-	e->builtin_list[9] = ft_strdup("echo");
-	e->builtin_list[10] = ft_strdup("alias");
-	e->builtin_list[11] = ft_strdup("unalias");
+	e->builtin_list[6] = ft_strdup("bg");
+	e->builtin_list[7] = ft_strdup("jobs");
+	e->builtin_list[8] = ft_strdup("history");
+	e->builtin_list[9] = ft_strdup("hash");
+	e->builtin_list[10] = ft_strdup("echo");
+	e->builtin_list[11] = ft_strdup("alias");
+	e->builtin_list[12] = ft_strdup("unalias");
 }

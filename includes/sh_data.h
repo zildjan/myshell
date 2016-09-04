@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/07/23 01:29:45 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/09/04 22:53:42 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,6 +188,7 @@ typedef struct	s_cmd
 
 typedef struct	s_env
 {
+	char			fg;
 	char			sub;
 	int				fd_in;
 	char			**var;
