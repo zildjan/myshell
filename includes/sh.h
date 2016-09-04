@@ -6,7 +6,11 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2016/08/03 01:48:18 by pbourrie         ###   ########.fr       */
+=======
+/*   Updated: 2016/09/04 00:45:07 by pbourrie         ###   ########.fr       */
+>>>>>>> 764a1ce18c5ecd9b56e481302856e2dd4cb29b8e
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -502,7 +506,7 @@ void		term_load_key2(t_env *e);
 void		jobs_update_status(t_env *e);
 
 void		jobs_add(t_env *e, int pid);
-void		jobs_continue(t_env *e);
+void		jobs_continue(t_env *e, int fg);
 void		jobs_remove(t_env *e, int pid);
 void		jobs_list(t_env *e);
 int			jobs_count(t_env *e, int pid);

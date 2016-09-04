@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/10 18:58:17 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/07/25 00:48:55 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/09/04 00:44:58 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -209,13 +209,13 @@ int		process_builtin(t_env *e)
 	else if (ft_strequ(e->cmd[e->cid].arg[0], "env"))
 		builtin_env(e);
 	else if (ft_strequ(e->cmd[e->cid].arg[0], "fg"))
-		jobs_continue(e);
+		jobs_continue(e, 1);
+	else if (ft_strequ(e->cmd[e->cid].arg[0], "bg"))
+		jobs_continue(e, 0);
 	else if (ft_strequ(e->cmd[e->cid].arg[0], "jobs"))
 		jobs_list(e);
 	else if (ft_strequ(e->cmd[e->cid].arg[0], "history"))
 		history_print(e);
-	else if (ft_strequ(e->cmd[e->cid].arg[0], "hash"))
-		builtin_hash(e);
 	else if (!process_builtin_2(e))
 		return (0);
 	return (1);
@@ -223,7 +223,9 @@ int		process_builtin(t_env *e)
 
 int		process_builtin_2(t_env *e)
 {
-	if (ft_strequ(e->cmd[e->cid].arg[0], "alias"))
+	if (ft_strequ(e->cmd[e->cid].arg[0], "hash"))
+		builtin_hash(e);
+	else if (ft_strequ(e->cmd[e->cid].arg[0], "alias"))
 		builtin_alias(e);
 	else if (ft_strequ(e->cmd[e->cid].arg[0], "unalias"))
 		builtin_unalias(e);

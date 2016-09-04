@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/13 22:16:21 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/07/27 01:22:47 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/09/04 01:51:31 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ void	jobs_update_status(t_env *e)
 		if (pid > 0)
 		{
 //			ft_printf("pid=%d status=%d\n", pid, status);
-			process_wait_status(e, status, pid, 1);
+			process_wait_status(e, status, pid, pid);
+//			tcsetpgrp(0, getpid());
 		}
 		job = job->next;
 	}
@@ -61,11 +62,11 @@ void	jobs_add(t_env *e, int pid)
 	}
 //	term_restore(e);
 //	tcsetpgrp(0, getpid());
-	ft_printf("\n[%ld]  - %ld suspended  %s\n", e->job->id, pid, e->job->name);
+	ft_printf("\n[%d]  - %d suspended  %s\n", e->job->id, pid, e->job->name);
 
 }
 
-void	jobs_continue(t_env *e)
+void	jobs_continue(t_env *e, int fg)
 {
 	char	*name;
 
@@ -74,14 +75,21 @@ void	jobs_continue(t_env *e)
 		e->job = e->job->next;
 	if (!e->jobs_lst)
 	{
-		ft_putendl_fd("fg: no current job", 2);
+		if (fg)
+			ft_putendl_fd("fg: no current job", 2);
+		else
+			ft_putendl_fd("bg: no current job", 2);
 		return ;
 	}
 	name = e->job->name;
-	ft_printf("[%ld]  - %ld continued  %s\n", e->job->id, e->job->pgid, name);
+	ft_printf("[%d]  - %d continued  %s\n", e->job->id, e->job->pgid, name);
 
-	term_restore_back(e);
-	tcsetpgrp(0, e->job->pgid);
+	if (fg)
+	{
+//		ft_printf("ICI\n");
+		term_restore_back(e);
+		tcsetpgrp(0, e->job->pgid);
+	}
 	killpg(e->job->pgid, SIGCONT);
 //	process_wait(e, e->job->pgid, 1);
 }
@@ -101,7 +109,7 @@ void	jobs_remove(t_env *e, int pid)
 	if (!job)
 		return ;
 	killpg(job->pgid, SIGINT);
-	ft_printf("\n[%ld]  - %ld Done  %s\n", e->job->id, pid, e->job->name);
+	ft_printf("\n[%d]  - %d Done  %s\n", e->job->id, pid, e->job->name);
 	if (isatty(e->fd_in))
 	{
 		gen_prompt(e, NULL);
@@ -128,7 +136,7 @@ void	jobs_list(t_env *e)
 	while (job)
 	{
 		i++;
-		ft_printf("[%ld]  %ld - %s\n", job->id, job->pgid, job->name);
+		ft_printf("[%d]  %d - %s\n", job->id, job->pgid, job->name);
 		job = job->next;
 	}
 }
