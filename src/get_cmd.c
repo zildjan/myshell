@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/07/19 02:15:53 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/09/05 01:45:55 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ void	get_cmd(t_env *e)
 //	ft_printf("line='%s'\n", e->line);
 	if (e->term && !e->fd_in)
 		history_save_ent(e, e->line);
+
 	if (!lex.error)
 	{
 //		ft_printf("PARSING\n");
@@ -35,6 +36,9 @@ void	get_cmd(t_env *e)
 		parse_cmd_put_error(&lex);
 		e->status = 258;
 	}
+
+
+
 	free(e->line);
 	e->line = NULL;
 }

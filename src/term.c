@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/06/26 19:57:24 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/09/05 01:59:35 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,16 +51,34 @@ void	term_backup(t_env *e)
 
 void	term_restore(t_env *e)
 {
-	int		try;
+	int				try;
+//	struct termios	*test;
 
+//	test = NULL;
+//	test = ft_memalloc(sizeof(struct termios));
 	if (e->term)
 	{
 		if (e->term_status == 1)
 		{
+//			ft_printf("\nRESTAURE III\n");
+//			ft_putchar(7);
 			refresh_nb_col(e);
 			try = 0;
-			while (tcsetattr(0, TCSADRAIN, e->term) == -1 && try < 20)
+			while (tcsetattr(0, TCSADRAIN, e->term) == -1 && try < 100)
 				try++;
+/*			tcsetattr(0, TCSADRAIN, e->term);
+			tcgetattr(0, test);
+			while (ft_memcmp(test, e->term, sizeof(struct termios)) && try < 100)
+			{
+				ft_printf("diff=%d\n", ft_memcmp(test, e->term, sizeof(struct termios)));
+//				ft_printf("ICI\n");
+				tcsetattr(0, TCSADRAIN, e->term);
+				tcgetattr(0, test);
+				usleep(10);
+				try++;
+			}
+			if (try > 3)
+			ft_printf("TRY=%d\n", try);*/
 		}
 		if (e->term_status > 0)
 			e->term_status--;
@@ -74,6 +92,7 @@ void	term_restore_back(t_env *e)
 	if (e->term_status == 0)
 	{
 		term_restore_backup(NULL);
+//			ft_printf("\nINSTAURE  000\n");
 	}
 	e->term_status++;
 }

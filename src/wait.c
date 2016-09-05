@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/10 15:54:41 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/09/04 22:44:42 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/09/05 02:10:46 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,15 +51,17 @@ void	process_wait_status(t_env *e, int status, int pid, int job)
 		{
 			if (!job)
 				jobs_add(e, pid);
-			else
-			{
-				ft_printf("\r                      \n[d]  - d suspended  s\n");
-				if (isatty(e->fd_in))
-				{
-					gen_prompt(e, NULL);
-					print_prompt(e);
-				}
-			}
+
+			tcsetpgrp(0, getpid());
+			term_restore(e);
+
+			ft_printf("\r                      \n[d]  - d suspended  s\n");
+//			if (isatty(e->fd_in) && job)
+//			{
+//				gen_prompt(e, NULL);
+//				print_prompt(e);
+//			}
+
 		}
 		else if (WSTOPSIG(status) == SIGTTOU && job)
 		{
@@ -81,12 +83,15 @@ void	process_wait_status(t_env *e, int status, int pid, int job)
 		}
 	}
 	else
-		e->status = WEXITSTATUS(status);
-	if (job)
 	{
+		e->status = WEXITSTATUS(status);
+
+		if (job)
+		{
 //		ft_printf("ICI sign=%d\n", WSTOPSIG(status));
-		tcsetpgrp(0, getpid());
-		term_restore(e);
+			tcsetpgrp(0, getpid());
+			term_restore(e);
+		}
 	}
 	if (!WIFSTOPPED(status) && job && !e->sub)
 		jobs_remove(e, pid);
