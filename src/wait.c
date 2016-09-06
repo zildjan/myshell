@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/10 15:54:41 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/09/05 02:10:46 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/09/06 01:59:15 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,16 @@ void	process_wait(t_env *e, int pid, int job)
 	}
 	ret = 0;
 
-	waitpid(pid, &ret, WUNTRACED);
+	waitpid(pid * -1, &ret, WUNTRACED);
 //	perror("");
 //	if (e->wait_cid == e->cid || job)
+//	ft_printf("ICI\n");
+	if (WIFSTOPPED(ret) && !e->sub && WSTOPSIG(ret) == SIGTSTP)
+		usleep(400);
 
 	if (!e->sub)
-		tcsetpgrp(0, getpid());
+		tcsetpgrp(0, getpgrp());
+//	ft_printf("front=%d\n", tcgetpgrp(0));
 	if (!e->sub)
 		term_restore(e);
 	process_wait_status(e, ret, pid, job);
@@ -52,20 +56,21 @@ void	process_wait_status(t_env *e, int status, int pid, int job)
 			if (!job)
 				jobs_add(e, pid);
 
+		usleep(400);
 			tcsetpgrp(0, getpid());
 			term_restore(e);
 
-			ft_printf("\r                      \n[d]  - d suspended  s\n");
-//			if (isatty(e->fd_in) && job)
-//			{
-//				gen_prompt(e, NULL);
-//				print_prompt(e);
-//			}
+			jobs_put_job_status(e, pid, "suspended");
+			if (isatty(e->fd_in) && job)
+			{
+				gen_prompt(e, NULL);
+				print_prompt(e);
+			}
 
 		}
 		else if (WSTOPSIG(status) == SIGTTOU && job)
 		{
-			ft_printf("\r[d]  - %d suspended (tty output)  s\n", job);
+			jobs_put_job_status(e, pid, "suspended (tty output)");
 			if (isatty(e->fd_in))
 			{
 				gen_prompt(e, NULL);
@@ -74,7 +79,7 @@ void	process_wait_status(t_env *e, int status, int pid, int job)
 		}
 		else if (WSTOPSIG(status) == SIGTTIN && job)
 		{
-			ft_printf("\r[d]  - %d suspended (tty input)  s\n", job);
+			jobs_put_job_status(e, pid, "suspended (tty input)");
 			if (isatty(e->fd_in))
 			{
 				gen_prompt(e, NULL);

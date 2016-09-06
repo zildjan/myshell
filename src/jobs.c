@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/13 22:16:21 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/09/05 02:15:08 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/09/06 02:06:40 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,13 @@ void	jobs_update_status(t_env *e)
 	int		pid;
 
 
-	if (!e->fg)
-		return ;
+//	if (!e->fg)
+//		return ;
 	job = e->jobs_lst;
-//	ft_printf("ICI\n");
+//	ft_printf("ICI2\n");
 	while (job)
 	{
-		pid = waitpid (job->pgid, &status, WUNTRACED | WNOHANG);
+		pid = waitpid(job->pgid, &status, WUNTRACED | WNOHANG);
 		if (pid > 0)
 		{
 //			ft_printf("\n\npid=%d status=%d\n\n", pid, status);
@@ -35,6 +35,17 @@ void	jobs_update_status(t_env *e)
 		}
 		job = job->next;
 	}
+}
+
+void	jobs_put_job_status(t_env *e, int pgid, char *status)
+{
+	t_job	*job;
+
+	job = jobs_find(e, pgid, 0);
+	if (!job)
+		return ;
+	ft_putstr("\r                                              ");
+	ft_printf("\n[%d]  - %d %s  %s\n", job->id, pgid, status, job->name);
 }
 
 t_job	*jobs_find(t_env *e, int pid, int id)
@@ -143,14 +154,15 @@ void	jobs_continue(t_env *e, int fg)
 		term_restore_back(e);
 		tcsetpgrp(0, e->job->pgid);
 	}
-	e->fg = 0;
+
 	killpg(e->job->pgid, SIGCONT);
+
 //	ft_printf("ICI1\n");
-	process_wait(e, e->job->pgid, 1);
-	e->fg = 1;
+//	process_wait(e, e->job->pgid, 1);
 
 
 
+/*
 	struct termios *test2;
 	test2 = ft_memalloc(sizeof(struct termios));
 	tcgetattr(0, test2);
@@ -181,7 +193,7 @@ void	jobs_remove(t_env *e, int pid)
 	if (!job)
 		return ;
 	killpg(job->pgid, SIGINT);
-	ft_printf("\n[%d]  - %d Done  %s\n", e->job->id, pid, e->job->name);
+	ft_printf("\n[%d]  - %d Done  %s\n", job->id, pid, job->name);
 	if (isatty(e->fd_in))
 	{
 		gen_prompt(e, NULL);
