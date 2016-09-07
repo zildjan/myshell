@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/09/07 23:05:38 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/09/08 01:23:44 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -442,7 +442,7 @@ void		process_init_child(t_env *e);
 */
 void		process_wait(t_env *e, pid_t pid, int job);
 void		process_wait_status(t_env *e, int status, pid_t pid, int job);
-void		process_wait_error(t_env *e, int ret, int job);
+void		process_wait_error(t_env *e, int ret, int isjob, pid_t pid);
 
 /*
 **   HEREDOC

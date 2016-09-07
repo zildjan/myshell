@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/09/07 22:51:09 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/09/07 23:55:15 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,6 +129,7 @@ typedef struct	s_parse
 	int		ignore;
 	char	doalias;
 	int		aliased;
+	int		last_i;
 }				t_parse;
 
 typedef struct	s_compl
@@ -183,6 +184,7 @@ typedef struct	s_cmd
 	t_redir		*redir;
 	t_hdoc		*hdoc;
 	int			hdoc_pipe[2];
+	char		*name;
 	int			status;
 }				t_cmd;
 

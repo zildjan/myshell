@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/13 22:16:21 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/09/07 23:05:12 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/09/08 01:28:45 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	jobs_update_status(t_env *e)
 	pid_t	pid;
 
 
-//	if (!e->fg)
+//	if (e->tc_pgid)
 //		return ;
 	job = e->jobs_lst;
 //	ft_printf("ICI2\n");
@@ -30,8 +30,7 @@ void	jobs_update_status(t_env *e)
 		{
 //			ft_printf("\n\npid=%d status=%d\n\n", pid, status);
 			process_wait_status(e, status, pid, pid);
-//		term_restore(e);
-//			tcsetpgrp(0, getpid());
+
 		}
 		job = job->next;
 	}
@@ -89,7 +88,9 @@ void	jobs_add(t_env *e, pid_t pgid)
 		new = (t_job*)ft_memalloc(sizeof(t_job));
 		new->pgid = pgid; ///////////
 		new->id = id;
-		new->name = ft_strdup(e->carg[0]);
+
+		new->name = ft_strdup(e->cmd[0].name);
+
 		new->next = NULL;
 
 		e->job = new;
@@ -195,7 +196,8 @@ void	jobs_remove(t_env *e, pid_t pgid)
 	if (!job)
 		return ;
 	killpg(job->pgid, SIGINT);
-	ft_printf("\n[%d]  - %d Done  %s\n", job->id, pgid, job->name);
+	if (!e->status)
+		ft_printf("\r[%d]  - %d Done  %s\n", job->id, pgid, job->name);
 	if (isatty(e->fd_in))
 	{
 		gen_prompt(e, NULL);

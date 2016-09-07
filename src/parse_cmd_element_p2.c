@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 17:05:18 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/07/25 01:18:39 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/09/07 23:59:22 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,10 @@ int		parse_operators(t_env *e, t_parse *p, int separ, char doub)
 		if (p->redirec)
 			p->error = EP_MISS_REDIREC;
 		if (!p->error)
+		{
+			e->cmd[0].name = ft_strsub(e->line, p->last_i, p->i - p->last_i);
 			process_cmd(e);
+		}
 		else
 			return (1);
 

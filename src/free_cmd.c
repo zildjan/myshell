@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/06/23 01:21:12 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/09/08 00:02:39 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ void	free_cmd(t_env *e)
 		i2 = 0;
 		i++;
 	}
+	if (e->cmd[0].name)
+		free(e->cmd[0].name);
 	free(e->cmd);
 	e->cmd = NULL;
 	e->nb_cmd = 0;

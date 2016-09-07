@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/09/05 01:41:27 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/09/07 23:58:58 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ void	parse_cmd(t_env *e)
 //		printf("[] b='%s' ib=%d\n", p.buf, p.ib);
 		if (parse_cmd_check_eol(e, &p))
 			break ;
+
 		parse_cmd_quotes(e, &p);
 
 		if (p.escape)
@@ -69,6 +70,7 @@ void	parse_init(t_env *e, t_parse *p)
 	p->buf_len = p->line_len;
 	p->buf = ft_strnew(p->buf_len);
 	p->i = -1;
+	p->last_i = 0;
 	p->ib = 0;
 	p->ignore = 0;
 	parse_init_cmd(e, p);
@@ -87,6 +89,7 @@ void	parse_init_cmd(t_env *e, t_parse *p)
 	e->cmd[0].fd_in = 0;
 	e->cmd[0].fd_out = 1;
 	e->cmd[0].fd_err = 2;
+	p->last_i = p->i + 1;
 }
 
 int		parse_cmd_check_eol(t_env *e, t_parse *p)
@@ -133,6 +136,7 @@ void	parse_cmd_loop_end(t_env *e, t_parse *p)
 	if (!p->error && p->redirec)
 		p->error = EP_MISS_REDIREC;
 	free(p->buf);
+	e->cmd[0].name = ft_strsub(e->line, p->last_i, p->i - p->last_i);
 	e->cid = 0;
 }
 
