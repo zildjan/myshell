@@ -6,13 +6,13 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/10 15:54:41 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/09/06 01:59:15 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/09/07 23:20:46 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "sh.h"
 
-void	process_wait(t_env *e, int pid, int job)
+void	process_wait(t_env *e, pid_t pid, int job)
 {
 	int		ret;
 
@@ -31,14 +31,14 @@ void	process_wait(t_env *e, int pid, int job)
 		usleep(400);
 
 	if (!e->sub)
-		tcsetpgrp(0, getpgrp());
+		term_set_tcpgid(e, 0);
 //	ft_printf("front=%d\n", tcgetpgrp(0));
 	if (!e->sub)
 		term_restore(e);
 	process_wait_status(e, ret, pid, job);
 }
 
-void	process_wait_status(t_env *e, int status, int pid, int job)
+void	process_wait_status(t_env *e, int status, pid_t pid, int job)
 {
 	if (WIFSIGNALED(status))
 	{
@@ -54,13 +54,16 @@ void	process_wait_status(t_env *e, int status, int pid, int job)
 		if (WSTOPSIG(status) == SIGTSTP)
 		{
 			if (!job)
+			{
+//				ft_printf("'%s'\n", e->line);
 				jobs_add(e, pid);
+			}
 
 		usleep(400);
-			tcsetpgrp(0, getpid());
+			term_set_tcpgid(e, 0);
 			term_restore(e);
 
-			jobs_put_job_status(e, pid, "suspended");
+			jobs_put_job_status(e, pid, 1, "suspended");
 			if (isatty(e->fd_in) && job)
 			{
 				gen_prompt(e, NULL);
@@ -70,7 +73,7 @@ void	process_wait_status(t_env *e, int status, int pid, int job)
 		}
 		else if (WSTOPSIG(status) == SIGTTOU && job)
 		{
-			jobs_put_job_status(e, pid, "suspended (tty output)");
+			jobs_put_job_status(e, pid, 0, "suspended (tty output)");
 			if (isatty(e->fd_in))
 			{
 				gen_prompt(e, NULL);
@@ -79,7 +82,7 @@ void	process_wait_status(t_env *e, int status, int pid, int job)
 		}
 		else if (WSTOPSIG(status) == SIGTTIN && job)
 		{
-			jobs_put_job_status(e, pid, "suspended (tty input)");
+			jobs_put_job_status(e, pid, 0, "suspended (tty input)");
 			if (isatty(e->fd_in))
 			{
 				gen_prompt(e, NULL);
@@ -94,7 +97,7 @@ void	process_wait_status(t_env *e, int status, int pid, int job)
 		if (job)
 		{
 //		ft_printf("ICI sign=%d\n", WSTOPSIG(status));
-			tcsetpgrp(0, getpid());
+			term_set_tcpgid(e, 0);
 			term_restore(e);
 		}
 	}

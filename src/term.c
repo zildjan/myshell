@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/09/06 02:14:27 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/09/07 22:52:53 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,5 +112,22 @@ void	term_restore_backup(struct termios *back)
 			while (tcsetattr(0, TCSADRAIN, backup) == -1 && try < 20)
 				try++;
 		}
+	}
+}
+
+void	term_set_tcpgid(t_env *e, pid_t pgid)
+{
+	if (pgid)
+	{
+		tcsetpgrp(0, pgid);
+		e->tc_pgid = pgid;
+	}
+	else
+	{
+		e->tc_pgid = 0;
+		if (e->sub)
+			tcsetpgrp(0, getpgrp());
+		else
+			tcsetpgrp(0, e->shell_pgid);
 	}
 }

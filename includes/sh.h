@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/09/06 01:58:56 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/09/07 23:05:38 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -394,7 +394,7 @@ void		parse_tilde_expansion(t_env *e, t_parse *p);
 */
 void		parse_cmd_substitution(t_env *e, t_parse *p);
 char		*parse_cmd_substitution_fork(t_env *e, int *fd, char *cmd);
-char		*parse_cmd_substitution_get_output(t_env *e, int *fd, int pid);
+char		*parse_cmd_substitution_get_output(t_env *e, int *fd, pid_t pid);
 void		parse_cmd_substi_line(t_env *e, t_parse *p, char *out, int start);
 
 /*
@@ -434,14 +434,14 @@ void		process_fork_subcmd(t_env *e, char dofork);
 void		process_piped_cmd(t_env *e);
 void		process_piped_cmd_child(t_env *e);
 
-void		process_set_child_attr(t_env *e, int pid);
+void		process_set_child_attr(t_env *e, pid_t pid);
 void		process_init_child(t_env *e);
 
 /*
 **   WAIT
 */
-void		process_wait(t_env *e, int pid, int job);
-void		process_wait_status(t_env *e, int status, int pid, int job);
+void		process_wait(t_env *e, pid_t pid, int job);
+void		process_wait_status(t_env *e, int status, pid_t pid, int job);
 void		process_wait_error(t_env *e, int ret, int job);
 
 /*
@@ -487,6 +487,8 @@ void		term_restore(t_env *e);
 void		term_restore_back(t_env *e);
 void		term_restore_backup(struct termios *back);
 
+void		term_set_tcpgid(t_env *e, pid_t pgid);
+
 /*
 **   TERM LOAD INFO
 */
@@ -501,14 +503,14 @@ void		term_load_key2(t_env *e);
 */
 void		jobs_update_status(t_env *e);
 
-void		jobs_put_job_status(t_env *e, int pgid, char *status);
-t_job		*jobs_find(t_env *e, int pgid, int id);
+void		jobs_put_job_status(t_env *e, pid_t pgid, char nl, char *status);
+t_job		*jobs_find(t_env *e, pid_t pgid, int id);
 
-void		jobs_add(t_env *e, int pid);
+void		jobs_add(t_env *e, pid_t pgid);
 void		jobs_continue(t_env *e, int fg);
-void		jobs_remove(t_env *e, int pid);
+void		jobs_remove(t_env *e, pid_t pgid);
 void		jobs_list(t_env *e);
-int			jobs_get_new_id(t_env *e, int pid);
+int			jobs_get_new_id(t_env *e, pid_t pgid);
 
 /*
 **   PROMPT

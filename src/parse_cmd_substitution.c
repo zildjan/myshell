@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/19 00:45:14 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/07/27 01:29:29 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/09/07 23:00:30 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	parse_cmd_substitution(t_env *e, t_parse *p)
 
 char	*parse_cmd_substitution_fork(t_env *e, int *fd, char *cmd)
 {
-	int		pid;
+	pid_t	pid;
 
 	pid = fork();
 	if (pid == 0)
@@ -58,7 +58,7 @@ char	*parse_cmd_substitution_fork(t_env *e, int *fd, char *cmd)
 	return (parse_cmd_substitution_get_output(e, fd, pid));
 }
 
-char	*parse_cmd_substitution_get_output(t_env *e, int *fd, int pid)
+char	*parse_cmd_substitution_get_output(t_env *e, int *fd, pid_t pid)
 {
 	char	buf[100];
 	int		ret;

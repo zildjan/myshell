@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/10 18:58:17 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/09/04 00:44:58 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/09/07 23:08:17 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,13 +39,13 @@ void	process_cmd(t_env *e)
 	e->carg = NULL;
 }
 
-void	process_set_child_attr(t_env *e, int pid)
+void	process_set_child_attr(t_env *e, pid_t pid)
 {
 	if (!e->sub)
 	{
 		setpgid(pid, pid);
 		if (!e->background_cmd)
-			tcsetpgrp(0, pid);
+			term_set_tcpgid(e, pid);
 	}
 	e->cmd[e->cid].pid = pid;
 	e->cmd[e->cid].status = 1;
@@ -57,7 +57,7 @@ void	process_init_child(t_env *e)
 	{
 		setpgid(0, getpid());
 		if (!e->background_cmd)
-			tcsetpgrp(0, getpid());
+			term_set_tcpgid(e, getpid());
 	}
 	signal_default();
 	e->sub = 1;
@@ -67,7 +67,7 @@ void	process_init_child(t_env *e)
 
 void	process_piped_cmd(t_env *e)
 {
-	int		pid;
+	pid_t	pid;
 
 	pid = 0;
 	if (!e->sub && !e->background_cmd)
@@ -138,7 +138,7 @@ void	process_bin(t_env *e, char **env, char dofork)
 
 void	process_fork(t_env *e, char *cmd_path, char **env, char dofork)
 {
-	int		pid;
+	pid_t	pid;
 
 	pid = 0;
 	if (!e->sub && !e->background_cmd)
@@ -171,7 +171,7 @@ void	process_fork_subcmd(t_env *e, char dofork)
 {
 //	ft_printf("subcmd='%s'\n", e->cmd[e->cid].arg[0]);
 
-	int		pid;
+	pid_t	pid;
 
 	pid = 0;
 	if (!e->sub && !e->background_cmd)

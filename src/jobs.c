@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/13 22:16:21 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/09/06 02:06:40 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/09/07 23:05:12 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	jobs_update_status(t_env *e)
 {
 	int		status;
 	t_job	*job;
-	int		pid;
+	pid_t	pid;
 
 
 //	if (!e->fg)
@@ -37,27 +37,29 @@ void	jobs_update_status(t_env *e)
 	}
 }
 
-void	jobs_put_job_status(t_env *e, int pgid, char *status)
+void	jobs_put_job_status(t_env *e, pid_t pgid, char nl, char *status)
 {
 	t_job	*job;
 
 	job = jobs_find(e, pgid, 0);
 	if (!job)
 		return ;
-	ft_putstr("\r                                              ");
-	ft_printf("\n[%d]  - %d %s  %s\n", job->id, pgid, status, job->name);
+	ft_putstr("\r");
+	if (nl)
+		ft_putstr("                                              \n");
+	ft_printf("[%d]  - %d %s  %s\n", job->id, pgid, status, job->name);
 }
 
-t_job	*jobs_find(t_env *e, int pid, int id)
+t_job	*jobs_find(t_env *e, pid_t pgid, int id)
 {
 	t_job	*job;
 
 	job = e->jobs_lst;
 	while (job)
 	{
-		if (pid)
+		if (pgid)
 		{
-			if (job->pgid == pid)
+			if (job->pgid == pgid)
 				return (job);
 		}
 		else
@@ -70,14 +72,14 @@ t_job	*jobs_find(t_env *e, int pid, int id)
 	return (NULL);
 }
 
-void	jobs_add(t_env *e, int pid)
+void	jobs_add(t_env *e, pid_t pgid)
 {
 	t_job	*new;
 	t_job	*tmp;
 	int		id;
 
 //	ft_printf("\n suspended  \n");
-	if ((id = jobs_get_new_id(e, pid)) != -1)
+	if ((id = jobs_get_new_id(e, pgid)) != -1)
 	{
 
 		tmp = e->jobs_lst;
@@ -85,7 +87,7 @@ void	jobs_add(t_env *e, int pid)
 			tmp = tmp->next;
 
 		new = (t_job*)ft_memalloc(sizeof(t_job));
-		new->pgid = pid; ///////////
+		new->pgid = pgid; ///////////
 		new->id = id;
 		new->name = ft_strdup(e->carg[0]);
 		new->next = NULL;
@@ -96,7 +98,7 @@ void	jobs_add(t_env *e, int pid)
 		else
 			tmp->next = new;
 	}
-//	ft_printf("\n[%d]  - %d suspended  %s\n", e->job->id, pid, e->job->name);
+//	ft_printf("\n[%d]  - %d suspended  %s\n", e->job->id, pgid, e->job->name);
 }
 
 void	jobs_continue(t_env *e, int fg)
@@ -152,7 +154,7 @@ void	jobs_continue(t_env *e, int fg)
 	if (fg)
 	{
 		term_restore_back(e);
-		tcsetpgrp(0, e->job->pgid);
+		term_set_tcpgid(e, e->job->pgid);
 	}
 
 	killpg(e->job->pgid, SIGCONT);
@@ -178,14 +180,14 @@ void	jobs_continue(t_env *e, int fg)
 //	ft_printf("ICI2\n");
 }
 
-void	jobs_remove(t_env *e, int pid)
+void	jobs_remove(t_env *e, pid_t pgid)
 {
 	t_job	*job;
 	t_job	*pre_job;
 
 	pre_job = NULL;
 	job = e->jobs_lst;
-	while (job && job->pgid != pid)
+	while (job && job->pgid != pgid)
 	{
 		pre_job = job;
 		job = job->next;
@@ -193,7 +195,7 @@ void	jobs_remove(t_env *e, int pid)
 	if (!job)
 		return ;
 	killpg(job->pgid, SIGINT);
-	ft_printf("\n[%d]  - %d Done  %s\n", job->id, pid, job->name);
+	ft_printf("\n[%d]  - %d Done  %s\n", job->id, pgid, job->name);
 	if (isatty(e->fd_in))
 	{
 		gen_prompt(e, NULL);
@@ -227,7 +229,7 @@ void	jobs_list(t_env *e)
 	}
 }
 
-int		jobs_get_new_id(t_env *e, int pid)
+int		jobs_get_new_id(t_env *e, pid_t pgid)
 {
 	t_job	*tmp;
 	int		i;
@@ -236,7 +238,7 @@ int		jobs_get_new_id(t_env *e, int pid)
 	i = 0;
 	while (tmp)
 	{
-		if (tmp->pgid == pid)
+		if (tmp->pgid == pgid)
 			return (-1);
 		i = tmp->id;
 		tmp = tmp->next;
