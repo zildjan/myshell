@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/09/08 00:02:39 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/09/08 22:39:30 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,9 @@ void	free_cmd(t_env *e)
 	int	i;
 	int	i2;
 
-	i = 0;
+	i = -1;
 	i2 = 0;
-	while (e->nb_cmd > i)
+	while (e->nb_cmd > ++i)
 	{
 		while (e->cmd[i].arg && e->cmd[i].arg[i2])
 		{
@@ -33,7 +33,6 @@ void	free_cmd(t_env *e)
 		free_heredoc(e, i);
 		e->cmd[i].arg = NULL;
 		i2 = 0;
-		i++;
 	}
 	if (e->cmd[0].name)
 		free(e->cmd[0].name);

@@ -6,7 +6,7 @@
 #    By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/01/04 17:14:24 by pbourrie          #+#    #+#              #
-#    Updated: 2016/08/03 01:45:54 by pbourrie         ###   ########.fr        #
+#    Updated: 2016/09/08 22:53:53 by pbourrie         ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -32,6 +32,7 @@ SRCS =		main.c \
 			script.c \
 			get_env.c \
 			set_env.c \
+			builtin.c \
 			builtin_cd.c \
 			builtin_cd_tools.c \
 			builtin_echo.c \
@@ -84,6 +85,7 @@ SRCS =		main.c \
 			redirection_tools.c \
 			heredoc.c \
 			execute.c \
+			execute_sub_and_pipe.c \
 			wait.c \
 			pipe.c \
 			term.c \

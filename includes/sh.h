@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/09/08 01:23:44 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/09/08 23:08:39 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,12 @@ void		set_env_var(t_env *e, char *name, char *val);
 int			unset_env_var(t_env *e, char *name);
 void		resize_env_tab(t_env *e, int new);
 void		refresh_sh_var(t_env *e, char *name);
+
+/*
+**   BUILTIN
+*/
+int			process_builtin(t_env *e);
+int			process_builtin_2(t_env *e);
 
 /*
 **   BUILTIN_CD
@@ -179,7 +185,7 @@ void		set_home_path(t_env *e);
 void		get_cmd(t_env *e);
 t_parse		get_cmd_is_ended(t_env *e);
 int			get_cmd_get_end(t_env *e, t_parse *l, char **line_start, int type);
-int			get_cmd_end(t_env *e, char type);
+int			get_cmd_end(t_env *e, char type, int ret);
 int			get_input_line(t_env *e, int eof_exit);
 
 /*
@@ -303,6 +309,7 @@ void		completion_add_dirent(t_env *e, t_dirent *dir_ent, char *path);
 /*
 **	 LEXER
 */
+void		lexer_init(t_env *e, t_parse *lex, int end);
 void		lexer(t_env *e, t_parse *lex, int end);
 void		lexer_add_arg(t_parse *l);
 void		lexer_add_cmd(t_parse *l, int separ);
@@ -422,20 +429,16 @@ void		parse_cmd_subcmd_parse_line_quotes(t_env *e, t_parse *p);
 */
 void		process_cmd(t_env *e);
 void		process_bin(t_env *e, char **env, char dofork);
-
 void		process_fork(t_env *e, char *cmd_path, char **env, char dofork);
-
-int			process_builtin(t_env *e);
-int			process_builtin_2(t_env *e);
-
-
-void		process_fork_subcmd(t_env *e, char dofork);
-
-void		process_piped_cmd(t_env *e);
-void		process_piped_cmd_child(t_env *e);
-
 void		process_set_child_attr(t_env *e, pid_t pid);
 void		process_init_child(t_env *e);
+
+/*
+**   EXECUTE_SUB_AND_PIPE
+*/
+void		process_fork_subcmd(t_env *e, char dofork);
+void		process_piped_cmd(t_env *e);
+void		process_piped_cmd_child(t_env *e);
 
 /*
 **   WAIT

@@ -6,13 +6,13 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/03 00:34:22 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/07/25 02:23:52 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/09/08 23:10:48 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "sh.h"
 
-void	lexer(t_env *e, t_parse *l, int end)
+void	lexer_init(t_env *e, t_parse *l, int end)
 {
 	l->quo = NONE;
 	l->bquo = NONE;
@@ -32,6 +32,11 @@ void	lexer(t_env *e, t_parse *l, int end)
 	l->end = end;
 	if (end < 0)
 		l->end = l->line_len;
+}
+
+void	lexer(t_env *e, t_parse *l, int end)
+{
+	lexer_init(e, l, end);
 	while (l->i < l->end && e->line[l->i])
 	{
 		lexer_quotes(e, l);
@@ -65,13 +70,10 @@ void	lexer_add_arg(t_parse *l)
 			l->error = EP_MISS_REDIREC;
 			return ;
 		}
-		if (l->buf[0] == '&')
-		{
-			if (!ft_isdigit(l->buf[1]) && l->buf[1] != '-')
-				l->error = EP_BAD_FD;
-			else if (l->buf[2])
-				l->error = EP_SYNTAX;
-		}
+		if (l->buf[0] == '&' && !ft_isdigit(l->buf[1]) && l->buf[1] != '-')
+			l->error = EP_BAD_FD;
+		else if (l->buf[0] == '&' && l->buf[2])
+			l->error = EP_SYNTAX;
 		l->redirec = 0;
 		ft_strclr(l->buf);
 		l->ib = 0;
@@ -79,12 +81,8 @@ void	lexer_add_arg(t_parse *l)
 	}
 	if (l->ib <= 0)
 		return ;
-//	ft_printf("is=%d sub=%d buf='%s'\n", l->is_sub, l->sub, l->buf);
 	if (l->is_sub > 1 && !l->sub)
-	{
-//		ft_printf("ICI\n");
 		l->error = EP_SYNTAX;
-	}
 	if (l->is_sub && !l->sub)
 		l->is_sub++;
 	l->a_id++;
