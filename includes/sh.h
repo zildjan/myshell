@@ -6,14 +6,13 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/09/08 23:08:39 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/09/09 01:32:50 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FT_SH_H
 # define FT_SH_H
 
-//# include <curses.h>
 # include <term.h>
 # include <termios.h>
 # include <termcap.h>
@@ -341,24 +340,29 @@ char		*history_find(t_env *e, char *str, int num);
 **   PARSE_CMD
 */
 void		parse_cmd(t_env *e);
-void		parse_init(t_env *e, t_parse *p);
-void		parse_init_cmd(t_env *e, t_parse *p);
 int			parse_cmd_check_eol(t_env *e, t_parse *p);
 void		parse_cmd_loop_end(t_env *e, t_parse *p);
 int			parse_cmd_is_end(t_parse *p);
+
+/*
+**   PARSE_CMD_INIT
+*/
+void		parse_init(t_env *e, t_parse *p);
+void		parse_init_cmd(t_env *e, t_parse *p);
 
 /*
 **   PARSE_CMD_ELEMENT_P1
 */
 int			parse_cmd_quotes(t_env *e, t_parse *p);
 int			parse_cmd_operator_parenthesis(t_env *e, t_parse *p);
+int			parse_cmd_operator_ampersand(t_env *e, t_parse *p);
 int			parse_cmd_pipe_comma(t_env *e, t_parse *p);
 int			parse_cmd_expansion(t_env *e, t_parse *p);
-int			parse_cmd_redirection(t_env *e, t_parse *p);
 
 /*
 **   PARSE_CMD_ELEMENT_P2
 */
+int			parse_cmd_redirection(t_env *e, t_parse *p);
 int			parse_cmd_space_backslash(t_env *e, t_parse *p);
 int			parse_cmd_add_to_buf(t_env *e, t_parse *p);
 void		parse_cmd_reset_quotes(t_env *e, t_parse *p);
@@ -369,6 +373,7 @@ int			parse_operators(t_env *e, t_parse *p, int separ, char doub);
 */
 void		parse_add_cmd(t_env *e, t_parse *p, char sep);
 int			parse_add_arg(t_env *e, t_parse *p);
+void		parse_add_arg_malloc(t_env *e, t_parse *p);
 int			parse_add_arg_redir_alias(t_env *e, t_parse *p);
 void		parse_add_cmd_sep(t_env *e, t_parse *p, char sep);
 
@@ -445,6 +450,7 @@ void		process_piped_cmd_child(t_env *e);
 */
 void		process_wait(t_env *e, pid_t pid, int job);
 void		process_wait_status(t_env *e, int status, pid_t pid, int job);
+void		process_wait_sigstop(t_env *e, int status, pid_t pid, int job);
 void		process_wait_error(t_env *e, int ret, int isjob, pid_t pid);
 
 /*
@@ -478,7 +484,7 @@ void		open_file_error(char *path, int type);
 **   PIPE
 */
 int			pipe_new(t_env *e, t_redir *redir);
-void		pipe_assign(t_env *e, t_redir *redir);
+void		pipe_assign(t_env *e);
 void		pipe_close(t_env *e, int cid);
 
 /*
@@ -490,6 +496,9 @@ void		term_restore(t_env *e);
 void		term_restore_back(t_env *e);
 void		term_restore_backup(struct termios *back);
 
+/*
+**   TERM_TOOLS
+*/
 void		term_set_tcpgid(t_env *e, pid_t pgid);
 
 /*
@@ -504,15 +513,19 @@ void		term_load_key2(t_env *e);
 /*
 **   JOBS
 */
-void		jobs_update_status(t_env *e);
+void		jobs_continue(t_env *e, int fg);
+int			jobs_continue_getjob(t_env *e, int fg, int id);
+void		jobs_remove(t_env *e, pid_t pgid);
+void		jobs_remove_notif(t_env *e, t_job *job);
+void		jobs_list(t_env *e);
 
+/*
+**   JOBS_TOOLS
+*/
+void		jobs_update_status(t_env *e);
 void		jobs_put_job_status(t_env *e, pid_t pgid, char nl, char *status);
 t_job		*jobs_find(t_env *e, pid_t pgid, int id);
-
 void		jobs_add(t_env *e, pid_t pgid);
-void		jobs_continue(t_env *e, int fg);
-void		jobs_remove(t_env *e, pid_t pgid);
-void		jobs_list(t_env *e);
 int			jobs_get_new_id(t_env *e, pid_t pgid);
 
 /*
@@ -557,7 +570,6 @@ void		put_cmd_opt_error(char *cmd, char opt, int fd, char *usage);
 void		catch_signal(void);
 void		sig_handler(t_env *e, int signum);
 void		sig_mediator(int signum);
-
 void		signal_default(void);
 
 #endif

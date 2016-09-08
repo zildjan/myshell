@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/10 18:58:17 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/07/18 02:03:53 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/09/09 01:20:58 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,13 +89,11 @@ void	redirec_assign(t_env *e)
 		if (redir->type == R_OUT || redir->type == R_OUTA
 			|| redir->type == R_IN)
 		{
-
-			if (dup2(redir->fd_to, redir->fd) == -1)
-				perror("dup: ");
+			dup2(redir->fd_to, redir->fd);
 		}
 		else if (e->nb_cmd > 1 && !piped)
 		{
-			pipe_assign(e, redir);
+			pipe_assign(e);
 			piped = 1;
 		}
 		else if (redir->type == R_FDOUT || redir->type == R_FDIN)

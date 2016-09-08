@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/09/07 23:55:15 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/09/09 00:30:06 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,7 +124,6 @@ typedef struct	s_parse
 	int		buf_len;
 	int		redirec;
 	int		redirec_fd;
-	char	*last_arg;
 	int		end;
 	int		ignore;
 	char	doalias;

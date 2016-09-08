@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 17:04:22 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/07/25 02:04:16 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/09/09 01:10:58 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,6 @@ int		parse_cmd_operator_parenthesis(t_env *e, t_parse *p)
 				return (1);
 		if (p->a_id)
 		{
-
 			p->error = EP_SYNTAX;
 			return (1);
 		}
@@ -62,10 +61,24 @@ int		parse_cmd_operator_parenthesis(t_env *e, t_parse *p)
 		if (parse_operators(e, p, SEP_AND, 1))
 			return (1);
 	}
-	else if (e->line[p->i] == '|' && e->line[p->i + 1] == '|'
+	else
+		return (parse_cmd_operator_ampersand(e, p));
+	return (1);
+}
+
+int		parse_cmd_operator_ampersand(t_env *e, t_parse *p)
+{
+	if (e->line[p->i] == '|' && e->line[p->i + 1] == '|'
 			&& !p->quo && !p->escape && p->ignore <= p->i)
 	{
 		if (parse_operators(e, p, SEP_OR, 1))
+			return (1);
+	}
+	else if (e->line[p->i] == '&' && !p->quo
+			&& !p->escape && p->ignore <= p->i)
+	{
+		e->background_cmd = 1;
+		if (parse_operators(e, p, NONE, 0))
 			return (1);
 	}
 	else
@@ -90,19 +103,7 @@ int		parse_cmd_pipe_comma(t_env *e, t_parse *p)
 			&& !p->escape && p->ignore <= p->i)
 	{
 		if (parse_operators(e, p, NONE, 0))
-		{
-			return (1);// A VERFIFIER UTILITE
-		}
-	}
-	else if (e->line[p->i] == '&' && !p->quo
-			&& !p->escape && p->ignore <= p->i)
-	{
-		e->background_cmd = 1;
-		if (parse_operators(e, p, NONE, 0))
-		{
 			return (1);
-		}
-
 	}
 	else
 		return (parse_cmd_expansion(e, p));
@@ -111,7 +112,6 @@ int		parse_cmd_pipe_comma(t_env *e, t_parse *p)
 
 int		parse_cmd_expansion(t_env *e, t_parse *p)
 {
-
 	if (e->line[p->i] == '$' && p->quo != SIMP
 		&& !p->escape && p->ignore <= p->i)
 	{
@@ -124,32 +124,5 @@ int		parse_cmd_expansion(t_env *e, t_parse *p)
 	}
 	else
 		return (parse_cmd_redirection(e, p));
-	return (1);
-}
-
-int		parse_cmd_redirection(t_env *e, t_parse *p)
-{
-	if (((ft_isdigit(e->line[p->i])
-		&& (p->i - 1 == -1 || is_aspace(e->line[p->i - 1]))
-		&& (e->line[p->i + 1] == '<' || e->line[p->i + 1] == '>'))
-		|| (e->line[p->i] == '<' || e->line[p->i] == '>'))
-		&& !p->quo && !p->escape && p->ignore <= p->i)
-	{
-		if (p->ib > 0)
-			parse_add_arg(e, p);
-		p->redirec_fd = -1;
-//		ft_printf("ICI buf='%s' fd=%d line='%s'\n", p->buf, p->redirec_fd, e->line + p->i);
-		if (ft_isdigit(e->line[p->i]))
-			p->redirec_fd = e->line[p->i++] - 48;
-		parse_get_redirec_type(e, p);
-		if (e->line[p->i] && e->line[p->i + 1] == '&')
-		{
-			p->i++;
-			return (parse_cmd_add_to_buf(e, p));
-		}
-
-	}
-	else
-		return (parse_cmd_space_backslash(e, p));
 	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 17:06:44 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/07/25 01:18:42 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/09/09 00:34:58 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,42 +35,21 @@ void	parse_add_cmd(t_env *e, t_parse *p, char sep)
 	e->cmd[e->cid].condi = NONE;
 	e->cmd[e->cid].redir = NULL;
 	e->cmd[e->cid].hdoc = NULL;
-//	set_env_var(e, "_", p->last_arg);
-	if (p->last_arg)
-	{
-		set_env_var(e, "_", p->last_arg);
-		free(p->last_arg);
-		p->last_arg = NULL;
-	}
 	parse_add_cmd_sep(e, p, sep);
 }
 
 int		parse_add_arg(t_env *e, t_parse *p)
 {
-	int		old_size;
-	int		new_size;
-	char	***parg;
-
-//	ft_printf("ARG -> buf=%s\n", p->buf);
 	if (p->redirec)
 	{
-//	ft_printf("ICI\n");
 		parse_add_redirec(e, p);
 		return (1);
 	}
 	if (parse_add_arg_redir_alias(e, p))
 		return (0);
-//	ft_printf("ARG OK\n");
-	old_size = sizeof(char*) * (p->a_id + 1);
-	new_size = sizeof(char*) * (p->a_id + 2);
-	parg = &e->cmd[e->cid].arg;
-	if (p->a_id == 0)
-		*parg = (char**)ft_memalloc(new_size);
-	else
-		*parg = (char**)ft_memrealloc(*parg, old_size, new_size);
+	parse_add_arg_malloc(e, p);
 	e->cmd[e->cid].arg[p->a_id] = dup_arg(p->buf);
-	if (p->a_id == 0 && e->cmd[e->cid].arg[p->a_id])
-		p->last_arg = ft_strdup(e->cmd[e->cid].arg[p->a_id]);
+	set_env_var(e, "_", e->cmd[e->cid].arg[p->a_id]);
 	e->cmd[e->cid].arg[p->a_id + 1] = NULL;
 	ft_strclr(p->buf);
 	p->ib = 0;
@@ -80,14 +59,27 @@ int		parse_add_arg(t_env *e, t_parse *p)
 	return (1);
 }
 
+void	parse_add_arg_malloc(t_env *e, t_parse *p)
+{
+	int		old_size;
+	int		new_size;
+	char	***parg;
+
+	old_size = sizeof(char*) * (p->a_id + 1);
+	new_size = sizeof(char*) * (p->a_id + 2);
+	parg = &e->cmd[e->cid].arg;
+	if (p->a_id == 0)
+		*parg = (char**)ft_memalloc(new_size);
+	else
+		*parg = (char**)ft_memrealloc(*parg, old_size, new_size);
+}
+
 int		parse_add_arg_redir_alias(t_env *e, t_parse *p)
 {
 	if ((p->a_id == 0 || p->doalias) && p->aliased < p->i
 		&& p->quoted == NONE && !p->redirec)
 		if (parse_cmd_alias(e, p))
 			return (1);
-//	printf("-> sub=%d cid=%d buf='%s' line='%s'\n",
-//		   e->cmd[e->cid].sub, e->cid, p->buf, e->line + p->i);
 	if (e->cmd[e->cid].sub)
 	{
 		p->error = EP_SYNTAX;

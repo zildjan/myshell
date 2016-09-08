@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/06/26 22:46:00 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/06/27 02:31:59 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/09/09 01:01:39 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,13 @@
 
 void	parse_cmd_subcmd(t_env *e, t_parse *p)
 {
+	p->quo = NONE;
+	p->bquo = 0;
+	p->escape = 0;
+	p->sub = 1;
 	if (!parse_cmd_subcmd_parse_line(e, p))
 	{
 		p->error = EP_EOF;
-//		ft_printf("ICI buf='%s' sub=%d\n", p->buf, p->sub);
 		return ;
 	}
 	p->quo = 0;
@@ -26,19 +29,12 @@ void	parse_cmd_subcmd(t_env *e, t_parse *p)
 	p->quoted = 1;
 	parse_add_arg(e, p);
 	e->cmd[e->cid].sub = 1;
-//	printf("CELUICi ** ib=%d\n", p->ib);
-//	ft_printf("[]subcmd='%s'\n", e->cmd[e->cid].arg[0]);
 }
 
 int		parse_cmd_subcmd_parse_line(t_env *e, t_parse *p)
 {
-	p->quo = NONE;
-	p->bquo = 0;
-	p->escape = 0;
-	p->sub = 1;
 	while (e->line[p->i++])
 	{
-//		ft_printf("-> '%c' \n", e->line[p->i]);
 		parse_cmd_subcmd_parse_line_quotes(e, p);
 		if (e->line[p->i] == '\\' && !p->escape &&
 			(e->line[p->i + 1] == '\\'
@@ -66,25 +62,16 @@ void	parse_cmd_subcmd_parse_line_quotes(t_env *e, t_parse *p)
 	if (e->line[p->i] == '\'' && (!p->quo || p->quo == SIMP)
 		&& !p->escape)
 	{
-		if (p->quo)
-			p->quo = NONE;
-		else
-			p->quo = SIMP;
+		p->quo = (p->quo) ? NONE : SIMP;
 	}
 	else if (e->line[p->i] == '"' && (!p->quo || p->quo == DOUB)
 			&& !p->escape)
 	{
-		if (p->quo)
-			p->quo = NONE;
-		else
-			p->quo = DOUB;
+		p->quo = (p->quo) ? NONE : DOUB;
 	}
 	else if (e->line[p->i] == '`' && p->quo != SIMP && !p->escape)
 	{
-		if (p->bquo)
-			p->bquo = 0;
-		else
-			p->bquo = 1;
+		p->bquo = (p->bquo) ? 0 : 1;
 	}
 	else if (e->line[p->i] == '(' && !p->quo && !p->bquo && !p->escape)
 	{

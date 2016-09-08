@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/06 00:29:40 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/07/25 02:15:31 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/09/09 01:18:03 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,27 +17,14 @@ int		lexer_quotes(t_env *e, t_parse *l)
 	if (e->line[l->i] == '\'' && (!l->quo || l->quo == SIMP)
 		&& !l->escape)
 	{
-		if (l->quo)
-			l->quo = NONE;
-		else
-			l->quo = SIMP;
+		l->quo = (l->quo) ? NONE : SIMP;
 	}
 	else if (e->line[l->i] == '"' && (!l->quo || l->quo == DOUB)
 			&& !l->escape)
 	{
-		if (l->quo)
-			l->quo = NONE;
-		else
-			l->quo = DOUB;
+		l->quo = (l->quo) ? NONE : DOUB;
 	}
-	else
-		return (lexer_bquotes_pipes(e, l));
-	return (1);
-}
-
-int		lexer_bquotes_pipes(t_env *e, t_parse *l)
-{
-	if (e->line[l->i] == '`' && l->quo != SIMP && !l->escape)
+	else if (e->line[l->i] == '`' && l->quo != SIMP && !l->escape)
 	{
 		if (l->bquo)
 			l->bquo = NONE;
@@ -47,13 +34,18 @@ int		lexer_bquotes_pipes(t_env *e, t_parse *l)
 			l->a_id = 0;
 		}
 	}
-	else if (e->line[l->i] == '(' && !l->quo && !l->escape)
+	else
+		return (lexer_bquotes_pipes(e, l));
+	return (1);
+}
+
+int		lexer_bquotes_pipes(t_env *e, t_parse *l)
+{
+	if (e->line[l->i] == '(' && !l->quo && !l->escape)
 	{
 		lexer_add_arg(l);
 		if (l->a_id)
-		{
 			l->error = EP_SYNTAX;
-		}
 		l->sub++;
 		l->is_sub = 1;
 		l->a_id = 0;
@@ -64,12 +56,6 @@ int		lexer_bquotes_pipes(t_env *e, t_parse *l)
 		if (l->sub < 0)
 			l->error = EP_SYNTAX;
 	}
-	else if (e->line[l->i] == '|' && e->line[l->i + 1] == '|'
-			&& !l->quo && !l->escape)
-	{
-		l->i++;
-		lexer_add_cmd(l, SEP_OR);
-	}
 	else
 		return (lexer_operator_delim(e, l));
 	return (1);
@@ -77,24 +63,24 @@ int		lexer_bquotes_pipes(t_env *e, t_parse *l)
 
 int		lexer_operator_delim(t_env *e, t_parse *l)
 {
-	if (e->line[l->i] == '&' && e->line[l->i + 1] == '&'
+	if (e->line[l->i] == '|' && e->line[l->i + 1] == '|'
+			&& !l->quo && !l->escape)
+	{
+		l->i++;
+		lexer_add_cmd(l, SEP_OR);
+	}
+	else if (e->line[l->i] == '&' && e->line[l->i + 1] == '&'
 		&& !l->quo && !l->escape)
 	{
 		l->i++;
 		lexer_add_cmd(l, SEP_AND);
 	}
 	else if (e->line[l->i] == '|' && !l->quo && !l->escape)
-	{
 		lexer_add_cmd(l, SEP_PIPE);
-	}
 	else if (e->line[l->i] == ';' && !l->quo && !l->escape)
-	{
 		lexer_add_cmd(l, NONE);
-	}
 	else if (e->line[l->i] == '&' && !l->quo && !l->escape)
-	{
 		lexer_add_cmd(l, NONE);
-	}
 	else
 		return (lexer_exp_redir(e, l));
 	return (1);

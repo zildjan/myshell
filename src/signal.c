@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/13 19:14:16 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/09/08 00:15:55 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/09/09 01:23:19 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,9 @@ void	catch_signal(void)
 	signal(SIGINT, sig_mediator);
 	signal(SIGQUIT, sig_mediator);
 	signal(SIGTSTP, sig_mediator);
-//	signal(SIGTTIN, sig_mediator);
-//	signal(SIGTTOU, sig_mediator);
 	signal(SIGTTIN, SIG_IGN);
 	signal(SIGTTOU, SIG_IGN);
 	signal(SIGCHLD, sig_mediator);
-//	signal(SIGCHLD, SIG_IGN);
 	signal(SIGSEGV, sig_mediator);
 	signal(SIGILL, sig_mediator);
 	signal(SIGABRT, sig_mediator);
@@ -76,21 +73,6 @@ void	sig_handler(t_env *e, int signum)
 		put_sig_error(signum, "\nEXIT", 2);
 		term_restore_backup(NULL);
 		exit(1);
-	}
-
-//	sig_print(signum);
-//	if (se->sub)
-//		return ;
-//	if (se->sub)
-//		ft_printf("SUBME\n");
-
-	if (signum == SIGTTIN)
-	{
-//		tcsetpgrp(1, getpid());
-	}
-	else if (signum == SIGTTOU)
-	{
-//		tcsetpgrp(0, getpid());
 	}
 	else if (signum == SIGWINCH)
 	{

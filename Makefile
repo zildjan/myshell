@@ -6,7 +6,7 @@
 #    By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/01/04 17:14:24 by pbourrie          #+#    #+#              #
-#    Updated: 2016/09/08 22:53:53 by pbourrie         ###   ########.fr        #
+#    Updated: 2016/09/09 01:29:31 by pbourrie         ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -71,6 +71,7 @@ SRCS =		main.c \
 			history.c \
 			history_find.c \
 			parse_cmd.c \
+			parse_cmd_init.c \
 			parse_cmd_element_p1.c \
 			parse_cmd_element_p2.c \
 			parse_cmd_add_element.c \
@@ -89,10 +90,12 @@ SRCS =		main.c \
 			wait.c \
 			pipe.c \
 			term.c \
+			term_tools.c \
 			term_load_info.c \
 			prompt.c \
 			error.c \
 			jobs.c \
+			jobs_tools.c \
 			signal.c \
 			free_env.c \
 			free_sub_env.c \
