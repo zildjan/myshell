@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 17:06:44 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/09/09 00:34:58 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/09/10 00:26:32 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,8 @@ int		parse_add_arg(t_env *e, t_parse *p)
 		return (0);
 	parse_add_arg_malloc(e, p);
 	e->cmd[e->cid].arg[p->a_id] = dup_arg(p->buf);
-	set_env_var(e, "_", e->cmd[e->cid].arg[p->a_id]);
+	if (e->cid || (!e->cid && !ft_strstr(p->buf, "echo")))
+		set_env_var(e, "_", e->cmd[e->cid].arg[p->a_id]);
 	e->cmd[e->cid].arg[p->a_id + 1] = NULL;
 	ft_strclr(p->buf);
 	p->ib = 0;

@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/13 22:16:21 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/09/09 00:16:49 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/09/10 02:35:00 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,8 +99,12 @@ void	jobs_remove(t_env *e, pid_t pgid)
 
 void	jobs_remove_notif(t_env *e, t_job *job)
 {
-	if (!e->status)
-		ft_printf("\r[%d]  - %d Done  %s\n", job->id, job->pgid, job->name);
+	if (!e->status && e->last_job != job->pgid)
+		ft_printf("\n\r[%d]  - %d Done  %s", job->id, job->pgid, job->name);
+	else if (e->status < 126 && e->last_job != job->pgid)
+		ft_printf("\n\r[%d]  - %d exit %d  %s",
+				job->id, job->pgid, e->status, job->name);
+	ft_putchar('\n');
 	if (isatty(e->fd_in))
 	{
 		gen_prompt(e, NULL);

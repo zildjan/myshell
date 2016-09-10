@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/09/09 00:30:06 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/09/10 02:21:51 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,10 @@
 # define SEP_PIPE 1
 # define SEP_AND 2
 # define SEP_OR 3
+
+# define EDITION 1
+# define PARSING 2
+# define EXECUTION 3
 
 typedef struct dirent	t_dirent;
 
@@ -191,6 +195,8 @@ typedef struct	s_env
 {
 	pid_t			tc_pgid;
 	pid_t			shell_pgid;
+	pid_t			last_job;
+	int				step;
 	char			sub;
 	int				fd_in;
 	char			**var;

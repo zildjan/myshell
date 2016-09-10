@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/19 00:45:14 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/09/07 23:00:30 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/09/10 02:26:33 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ char	*parse_cmd_substitution_fork(t_env *e, int *fd, char *cmd)
 	if (pid == 0)
 	{
 		e->sub = 1;
+		signal_default();
 		close(fd[0]);
 		dup2(fd[1], 1);
 		close(fd[1]);

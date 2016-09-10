@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/09/07 22:52:43 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/09/10 02:18:02 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ t_env	*init_env(char **environ)
 	e->sub = 0;
 	e->fd_in = 0;
 	e->shell_pgid = getpid();
+	e->last_job = 0;
 	init_env_var(e, environ);
 	e->job = NULL;
 	e->jobs_lst = NULL;

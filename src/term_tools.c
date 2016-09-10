@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/09 01:28:54 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/09/09 01:29:13 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/09/10 02:17:38 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ void	term_set_tcpgid(t_env *e, pid_t pgid)
 	{
 		tcsetpgrp(0, pgid);
 		e->tc_pgid = pgid;
+		e->last_job = pgid;
 	}
 	else
 	{

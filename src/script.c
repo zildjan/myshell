@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/29 23:32:56 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/06/30 01:47:07 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/09/09 23:54:18 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int		execute_script(t_env *e, char *path, char error)
 	if (e->line)
 		free(e->line);
 	close(fd);
-	return (0);
+	return (e->status);
 }
 
 int		execute_script_open(char *path, int *fd, char error)

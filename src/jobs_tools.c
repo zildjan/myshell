@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/09 00:14:27 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/09/09 00:16:44 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/09/10 02:24:49 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ void	jobs_update_status(t_env *e)
 	int		status;
 	t_job	*job;
 	pid_t	pid;
+	int		save;
 
 	job = e->jobs_lst;
 	while (job)
@@ -27,6 +28,14 @@ void	jobs_update_status(t_env *e)
 			process_wait_status(e, status, pid, pid);
 		}
 		job = job->next;
+	}
+	if (e->step == EDITION)
+	{
+		put_line(e, 0);
+		save = e->cur;
+		e->cur = e->line_len;
+		while (e->cur > save)
+			move_cursor_left(e);
 	}
 }
 
@@ -73,7 +82,7 @@ t_job	*jobs_find(t_env *e, pid_t pgid, int id)
 	return (NULL);
 }
 
-void	jobs_add(t_env *e, pid_t pgid)
+void	jobs_add(t_env *e, pid_t pgid, int bg)
 {
 	t_job	*new;
 	t_job	*tmp;
@@ -94,6 +103,8 @@ void	jobs_add(t_env *e, pid_t pgid)
 			e->jobs_lst = new;
 		else
 			tmp->next = new;
+		if (bg)
+			ft_printf("\r[%d] %d\n", new->id, new->pgid);
 	}
 }
 

@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/10/09 19:55:32 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/09/08 23:01:01 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/09/10 02:23:03 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ void	get_cmd(t_env *e)
 {
 	t_parse	lex;
 
+	e->step = EDITION;
 	get_input_line(e, 1);
 	if (e->line == NULL)
 		return ;
@@ -26,6 +27,7 @@ void	get_cmd(t_env *e)
 		history_save_ent(e, e->line);
 	if (!lex.error)
 	{
+		e->step = PARSING;
 		parse_cmd(e);
 	}
 	else
