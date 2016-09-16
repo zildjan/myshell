@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 17:05:18 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/09/09 01:11:01 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/09/16 02:22:31 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,8 @@
 int		parse_cmd_redirection(t_env *e, t_parse *p)
 {
 	if (((ft_isdigit(e->line[p->i])
-		&& (p->i - 1 == -1 || is_aspace(e->line[p->i - 1]))
+		&& (p->i - 1 == -1 || is_aspace(e->line[p->i - 1])
+							|| ft_strchr("&|;", e->line[p->i - 1]))
 		&& (e->line[p->i + 1] == '<' || e->line[p->i + 1] == '>'))
 		|| (e->line[p->i] == '<' || e->line[p->i] == '>'))
 		&& !p->quo && !p->escape && p->ignore <= p->i)
