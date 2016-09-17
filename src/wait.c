@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/10 15:54:41 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/09/10 01:48:05 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/09/17 04:18:44 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	process_wait(t_env *e, pid_t pid, int job)
 {
 	int		ret;
 
-	if (!e->sub && e->background_cmd && !job)
+	if (!e->sub && e->background_cmd && !job && e->term)
 	{
 		jobs_add(e, pid, 1);
 		return ;
@@ -63,7 +63,7 @@ void	process_wait_sigstop(t_env *e, int status, pid_t pid, int job)
 {
 	if (WSTOPSIG(status) == SIGTSTP)
 	{
-		if (!job)
+		if (!job && e->term)
 			jobs_add(e, pid, 0);
 		usleep(400);
 		term_set_tcpgid(e, 0);

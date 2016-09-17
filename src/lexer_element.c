@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/06 00:29:40 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/09/09 01:18:03 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/09/17 04:07:48 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int		lexer_quotes(t_env *e, t_parse *l)
 
 int		lexer_bquotes_pipes(t_env *e, t_parse *l)
 {
-	if (e->line[l->i] == '(' && !l->quo && !l->escape)
+	if (e->line[l->i] == '(' && !l->quo && !l->bquo && !l->escape)
 	{
 		lexer_add_arg(l);
 		if (l->a_id)
@@ -50,7 +50,7 @@ int		lexer_bquotes_pipes(t_env *e, t_parse *l)
 		l->is_sub = 1;
 		l->a_id = 0;
 	}
-	else if (e->line[l->i] == ')' && !l->quo && !l->escape)
+	else if (e->line[l->i] == ')' && !l->quo && !l->bquo && !l->escape)
 	{
 		l->sub--;
 		if (l->sub < 0)
