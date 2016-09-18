@@ -6,7 +6,7 @@
 /*   By: pbourrie <pbourrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/10 18:58:17 by pbourrie          #+#    #+#             */
-/*   Updated: 2016/09/10 02:23:46 by pbourrie         ###   ########.fr       */
+/*   Updated: 2016/09/18 03:30:21 by pbourrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	process_cmd(t_env *e)
 			|| (condi == SEP_AND && !e->status)
 			|| (condi == SEP_OR && e->status)))
 	{
-		if (!process_builtin(e))
+		if (!e->cmd[e->cid].sub && !process_builtin(e))
 			process_bin(e, e->var, 1);
 	}
 	if (e->cmd[e->cid].status > 0)
