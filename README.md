@@ -1,10 +1,13 @@
 # myshell
 ##A simple unix shell.
+Ce shell est le résultat d'un projet réalisé à l'école 42 de Paris.
+Le code est normé selon la norme C de l'école ce qui explique par exemple qu'aucune fonction de fait plus de 25 lignes et il respecte globalement les standards du C89.
+
 Quelques fonctionnalités:
 * Executions de commandes avec leurs paramètres.
 * Gestion du PATH et des droits.
 * Gestion des erreurs et de la valeur de retour des commandes.
-* Gestion des opérateurs de redirectio : ">", ">>", "<, des heredoc, des pipes et de l’aggrégation de file descriptors
+* Gestion des opérateurs de redirectino : ">", ">>", "<, des heredoc, des pipes et de l’aggrégation de file descriptors
 * Gestion des opérateurs logiques "&&" et "||" ainsi que du séparateur ";".
 * Gestion des inhibiteurs """ (double quote), "’" (simple quote) et "\" (backslash).
 * Gestion de la subtitution de commande avec les backquotes "`".
